@@ -1,0 +1,17 @@
+{
+  "meta": { "title": "Story Writing", "description": "A paragraph-level writing desk: draft, get AI rewrites, accept them, with settings, characters, versions and a live overview." },
+  "panel": "Story",
+  "tab.chapters": "Chapters", "tab.settings": "Settings", "tab.characters": "Characters", "tab.versions": "Versions", "tab.overview": "Overview",
+  "status.draft": "Draft", "status.pending": "Pending", "status.final": "Final",
+  "action.askAi": "Ask AI", "action.accept": "Accept", "action.retry": "Retry", "action.reject": "Discard",
+  "action.write": "Write next paragraph", "action.finalize": "Finalize", "action.revert": "Back to pending",
+  "action.snapshot": "Snapshot", "action.restore": "Restore", "action.refresh": "Refresh",
+  "label.newChapter": "New chapter", "label.newCharacter": "New character", "label.newSetting": "New setting",
+  "label.instruction": "How should it change? (optional)",
+  "label.stale": "Text changed; regenerate this suggestion",
+  "label.noWorkspace": "Select a workspace on the left first; stories are saved under its story directory.",
+  "label.emptyChapters": "No chapters yet. Create one to start.",
+  "label.loading": "Loading…",
+  "label.recovered": "book.json was damaged; it was backed up as book.json.bak and replaced with an empty draft.",
+  "label.overviewGlobal": "Whole book", "label.overviewProgress": "Chapters {c} · Final paragraphs {f}/{t} · Characters {p}"
+}

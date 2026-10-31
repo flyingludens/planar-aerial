@@ -1,0 +1,72 @@
+{
+  "name": "@local/dsh-plugin-storywriting",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "description": "位面飞行（Planar Aerial）— paragraph-level story writing panel",
+  "author": "flyingludens",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flyingludens/planar-aerial.git"
+  },
+  "homepage": "https://planaraerial.pages.dev",
+  "bugs": {
+    "url": "https://github.com/flyingludens/planar-aerial/issues"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src/**/*.js",
+    "lib/**/*.js",
+    "domain/**/*.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "build.mjs",
+    "electron/**/*.js",
+    "electron/index.html",
+    "electron/preload.cjs",
+    "build.electron.mjs"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node build.mjs && node --test --test-force-exit",
+    "lint": "eslint src lib tests",
+    "test:one": "node build.mjs && node --test --test-force-exit",
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "electron:build": "node build.electron.mjs",
+    "electron:start": "npm run electron:build && env -u ELECTRON_RUN_AS_NODE electron .",
+    "build:all": "npm run build && npm run electron:build && npm run site:build",
+    "site:build": "node build.site.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.13.0",
+    "electron": "^38.0.0"
+  },
+  "main": "electron/main.js",
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

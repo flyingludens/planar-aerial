@@ -1,0 +1,16 @@
+node_modules/
+story/
+*.log
+.DS_Store
+.superpowers/
+
+# Local tool environments. A virtualenv and a Playwright browser download are hundreds of megabytes
+# of platform-specific binaries that `npm install` or `playwright install` rebuilds on demand; they
+# were committed here once and were most of a one-gigabyte checkout.
+.venv*/
+.pw-browsers/
+.pw-profile/
+__pycache__/
+*.pyc
+
+dist/

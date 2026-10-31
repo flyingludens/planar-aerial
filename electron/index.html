@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
+    <title>位面飞行</title>
+    <style>
+      html,body,#root{height:100%;margin:0;background:#0b0b0c}
+      :root{--dsh-frame-leading-clearance:76px}
+      body{overflow:hidden;color:var(--dsw-alias-label-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+      /* The panel's title row is the window's drag handle; every control inside it stays
+         clickable. These properties are ignored outside Electron. */
+      .st-titlebar{-webkit-app-region:drag}
+      .st-titlebar button,.st-titlebar input,.st-titlebar select,.st-titlebar textarea,
+      .st-titlebar a,.st-titlebar [role="button"],.st-titlebar [role="menu"]{-webkit-app-region:no-drag}
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="./renderer.js"></script>
+  </body>
+</html>

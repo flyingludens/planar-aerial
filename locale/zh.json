@@ -1,0 +1,17 @@
+{
+  "meta": { "title": "写故事", "description": "段落式写作台：边写边让 AI 提建议，附带设定、人物关系、多版本与全书概览。" },
+  "panel": "写故事",
+  "tab.chapters": "目录", "tab.settings": "设定", "tab.characters": "人物", "tab.versions": "版本", "tab.overview": "概览",
+  "status.draft": "写作中", "status.pending": "待定", "status.final": "已定稿",
+  "action.askAi": "请 AI 改", "action.accept": "采纳", "action.retry": "再改", "action.reject": "放弃",
+  "action.write": "写下一段", "action.finalize": "定稿", "action.revert": "退回待定",
+  "action.snapshot": "存快照", "action.restore": "回滚", "action.refresh": "刷新",
+  "label.newChapter": "新建章节", "label.newCharacter": "新建人物", "label.newSetting": "新建设定",
+  "label.instruction": "这次想怎么改（可留空）",
+  "label.stale": "原文已变，需重新生成",
+  "label.noWorkspace": "请先在左侧选择一个工作区，故事会保存在该工作区的 story 目录。",
+  "label.emptyChapters": "还没有章节，先新建一章。",
+  "label.loading": "正在读取…",
+  "label.recovered": "book.json 损坏，已备份为 book.json.bak 并重建空稿。",
+  "label.overviewGlobal": "全书", "label.overviewProgress": "章节 {c} · 定稿段 {f}/{t} · 人物 {p}"
+}

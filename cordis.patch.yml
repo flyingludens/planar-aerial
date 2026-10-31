@@ -1,0 +1,31 @@
+- insert:
+    - id: storywriting
+      name: '@local/dsh-plugin-storywriting'
+      config:
+        snapshotEvery: 1
+        overviewBudget: 2000
+        # How much text a continuation reads, in characters. `continue` runs on a keystroke, so
+        # these are deliberately small: the next sentence has to match the paragraph in front of
+        # the writer, not the story so far. Sending the whole chapter bought nothing and cost
+        # tokens on every Tab.
+        #   continueLeadChars    — the prose BEFORE the caret (the only thing it must follow)
+        #   continueTrailChars   — the prose AFTER it (only has to be bridged)
+        #   continueContextChars — the book overview; 0 sends none at all
+        continueLeadChars: 400
+        continueTrailChars: 200
+        continueContextChars: 200
+        # Per-role models are NOT configured here. The plugin has its own config file,
+        #
+        #     ~/.dsh/storywriting/settings.json     (or $DSH_HOME/storywriting/settings.json)
+        #
+        # written by the panel's model page (模型 in the title row) and read on every call, so a
+        # change there takes effect immediately for continue / suggest / chat. A role that file
+        # does not name inherits the session's current model, which is what "not configured"
+        # means: switch the model in the host's own picker and every AI action follows.
+        #
+        # The same file also holds the portrait model and the library path. One file, one read,
+        # one write — which is what lets a route that changes a model avoid erasing either.
+        #
+        # It lives apart from this patch on purpose: the profile patch is the host's own
+        # configuration document (and the plugin manager writes to it), so a panel that rewrote
+        # it would be editing the same file from two sides.

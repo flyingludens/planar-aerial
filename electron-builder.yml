@@ -1,0 +1,25 @@
+appId: com.planaraerial.desktop
+productName: 位面飞行
+copyright: Copyright © 2026 Flying Ludens
+directories:
+  output: dist/releases/installer
+files:
+  - electron/**/*
+  - dist/electron/**/*
+  - lib/**/*.js
+  - domain/**/*.js
+  - locale/**/*
+  - package.json
+asar: true
+npmRebuild: false
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  signAndEditExecutable: false
+nsis:
+  oneClick: true
+  perMachine: false
+  allowToChangeInstallationDirectory: false
+  artifactName: PlanarAerial-${version}-win-x64.${ext}
