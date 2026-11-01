@@ -70,7 +70,7 @@ export const ZH = {
   // The About card's three facts. The name and the author are proper nouns and are NOT
   // translated; only the labels beside them are, which is why the values come from the build and
   // these two keys only name them.
-  'about.name': '产品', 'about.version': '版本', 'about.author': '作者',
+  'about.name': '产品', 'about.version': '版本', 'about.author': '作者', 'about.repository': 'GitHub', 'about.license': '协议', 'about.copyright': '版权',
   // The menu rows need no title at all except where it carries something the label cannot: the
   // save row is the only one whose shortcut is invisible, so it is the only one that keeps a hint.
   // The other three said what their own labels already said — "导出" titled "把这本作品导出成
@@ -364,7 +364,7 @@ export const EN = {
   'welcome.lede': 'On wings of words, from this world to the next.',
   'welcome.newBook': 'New book', 'welcome.library': 'Open library', 'welcome.back': 'Back to book',
   'rail.start': 'Start', 'rail.shelf': 'Shelf', 'rail.open': 'Open folder', 'rail.save': 'Save', 'rail.export': 'Export', 'rail.about': 'About',
-  'about.name': 'Product', 'about.version': 'Version', 'about.author': 'Author',
+  'about.name': 'Product', 'about.version': 'Version', 'about.author': 'Author', 'about.repository': 'GitHub', 'about.license': 'License', 'about.copyright': 'Copyright',
   'rail.saveHint': '⌘/Ctrl + S',
   'rail.exportEmpty': 'This book has no prose yet, so there is nothing to export.',
   'rail.exportDone': 'Exported {name}',

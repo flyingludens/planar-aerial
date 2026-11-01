@@ -139,6 +139,9 @@ var ZH = {
   "about.name": "\u4EA7\u54C1",
   "about.version": "\u7248\u672C",
   "about.author": "\u4F5C\u8005",
+  "about.repository": "GitHub",
+  "about.license": "\u534F\u8BAE",
+  "about.copyright": "\u7248\u6743",
   // The menu rows need no title at all except where it carries something the label cannot: the
   // save row is the only one whose shortcut is invisible, so it is the only one that keeps a hint.
   // The other three said what their own labels already said — "导出" titled "把这本作品导出成
@@ -550,6 +553,9 @@ var EN = {
   "about.name": "Product",
   "about.version": "Version",
   "about.author": "Author",
+  "about.repository": "GitHub",
+  "about.license": "License",
+  "about.copyright": "Copyright",
   "rail.saveHint": "\u2318/Ctrl + S",
   "rail.exportEmpty": "This book has no prose yet, so there is nothing to export.",
   "rail.exportDone": "Exported {name}",
@@ -3613,7 +3619,13 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
 }
 
 // src/client/panel/rail-tools.js
-var PLUGIN = { name: "dsh-planar-aerial", version: "0.1.0-beta.3", author: "flyingludens" };
+var PLUGIN = {
+  name: "dsh-planar-aerial",
+  version: "0.1.0-beta.4",
+  author: "flyingludens",
+  repository: String("git+https://github.com/flyingludens/planar-aerial.git").replace(/^git\+/, "").replace(/\.git$/, ""),
+  license: "MIT"
+};
 function RailTool({ icon, label, hint, disabled, onClick, testId }) {
   return h(
     "button",
@@ -3770,10 +3782,24 @@ function AboutBox({ t, onClose }) {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
+  const licenseUrl = `${PLUGIN.repository}/blob/main/LICENSE`;
   const rows = [
     { key: "name", name: t("about.name"), value: t("brand.full") },
     { key: "version", name: t("about.version"), value: PLUGIN.version },
-    { key: "author", name: t("about.author"), value: PLUGIN.author }
+    { key: "author", name: t("about.author"), value: PLUGIN.author },
+    { key: "repository", name: t("about.repository"), value: h("a", {
+      className: "st-about-link",
+      href: PLUGIN.repository,
+      target: "_blank",
+      rel: "noreferrer"
+    }, PLUGIN.repository.replace(/^https?:\/\//, "")) },
+    { key: "license", name: t("about.license"), value: h("a", {
+      className: "st-about-link",
+      href: licenseUrl,
+      target: "_blank",
+      rel: "noreferrer"
+    }, PLUGIN.license) },
+    { key: "copyright", name: t("about.copyright"), value: `\xA9 ${(/* @__PURE__ */ new Date()).getFullYear()} ${PLUGIN.author}` }
   ];
   return h(
     "div",
@@ -11897,6 +11923,9 @@ var CSS_RAIL = `
       .st-rail-tool:focus-visible .st-rail-tool-icon{color:var(--st-text-primary)}
       /* The label is what shortens when the column is narrow; the glyph is what identifies the row. */
       .st-rail-tool-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+      .st-about-link{color:var(--st-accent);text-decoration:none;overflow-wrap:anywhere}
+      .st-about-link:hover{text-decoration:underline}
 `;
 
 // src/client/mosaic/board.css.js

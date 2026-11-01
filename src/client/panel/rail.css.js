@@ -68,4 +68,7 @@ export const CSS_RAIL = `
       .st-rail-tool:focus-visible .st-rail-tool-icon{color:var(--st-text-primary)}
       /* The label is what shortens when the column is narrow; the glyph is what identifies the row. */
       .st-rail-tool-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+      .st-about-link{color:var(--st-accent);text-decoration:none;overflow-wrap:anywhere}
+      .st-about-link:hover{text-decoration:underline}
 `

@@ -25,8 +25,12 @@ import { ShelfIcon, SaveIcon, ExportIcon, InfoIcon, StartIcon, FolderIcon } from
  * a source file is also read directly by the Node render harness, where those constants do not
  * exist, and an undefined identifier there would throw on the first render of the card.
  */
-/* global __PLUGIN_NAME__, __PLUGIN_VERSION__, __PLUGIN_AUTHOR__ */
-const PLUGIN = { name: __PLUGIN_NAME__, version: __PLUGIN_VERSION__, author: __PLUGIN_AUTHOR__ }
+/* global __PLUGIN_NAME__, __PLUGIN_VERSION__, __PLUGIN_AUTHOR__, __PLUGIN_REPOSITORY__, __PLUGIN_LICENSE__ */
+const PLUGIN = {
+  name: __PLUGIN_NAME__, version: __PLUGIN_VERSION__, author: __PLUGIN_AUTHOR__,
+  repository: String(__PLUGIN_REPOSITORY__ ?? '').replace(/^git\+/, '').replace(/\.git$/, ''),
+  license: __PLUGIN_LICENSE__,
+}
 
 /** One button in the row. */
 function RailTool({ icon, label, hint, disabled, onClick, testId }) {
@@ -205,10 +209,18 @@ export function AboutBox({ t, onClose }) {
   // Name, version, author — each named by the label beside it. The name is the plugin's, which is
   // what the writer installed; the package scope it happens to live under is the deployment's
   // business, not theirs.
+  const licenseUrl = `${PLUGIN.repository}/blob/main/LICENSE`
   const rows = [
     { key: 'name', name: t('about.name'), value: t('brand.full') },
     { key: 'version', name: t('about.version'), value: PLUGIN.version },
     { key: 'author', name: t('about.author'), value: PLUGIN.author },
+    { key: 'repository', name: t('about.repository'), value: h('a', {
+      className: 'st-about-link', href: PLUGIN.repository, target: '_blank', rel: 'noreferrer',
+    }, PLUGIN.repository.replace(/^https?:\/\//, '')) },
+    { key: 'license', name: t('about.license'), value: h('a', {
+      className: 'st-about-link', href: licenseUrl, target: '_blank', rel: 'noreferrer',
+    }, PLUGIN.license) },
+    { key: 'copyright', name: t('about.copyright'), value: `© ${new Date().getFullYear()} ${PLUGIN.author}` },
   ]
   return h('div', {
     className: 'st-backdrop', role: 'presentation',
