@@ -284,7 +284,7 @@ export const CSS_CARDS = `
       /* The relations wall treats a card as a PHOTOGRAPH, not a framed tile: no inner border,
          a raised paper shadow, a small stable tilt, and a metal pin at its top centre. The
          gallery keeps its framed object treatment; only the canvas gets this one. */
-      .st-mosaic-canvas .st-mosaic-card-pinned{border:none;background:transparent;
+      .st-mosaic-canvas .st-mosaic-card-pinned{border:1px solid var(--st-ink-edge);background:var(--st-surface);
         border-radius:var(--st-radius-sm,8px);
         box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px rgba(0,0,0,.28),0 18px 38px rgba(0,0,0,.2);
         transform:rotate(var(--st-card-tilt,0deg))}

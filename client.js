@@ -3621,7 +3621,7 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
 // src/client/panel/rail-tools.js
 var PLUGIN = {
   name: "dsh-planar-aerial",
-  version: "0.1.0-beta.5",
+  version: "0.1.0-beta.6",
   author: "flyingludens",
   repository: String("git+https://github.com/flyingludens/planar-aerial.git").replace(/^git\+/, "").replace(/\.git$/, ""),
   license: "MIT"
@@ -6953,6 +6953,16 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
           const normal = length === 0 ? { x: 0, y: -1 } : { x: -dy / length, y: dx / length };
           const labelX = (start.x + end.x) / 2 + normal.x * 12;
           const labelY = (start.y + end.y) / 2 + normal.y * 12;
+          const arrowAt = 0.56;
+          const arrowX = start.x + dx * arrowAt;
+          const arrowY = start.y + dy * arrowAt;
+          const unit = length === 0 ? { x: 1, y: 0 } : { x: dx / length, y: dy / length };
+          const side = { x: -unit.y, y: unit.x };
+          const arrowPoints = length === 0 ? "" : [
+            `${arrowX + unit.x * 8},${arrowY + unit.y * 8}`,
+            `${arrowX - unit.x * 3 + side.x * 4},${arrowY - unit.y * 3 + side.y * 4}`,
+            `${arrowX - unit.x * 3 - side.x * 4},${arrowY - unit.y * 3 - side.y * 4}`
+          ].join(" ");
           return h(
             "g",
             { key: edge.id },
@@ -6977,6 +6987,11 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
                 e.stopPropagation?.();
                 onPick({ kind: "edge", edge });
               }
+            }),
+            h("polygon", {
+              className: "st-mosaic-edge-arrow",
+              points: arrowPoints,
+              "aria-hidden": true
             }),
             h("text", {
               className: "st-mosaic-edge-label",
@@ -12053,7 +12068,7 @@ var CSS_BOARD = `
          a recessed fill and an inner hairline, so the cards visibly sit ON something. */
       .st-mosaic-canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;padding:0;
         border-radius:var(--st-radius-md,12px);
-        background:var(--st-board-wall);
+        background:transparent;
         box-shadow:none}
       /* The two selectors are the board's FOOT, above a hairline. No frame of their own \u2014 the
          panel's fields are borderless with a fill, and a box around a filled select is a box in
@@ -12102,6 +12117,7 @@ var CSS_BOARD = `
       .st-mosaic-edge-hit{stroke:transparent;stroke-width:var(--st-edge-hit-w);pointer-events:stroke;cursor:pointer}
       .st-mosaic-edge-hit:hover + .st-mosaic-edge{stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
       .st-mosaic-edge-picked{stroke:var(--st-thread);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-arrow{fill:var(--st-thread);pointer-events:none}
       .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--st-font-family);font-size:var(--st-thread-label-size);
         font-weight:var(--st-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
         stroke-width:var(--st-thread-halo-w);stroke-linejoin:round;pointer-events:none;user-select:none}
@@ -12396,7 +12412,7 @@ var CSS_CARDS = `
       /* The relations wall treats a card as a PHOTOGRAPH, not a framed tile: no inner border,
          a raised paper shadow, a small stable tilt, and a metal pin at its top centre. The
          gallery keeps its framed object treatment; only the canvas gets this one. */
-      .st-mosaic-canvas .st-mosaic-card-pinned{border:none;background:transparent;
+      .st-mosaic-canvas .st-mosaic-card-pinned{border:1px solid var(--st-ink-edge);background:var(--st-surface);
         border-radius:var(--st-radius-sm,8px);
         box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px rgba(0,0,0,.28),0 18px 38px rgba(0,0,0,.2);
         transform:rotate(var(--st-card-tilt,0deg))}

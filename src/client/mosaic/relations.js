@@ -460,6 +460,19 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
         const normal = length === 0 ? { x: 0, y: -1 } : { x: -dy / length, y: dx / length }
         const labelX = (start.x + end.x) / 2 + normal.x * 12
         const labelY = (start.y + end.y) / 2 + normal.y * 12
+        // A small arrowhead at the middle makes the source and target readable even before the
+        // label is read. It is a separate polygon, not marker-end: the cards paint over the
+        // SVG layer, and an endpoint arrow would sit under the target card.
+        const arrowAt = 0.56
+        const arrowX = start.x + dx * arrowAt
+        const arrowY = start.y + dy * arrowAt
+        const unit = length === 0 ? { x: 1, y: 0 } : { x: dx / length, y: dy / length }
+        const side = { x: -unit.y, y: unit.x }
+        const arrowPoints = length === 0 ? '' : [
+          `${arrowX + unit.x * 8},${arrowY + unit.y * 8}`,
+          `${arrowX - unit.x * 3 + side.x * 4},${arrowY - unit.y * 3 + side.y * 4}`,
+          `${arrowX - unit.x * 3 - side.x * 4},${arrowY - unit.y * 3 - side.y * 4}`,
+        ].join(' ')
         // Two lines per edge, SIBLINGS never parent and child: a wide invisible one that takes
         // the pointer, and the hairline that is seen. A <line> takes no children — the visible
         // line was once nested inside the hit line and simply never rendered.
@@ -475,6 +488,9 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
             // The visible line carries the click too: it is the element a reader means when
             // they point at a wire.
             onClick: (e) => { e.stopPropagation?.(); onPick({ kind: 'edge', edge }) },
+          }),
+          h('polygon', {
+            className: 'st-mosaic-edge-arrow', points: arrowPoints, 'aria-hidden': true,
           }),
           h('text', {
             className: 'st-mosaic-edge-label', x: labelX, y: labelY,

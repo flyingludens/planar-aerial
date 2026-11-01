@@ -86,7 +86,7 @@ export const CSS_BOARD = `
          a recessed fill and an inner hairline, so the cards visibly sit ON something. */
       .st-mosaic-canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;padding:0;
         border-radius:var(--st-radius-md,12px);
-        background:var(--st-board-wall);
+        background:transparent;
         box-shadow:none}
       /* The two selectors are the board's FOOT, above a hairline. No frame of their own — the
          panel's fields are borderless with a fill, and a box around a filled select is a box in
@@ -135,6 +135,7 @@ export const CSS_BOARD = `
       .st-mosaic-edge-hit{stroke:transparent;stroke-width:var(--st-edge-hit-w);pointer-events:stroke;cursor:pointer}
       .st-mosaic-edge-hit:hover + .st-mosaic-edge{stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
       .st-mosaic-edge-picked{stroke:var(--st-thread);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-arrow{fill:var(--st-thread);pointer-events:none}
       .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--st-font-family);font-size:var(--st-thread-label-size);
         font-weight:var(--st-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
         stroke-width:var(--st-thread-halo-w);stroke-linejoin:round;pointer-events:none;user-select:none}
