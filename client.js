@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: "@local/dsh-plugin-storywriting",
+  id: "dsh-planar-aerial",
   factory(require) {
     var module = { exports: {} };
     var exports = module.exports;
@@ -3613,7 +3613,7 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
 }
 
 // src/client/panel/rail-tools.js
-var PLUGIN = { name: "@local/dsh-plugin-storywriting", version: "0.1.0-beta.1", author: "flyingludens" };
+var PLUGIN = { name: "dsh-planar-aerial", version: "0.1.0-beta.3", author: "flyingludens" };
 function RailTool({ icon, label, hint, disabled, onClick, testId }) {
   return h(
     "button",
