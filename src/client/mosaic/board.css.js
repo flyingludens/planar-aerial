@@ -86,14 +86,13 @@ export const CSS_BOARD = `
          a recessed fill and an inner hairline, so the cards visibly sit ON something. */
       .st-mosaic-canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;padding:0;
         border-radius:var(--st-radius-md,12px);
-        background:var(--dsw-alias-bg-layer-0,var(--dsw-alias-bg-base,var(--st-fallback-page)));
-        box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+        background:var(--st-board-wall);
+        box-shadow:none}
       /* The two selectors are the board's FOOT, above a hairline. No frame of their own — the
          panel's fields are borderless with a fill, and a box around a filled select is a box in
          a box. */
       .st-mosaic-focus{display:flex;flex-wrap:wrap;gap:var(--st-space-12,12px);align-items:center;
-        margin:var(--st-board-inset) 0 0;padding:var(--st-board-inset) 0 0;
-        border-top:1px solid var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
+        margin:var(--st-board-inset) 0 0;padding:var(--st-board-inset) 0 0;border-top:none}
       .st-mosaic-focus-label{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary)}
       /* One picker: a framed field holding a button, and a list anchored to that field. The
@@ -128,14 +127,17 @@ export const CSS_BOARD = `
       /* The visible line reads the card border's own token — the same colour as the boxes it
          joins, in whichever theme is loaded. The border token is invisible on a dark theme, so
          a theme-specific hairline here drew nothing. */
-      .st-mosaic-edge{stroke:var(--st-accent);stroke-width:var(--st-edge-w);
-        stroke-opacity:var(--st-edge-opacity);pointer-events:none}
+      .st-mosaic-edge{stroke:var(--st-thread);stroke-width:var(--st-thread-w);stroke-linecap:round;
+        stroke-opacity:1;pointer-events:none}
       /* The hit line: wide, transparent, takes the pointer. It carries hover for both lines via
          the adjacent-sibling combinator — the two lines are SIBLINGS, hit first, and a <line>
          cannot have children for a descendant combinator to find. */
       .st-mosaic-edge-hit{stroke:transparent;stroke-width:var(--st-edge-hit-w);pointer-events:stroke;cursor:pointer}
       .st-mosaic-edge-hit:hover + .st-mosaic-edge{stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
-      .st-mosaic-edge-picked{stroke:var(--st-accent);stroke-width:var(--st-edge-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-picked{stroke:var(--st-thread);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--st-font-family);font-size:var(--st-thread-label-size);
+        font-weight:var(--st-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
+        stroke-width:var(--st-thread-halo-w);stroke-linejoin:round;pointer-events:none;user-select:none}
       /* A card is a RAISED object on the board — its own shadow is what separates it from the
          wall behind it. The height is set, not grown from content: the wires are drawn from the
          same number (see CARD_H), and a card that sized itself to its name would move its own

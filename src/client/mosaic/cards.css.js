@@ -280,4 +280,20 @@ export const CSS_CARDS = `
          ask entries; the fetched proposal renders as one card per change below it. Each card
          keeps its edit fields, verdict buttons and evidence quote in one column; the bookmark
          badge counts what is still owed a verdict. */
+
+      /* The relations wall treats a card as a PHOTOGRAPH, not a framed tile: no inner border,
+         a raised paper shadow, a small stable tilt, and a metal pin at its top centre. The
+         gallery keeps its framed object treatment; only the canvas gets this one. */
+      .st-mosaic-canvas .st-mosaic-card-pinned{border:none;background:transparent;
+        border-radius:var(--st-radius-sm,8px);
+        box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px rgba(0,0,0,.28),0 18px 38px rgba(0,0,0,.2);
+        transform:rotate(var(--st-card-tilt,0deg))}
+      .st-mosaic-canvas .st-mosaic-card-pinned:hover{box-shadow:0 2px 4px rgba(0,0,0,.36),0 12px 24px rgba(0,0,0,.34),0 24px 48px rgba(0,0,0,.24)}
+      .st-mosaic-canvas .st-mosaic-card-pinned.st-mosaic-card-plain{background:var(--st-surface)}
+      .st-mosaic-canvas .st-mosaic-card-pinned .st-mosaic-card-photo{border-radius:var(--st-radius-sm,8px)}
+      .st-mosaic-card-pin{display:none}
+      .st-mosaic-card-pinned .st-mosaic-card-pin{display:block;position:absolute;z-index:var(--st-mosaic-z-card-pin);
+        left:50%;top:var(--st-card-pin-y,12px);width:var(--st-pin-size);height:var(--st-pin-size);
+        transform:translate(-50%,-50%);border-radius:var(--st-radius-pill);corner-shape:round;
+        background:var(--st-pin-metal);box-shadow:var(--st-pin-shadow);pointer-events:none}
 `

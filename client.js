@@ -3621,7 +3621,7 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
 // src/client/panel/rail-tools.js
 var PLUGIN = {
   name: "dsh-planar-aerial",
-  version: "0.1.0-beta.4",
+  version: "0.1.0-beta.5",
   author: "flyingludens",
   repository: String("git+https://github.com/flyingludens/planar-aerial.git").replace(/^git\+/, "").replace(/\.git$/, ""),
   license: "MIT"
@@ -6458,6 +6458,7 @@ function renderManuscript(markdown, t) {
 // src/client/mosaic/geometry.js
 var CARD_W = 120;
 var CARD_H = 168;
+var PIN_Y = 12;
 var CARD_GAP_X = 24;
 var CARD_GAP_Y = 24;
 var CARD_STEP_X = CARD_W + CARD_GAP_X;
@@ -6879,6 +6880,10 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
     if (drag === null || drag.id !== entity.id) return base;
     return { x: Math.max(0, base.x + drag.dx), y: Math.max(0, base.y + drag.dy) };
   };
+  const pinPos = (entity) => {
+    const p = livePos(entity);
+    return { x: p.x + CARD_W / 2, y: p.y + PIN_Y };
+  };
   const drawn = entities.filter((entity) => {
     if (neighbourhood !== null && !neighbourhood.has(entity.id)) return false;
     if (viewKind === "character" && entity.kind !== "character") return false;
@@ -6893,12 +6898,17 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
   };
   const cards = drawn.map((entity) => {
     const base = livePos(entity);
+    const tilt = (String(entity.id).charCodeAt(0) % 5 - 2) * 0.7;
     return {
       entity,
       picture: typeof portraitOf === "function" ? portraitOf(entity) : null,
       // Numbers, always: undefined renders as `top: null`, which React drops, leaving the card
       // at the canvas origin.
-      style: { left: Number.isFinite(base.x) ? base.x : 24, top: Number.isFinite(base.y) ? base.y : 24 }
+      style: {
+        left: Number.isFinite(base.x) ? base.x : 24,
+        top: Number.isFinite(base.y) ? base.y : 24,
+        "--st-card-tilt": `${tilt}deg`
+      }
     };
   });
   return h(
@@ -6911,7 +6921,7 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
         ref: canvasRef,
         // The one definition of the card's size, handed to the stylesheet: the wires end at a
         // card's centre and CSS draws the box, so both must read the same number.
-        style: { "--st-card-w": `${CARD_W}px`, "--st-card-h": `${CARD_H}px` },
+        style: { "--st-card-w": `${CARD_W}px`, "--st-card-h": `${CARD_H}px`, "--st-card-pin-y": `${PIN_Y}px` },
         onClick: (e) => {
           if (e.target === e.currentTarget) onPick(null);
         }
@@ -6931,11 +6941,18 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
           const from = byId.get(edge.from);
           const to = byId.get(edge.to);
           if (from === void 0 || to === void 0) return null;
-          const a = livePos(from);
-          const b = livePos(to);
-          const start = { x: a.x + CARD_W / 2, y: a.y + CARD_H / 2 };
-          const end = { x: b.x + CARD_W / 2, y: b.y + CARD_H / 2 };
+          const a = pinPos(from);
+          const b = pinPos(to);
+          const start = a;
+          const end = b;
           const pickedEdge = picked?.kind === "edge" && picked.edge.id === edge.id;
+          const label = edge.truth.kind || t("mosaic.untitled");
+          const dx = end.x - start.x;
+          const dy = end.y - start.y;
+          const length = Math.hypot(dx, dy);
+          const normal = length === 0 ? { x: 0, y: -1 } : { x: -dy / length, y: dx / length };
+          const labelX = (start.x + end.x) / 2 + normal.x * 12;
+          const labelY = (start.y + end.y) / 2 + normal.y * 12;
           return h(
             "g",
             { key: edge.id },
@@ -6960,7 +6977,15 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
                 e.stopPropagation?.();
                 onPick({ kind: "edge", edge });
               }
-            })
+            }),
+            h("text", {
+              className: "st-mosaic-edge-label",
+              x: labelX,
+              y: labelY,
+              textAnchor: "middle",
+              dominantBaseline: "middle",
+              "aria-hidden": true
+            }, label)
           );
         })
       ),
@@ -6971,7 +6996,7 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
           // `st-mosaic-card-plain`: no portrait yet. The caption's seam and the monogram read
           // differently on a card with no photograph, and the stylesheet needs to know which card
           // it is dressing.
-          className: "st-mosaic-card" + (picture === null || picture === void 0 ? " st-mosaic-card-plain" : ""),
+          className: "st-mosaic-card st-mosaic-card-pinned" + (picture === null || picture === void 0 ? " st-mosaic-card-plain" : ""),
           "data-entity": entity.id,
           style,
           onPointerDown: (e) => {
@@ -7001,6 +7026,7 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
             setDrag(null);
           }
         },
+        h("span", { className: "st-mosaic-card-pin", "aria-hidden": true }),
         h(
           "div",
           { className: "st-mosaic-card-photo" },
@@ -10002,8 +10028,9 @@ var CSS_SHARED = `
            over everything but the tabs. Written as numbers they were four unrelated integers;
            as a group they say "what covers what" in one place. */
         --st-mosaic-z-detail:1;
-        --st-mosaic-z-card-menu:2;
-        --st-mosaic-z-card-menu-list:3;
+        --st-mosaic-z-card-pin:2;
+        --st-mosaic-z-card-menu:3;
+        --st-mosaic-z-card-menu-list:4;
         --st-mosaic-z-page:6;
         /* The relations wires. A stroke width is a drawing weight, not a length \u2014 it is set
            here with the layers above so the three widths that describe one line live together:
@@ -10013,6 +10040,19 @@ var CSS_SHARED = `
         --st-edge-hit-w:16;
         --st-edge-picked-w:2;
         --st-edge-opacity:.9;
+        /* The investigation wall: a dark board, a red thread, and the metal pin at each card's
+           top edge. The thread is a physical object, so its weight and colour are separate from
+           the accent used by buttons and focus rings. */
+        --st-board-wall:color-mix(in srgb, var(--st-bg,#000) 82%, #5b3a2e);
+        --st-thread:#d24b4b;
+        --st-thread-ink:#f1d6ce;
+        --st-thread-w:2;
+        --st-thread-picked-w:3;
+        --st-thread-label-size:var(--st-text-sm);
+        --st-thread-halo-w:3px;
+        --st-pin-size:14px;
+        --st-pin-metal:radial-gradient(circle at 32% 28%, #fff 0, #d8d8d8 28%, #8a8a8a 66%, #4a4a4a 100%);
+        --st-pin-shadow:0 1px 2px rgba(0,0,0,.55);
         /* The two recurring fades. .6 is the quiet-mark tier (a separator dot, a disabled
            tool's icon); .5 is the discarded tier (a proposal the writer turned down). One-offs
            (an animation's start frame, the busy button) stay literals: a token used once is a
@@ -12013,14 +12053,13 @@ var CSS_BOARD = `
          a recessed fill and an inner hairline, so the cards visibly sit ON something. */
       .st-mosaic-canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;padding:0;
         border-radius:var(--st-radius-md,12px);
-        background:var(--dsw-alias-bg-layer-0,var(--dsw-alias-bg-base,var(--st-fallback-page)));
-        box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+        background:var(--st-board-wall);
+        box-shadow:none}
       /* The two selectors are the board's FOOT, above a hairline. No frame of their own \u2014 the
          panel's fields are borderless with a fill, and a box around a filled select is a box in
          a box. */
       .st-mosaic-focus{display:flex;flex-wrap:wrap;gap:var(--st-space-12,12px);align-items:center;
-        margin:var(--st-board-inset) 0 0;padding:var(--st-board-inset) 0 0;
-        border-top:1px solid var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
+        margin:var(--st-board-inset) 0 0;padding:var(--st-board-inset) 0 0;border-top:none}
       .st-mosaic-focus-label{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary)}
       /* One picker: a framed field holding a button, and a list anchored to that field. The
@@ -12055,14 +12094,17 @@ var CSS_BOARD = `
       /* The visible line reads the card border's own token \u2014 the same colour as the boxes it
          joins, in whichever theme is loaded. The border token is invisible on a dark theme, so
          a theme-specific hairline here drew nothing. */
-      .st-mosaic-edge{stroke:var(--st-accent);stroke-width:var(--st-edge-w);
-        stroke-opacity:var(--st-edge-opacity);pointer-events:none}
+      .st-mosaic-edge{stroke:var(--st-thread);stroke-width:var(--st-thread-w);stroke-linecap:round;
+        stroke-opacity:1;pointer-events:none}
       /* The hit line: wide, transparent, takes the pointer. It carries hover for both lines via
          the adjacent-sibling combinator \u2014 the two lines are SIBLINGS, hit first, and a <line>
          cannot have children for a descendant combinator to find. */
       .st-mosaic-edge-hit{stroke:transparent;stroke-width:var(--st-edge-hit-w);pointer-events:stroke;cursor:pointer}
       .st-mosaic-edge-hit:hover + .st-mosaic-edge{stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
-      .st-mosaic-edge-picked{stroke:var(--st-accent);stroke-width:var(--st-edge-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-picked{stroke:var(--st-thread);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--st-font-family);font-size:var(--st-thread-label-size);
+        font-weight:var(--st-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
+        stroke-width:var(--st-thread-halo-w);stroke-linejoin:round;pointer-events:none;user-select:none}
       /* A card is a RAISED object on the board \u2014 its own shadow is what separates it from the
          wall behind it. The height is set, not grown from content: the wires are drawn from the
          same number (see CARD_H), and a card that sized itself to its name would move its own
@@ -12350,6 +12392,22 @@ var CSS_CARDS = `
          ask entries; the fetched proposal renders as one card per change below it. Each card
          keeps its edit fields, verdict buttons and evidence quote in one column; the bookmark
          badge counts what is still owed a verdict. */
+
+      /* The relations wall treats a card as a PHOTOGRAPH, not a framed tile: no inner border,
+         a raised paper shadow, a small stable tilt, and a metal pin at its top centre. The
+         gallery keeps its framed object treatment; only the canvas gets this one. */
+      .st-mosaic-canvas .st-mosaic-card-pinned{border:none;background:transparent;
+        border-radius:var(--st-radius-sm,8px);
+        box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px rgba(0,0,0,.28),0 18px 38px rgba(0,0,0,.2);
+        transform:rotate(var(--st-card-tilt,0deg))}
+      .st-mosaic-canvas .st-mosaic-card-pinned:hover{box-shadow:0 2px 4px rgba(0,0,0,.36),0 12px 24px rgba(0,0,0,.34),0 24px 48px rgba(0,0,0,.24)}
+      .st-mosaic-canvas .st-mosaic-card-pinned.st-mosaic-card-plain{background:var(--st-surface)}
+      .st-mosaic-canvas .st-mosaic-card-pinned .st-mosaic-card-photo{border-radius:var(--st-radius-sm,8px)}
+      .st-mosaic-card-pin{display:none}
+      .st-mosaic-card-pinned .st-mosaic-card-pin{display:block;position:absolute;z-index:var(--st-mosaic-z-card-pin);
+        left:50%;top:var(--st-card-pin-y,12px);width:var(--st-pin-size);height:var(--st-pin-size);
+        transform:translate(-50%,-50%);border-radius:var(--st-radius-pill);corner-shape:round;
+        background:var(--st-pin-metal);box-shadow:var(--st-pin-shadow);pointer-events:none}
 `;
 
 // src/client/mosaic/entity.css.js

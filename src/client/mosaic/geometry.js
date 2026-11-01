@@ -18,6 +18,10 @@
 export const CARD_W = 120
 export const CARD_H = 168
 
+/** The pin's centre, measured from the card's top edge. The wire ends here, not at the card
+ * centre: a thread is tied to the pin, and a pin is what the eye follows. */
+export const PIN_Y = 12
+
 /** The gap between cards, so the pitch follows the card instead of being measured from it. */
 const CARD_GAP_X = 24
 const CARD_GAP_Y = 24

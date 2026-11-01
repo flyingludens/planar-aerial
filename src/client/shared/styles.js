@@ -388,8 +388,9 @@ export const CSS_SHARED = `
            over everything but the tabs. Written as numbers they were four unrelated integers;
            as a group they say "what covers what" in one place. */
         --st-mosaic-z-detail:1;
-        --st-mosaic-z-card-menu:2;
-        --st-mosaic-z-card-menu-list:3;
+        --st-mosaic-z-card-pin:2;
+        --st-mosaic-z-card-menu:3;
+        --st-mosaic-z-card-menu-list:4;
         --st-mosaic-z-page:6;
         /* The relations wires. A stroke width is a drawing weight, not a length — it is set
            here with the layers above so the three widths that describe one line live together:
@@ -399,6 +400,19 @@ export const CSS_SHARED = `
         --st-edge-hit-w:16;
         --st-edge-picked-w:2;
         --st-edge-opacity:.9;
+        /* The investigation wall: a dark board, a red thread, and the metal pin at each card's
+           top edge. The thread is a physical object, so its weight and colour are separate from
+           the accent used by buttons and focus rings. */
+        --st-board-wall:color-mix(in srgb, var(--st-bg,#000) 82%, #5b3a2e);
+        --st-thread:#d24b4b;
+        --st-thread-ink:#f1d6ce;
+        --st-thread-w:2;
+        --st-thread-picked-w:3;
+        --st-thread-label-size:var(--st-text-sm);
+        --st-thread-halo-w:3px;
+        --st-pin-size:14px;
+        --st-pin-metal:radial-gradient(circle at 32% 28%, #fff 0, #d8d8d8 28%, #8a8a8a 66%, #4a4a4a 100%);
+        --st-pin-shadow:0 1px 2px rgba(0,0,0,.55);
         /* The two recurring fades. .6 is the quiet-mark tier (a separator dot, a disabled
            tool's icon); .5 is the discarded tier (a proposal the writer turned down). One-offs
            (an animation's start frame, the busy button) stay literals: a token used once is a

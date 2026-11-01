@@ -9,7 +9,7 @@ import { React, h } from '../shared/react.js'
 import { useDismiss } from '../shared/hooks.js'
 import { rowId } from '../shared/logic.js'
 import { kindLabel, kindFields, fieldLabel, fieldValue } from './labels.js'
-import { CARD_W, CARD_H, mosaicFreeSpot } from './geometry.js'
+import { CARD_W, CARD_H, PIN_Y, mosaicFreeSpot } from './geometry.js'
 import { patchEntityOnBoard } from './write.js'
 import { Chevron } from '../shared/ui.js'
 
@@ -373,6 +373,11 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
     if (drag === null || drag.id !== entity.id) return base
     return { x: Math.max(0, base.x + drag.dx), y: Math.max(0, base.y + drag.dy) }
   }
+  // The point a thread is tied to: the card's top-centre pin.
+  const pinPos = (entity) => {
+    const p = livePos(entity)
+    return { x: p.x + CARD_W / 2, y: p.y + PIN_Y }
+  }
   // What the board DRAWS: characters narrowed by the centre and the view. The centre may be an
   // item — its neighbours are characters, and "what is around this thing" is a real question.
   const drawn = entities.filter((entity) => {
@@ -397,12 +402,19 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
   // filter would remount every card and drop the one being edited.
   const cards = drawn.map((entity) => {
     const base = livePos(entity)
+    // A small stable tilt is what makes a wall of photographs look pinned rather than laid out
+    // by a grid. It is derived from the id, so a rerender does not make the cards twitch.
+    const tilt = ((String(entity.id).charCodeAt(0) % 5) - 2) * 0.7
     return {
       entity,
       picture: typeof portraitOf === 'function' ? portraitOf(entity) : null,
       // Numbers, always: undefined renders as `top: null`, which React drops, leaving the card
       // at the canvas origin.
-      style: { left: Number.isFinite(base.x) ? base.x : 24, top: Number.isFinite(base.y) ? base.y : 24 },
+      style: {
+        left: Number.isFinite(base.x) ? base.x : 24,
+        top: Number.isFinite(base.y) ? base.y : 24,
+        '--st-card-tilt': `${tilt}deg`,
+      },
     }
   })
 
@@ -412,7 +424,7 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
       ref: canvasRef,
       // The one definition of the card's size, handed to the stylesheet: the wires end at a
       // card's centre and CSS draws the box, so both must read the same number.
-      style: { '--st-card-w': `${CARD_W}px`, '--st-card-h': `${CARD_H}px` },
+      style: { '--st-card-w': `${CARD_W}px`, '--st-card-h': `${CARD_H}px`, '--st-card-pin-y': `${PIN_Y}px` },
       onClick: (e) => {
         // A click on the empty canvas — not a card or an edge — dismisses the popover, like
         // every other scrim in the panel.
@@ -434,13 +446,20 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
         // normalizeMosaic already drops edges whose endpoints are gone; the guard keeps a
         // hand-edited book from crashing the page instead.
         if (from === undefined || to === undefined) return null
-        const a = livePos(from)
-        const b = livePos(to)
-        // The wire runs CENTRE to CENTRE and the cards paint over it: trimming to a guessed box
-        // edge left a gap at both ends, because a card's real height varies with its text.
-        const start = { x: a.x + CARD_W / 2, y: a.y + CARD_H / 2 }
-        const end = { x: b.x + CARD_W / 2, y: b.y + CARD_H / 2 }
+        const a = pinPos(from)
+        const b = pinPos(to)
+        // The thread runs from pin to pin. The cards paint over it, so the pin remains the visible
+        // anchor even when a card is dragged around another.
+        const start = a
+        const end = b
         const pickedEdge = picked?.kind === 'edge' && picked.edge.id === edge.id
+        const label = edge.truth.kind || t('mosaic.untitled')
+        const dx = end.x - start.x
+        const dy = end.y - start.y
+        const length = Math.hypot(dx, dy)
+        const normal = length === 0 ? { x: 0, y: -1 } : { x: -dy / length, y: dx / length }
+        const labelX = (start.x + end.x) / 2 + normal.x * 12
+        const labelY = (start.y + end.y) / 2 + normal.y * 12
         // Two lines per edge, SIBLINGS never parent and child: a wide invisible one that takes
         // the pointer, and the hairline that is seen. A <line> takes no children — the visible
         // line was once nested inside the hit line and simply never rendered.
@@ -456,14 +475,18 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
             // The visible line carries the click too: it is the element a reader means when
             // they point at a wire.
             onClick: (e) => { e.stopPropagation?.(); onPick({ kind: 'edge', edge }) },
-          }))
+          }),
+          h('text', {
+            className: 'st-mosaic-edge-label', x: labelX, y: labelY,
+            textAnchor: 'middle', dominantBaseline: 'middle', 'aria-hidden': true,
+          }, label))
       })),
     cards.map(({ entity, style, picture }) => h('div', {
       key: entity.id,
       // `st-mosaic-card-plain`: no portrait yet. The caption's seam and the monogram read
       // differently on a card with no photograph, and the stylesheet needs to know which card
       // it is dressing.
-      className: 'st-mosaic-card' + (picture === null || picture === undefined ? ' st-mosaic-card-plain' : ''),
+      className: 'st-mosaic-card st-mosaic-card-pinned' + (picture === null || picture === undefined ? ' st-mosaic-card-plain' : ''),
       'data-entity': entity.id,
       style,
       onPointerDown: (e) => {
@@ -494,6 +517,7 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
         setDrag(null)
       },
     },
+      h('span', { className: 'st-mosaic-card-pin', 'aria-hidden': true }),
       h('div', { className: 'st-mosaic-card-photo' },
         picture !== null && picture !== undefined
           ? h('img', { src: picture, alt: entity.name, draggable: false })

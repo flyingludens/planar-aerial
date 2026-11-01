@@ -23,6 +23,8 @@ await build({
     __PLUGIN_NAME__: JSON.stringify(MANIFEST.name),
     __PLUGIN_VERSION__: JSON.stringify(MANIFEST.version ?? '0.0.0'),
     __PLUGIN_AUTHOR__: JSON.stringify(MANIFEST.author ?? ''),
+    __PLUGIN_REPOSITORY__: JSON.stringify(MANIFEST.repository?.url ?? ''),
+    __PLUGIN_LICENSE__: JSON.stringify(MANIFEST.license ?? ''),
     __PLUGIN_DESCRIPTION__: JSON.stringify(MANIFEST.description ?? ''),
   },
   logLevel: 'info',

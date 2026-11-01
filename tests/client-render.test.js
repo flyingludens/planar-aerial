@@ -31,6 +31,7 @@ function readCssSources() {
   return bodies.join('\n')
 }
 import { loadClientLogic } from './helpers/load-client.mjs'
+import { PIN_Y } from '../src/client/mosaic/geometry.js'
 
 /**
  * These cases mount the panel the way a browser does: every hook runs, every effect fires, and
@@ -1798,15 +1799,15 @@ test('wire endpoints follow each unmoved entity to its own grid slot', async () 
   collect(opened, edges, (n) => has(n, 'st-mosaic-edge'))
   assert.equal(edges.length, 1, `the live edge is drawn, saw ${edges.length}`)
 
-  // The wire runs CENTRE to CENTRE and the cards are painted over it. Trimming it to a guessed box
-  // edge is what broke it once: a card is taller than its 56px minimum, so the computed endpoint
-  // landed inside the card and the line stopped short of the border at both ends.
+  // The wire runs PIN to PIN and the cards are painted over it. The endpoint is the top-centre
+  // pin, which is where a real thread on an investigation wall is tied; the card itself still
+  // owns the layout slot.
   //
   // The endpoints are read from the CARDS as rendered, not restated from a formula. The canvas
   // stopped deriving positions from an index — cards are placed once by mosaicFreeSpot and then
   // owned by the writer's drags — so the only honest check is: does each end of the wire sit at
-  // the centre of the card it names?
-  const { CARD_W, CARD_H } = loadClientLogic()
+  // the pin of the card it names?
+  const { CARD_W } = loadClientLogic()
   const cards = []
   collect(opened, cards, (n) => has(n, 'st-mosaic-card') && typeof n.props['data-entity'] === 'string')
   const boxOf = (id) => {
@@ -1814,14 +1815,14 @@ test('wire endpoints follow each unmoved entity to its own grid slot', async () 
     assert.ok(card, `the card for ${id} is on the canvas`)
     return card.props.style
   }
-  const centreOf = (id) => ({ x: boxOf(id).left + CARD_W / 2, y: boxOf(id).top + CARD_H / 2 })
+  const pinOf = (id) => ({ x: boxOf(id).left + CARD_W / 2, y: boxOf(id).top + PIN_Y })
   const wire = edges[0].props
   // The fixture's live edge is 张三 → 李四. Both ends must sit on their own card's centre, in
   // whichever order the wire was drawn.
   const ids = cards.map((n) => n.props['data-entity'])
   assert.equal(ids.length, 2, `two cards, saw ${ids.length}`)
-  const one = centreOf(ids[0])
-  const two = centreOf(ids[1])
+  const one = pinOf(ids[0])
+  const two = pinOf(ids[1])
   const ends = [[wire.x1, wire.y1], [wire.x2, wire.y2]]
   const matches = (end, c) => Math.abs(end[0] - c.x) < 0.01 && Math.abs(end[1] - c.y) < 0.01
   assert.ok(
