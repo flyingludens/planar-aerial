@@ -1,9 +1,8 @@
 {
-  "name": "@local/dsh-plugin-storywriting",
+  "name": "dsh-planar-aerial",
   "version": "0.1.0-beta.1",
-  "private": true,
   "type": "module",
-  "description": "位面飞行（Planar Aerial）— paragraph-level story writing panel",
+  "description": "位面飞行（Planar Aerial）— DSH 段落级小说写作插件",
   "author": "flyingludens",
   "license": "MIT",
   "repository": {
@@ -68,5 +67,17 @@
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "storywriting",
+    "novel",
+    "writing",
+    "planar-aerial"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
