@@ -1,6 +1,6 @@
 - insert:
     - id: storywriting
-      name: '@local/dsh-plugin-storywriting'
+      name: 'dsh-planar-aerial'
       config:
         snapshotEvery: 1
         overviewBudget: 2000

@@ -14,3 +14,6 @@ __pycache__/
 *.pyc
 
 dist/
+
+# Local npm pack artifacts
+*.tgz
