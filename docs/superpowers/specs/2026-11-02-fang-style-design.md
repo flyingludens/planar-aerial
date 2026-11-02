@@ -49,7 +49,7 @@ Projects/fang-style/
    - `--st-text-*` 一词两义，拆开：字号 → `--fang-font-size-sm/md/lg/xl`（Bootstrap/MUI 惯例）；文字颜色 → `--fang-ink-primary/secondary/tertiary`，与已有的墨色浓度分层 `--fang-ink-whisper/hair/edge/faint` 同族；「text」前缀不再使用
    - 行高：`--st-text-*-leading` 与 `--st-line-height-ui/reading` → 统一 `--fang-line-height-*`（命名的就是它设置的 CSS 属性，不缩写、不借 Tailwind 的 leading 行话）
    - `--st-w-*` → `--fang-width-narrow/compact/medium/reading/wide/max`（`w` 是缩写）
-   - `.st-mid` → `.fang-main`
+   - `.st-mid` → `.fang-main`（mid 是「过去排第几」，main 是「现在是什么」——框架的主内容列；配套的 `st-mid-body` 一并迁入库，改名 `fang-main-body`）
    - `--st-seg-h`（现有重复声明，28/26 两个值）→ `--fang-segmented-height`，修掉冲突
    - `--st-btn-h-*` → `--fang-btn-height-*`
    - `--st-inset-*` → `--fang-padding-xs/sm/md/xl`
