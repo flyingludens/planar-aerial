@@ -6,12 +6,11 @@
  * picked card or a picked wire.
  */
 import { React, h } from '../shared/react.js'
-import { useDismiss } from '../shared/hooks.js'
 import { rowId } from '../shared/logic.js'
 import { kindLabel, kindFields, fieldLabel, fieldValue } from './labels.js'
 import { CARD_W, CARD_H, PIN_Y, mosaicFreeSpot } from './geometry.js'
 import { patchEntityOnBoard } from './write.js'
-import { Chevron } from 'fang-style'
+import { Chevron, useDismiss } from 'fang-style'
 
 /** The generate-portrait glyph: a four-point sparkle, the shape every image tool uses. Drawn
     rather than typed so it inherits the button's ink; the spin while the model works is applied

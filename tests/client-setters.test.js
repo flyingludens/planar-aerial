@@ -12,8 +12,8 @@ const source = readFileSync(join(here, '..', 'client.js'), 'utf8')
  * and only a browser render would notice. This checks the source instead: every setter that is
  * *called* must also be *declared* by a useState destructuring.
  *
- * `useDockState` counts as a declaration: it is the wrapper that keeps a value alive across the
- * panel being unmounted, and it returns the same `[value, setter]` pair.
+ * `useSessionState` counts as a declaration: it is the wrapper that keeps a value alive across
+ * the panel being unmounted, and it returns the same `[value, setter]` pair.
  */
 test('every state setter that is called is also declared', () => {
   const declared = new Set()
@@ -23,7 +23,7 @@ test('every state setter that is called is also declared', () => {
   // panel as undeclared state. Match the hook CALL instead of the namespace it hangs off.
   // The fang-style library imports React as a plain ESM default import, which esbuild mangles to
   // `import_reactN.default` — a third shape the declaration side has to recognise.
-  const declaration = /const\s*\[[^\]]*?,\s*(set[A-Za-z0-9_$]+)[^\]]*\]\s*=\s*(?:React\d*\.useState|import_react\d+\.default\.useState|useDockState|usePersisted)/g
+  const declaration = /const\s*\[[^\]]*?,\s*(set[A-Za-z0-9_$]+)[^\]]*\]\s*=\s*(?:React\d*\.useState|import_react\d+\.default\.useState|useSessionState|usePersisted)/g
   for (const match of source.matchAll(declaration)) {
     declared.add(match[1])
   }

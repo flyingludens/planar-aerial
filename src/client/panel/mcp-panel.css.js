@@ -5,7 +5,7 @@ export const CSS_MCP = `
       .st-mcp-backdrop{position:absolute;inset:0;z-index:var(--st-mcp-z);display:flex;align-items:flex-start;justify-content:flex-end;
         padding:var(--fang-space-24,24px);background:color-mix(in srgb,var(--fang-bg,#000) 40%,transparent)}
       .st-mcp-panel{width:min(var(--st-mcp-w),100%);display:flex;flex-direction:column;gap:var(--fang-space-12,12px);
-        padding:var(--st-space-20,20px);border:var(--fang-hairline) solid var(--fang-ink-edge);
+        padding:var(--st-mcp-panel-pad);border:var(--fang-hairline) solid var(--fang-ink-edge);
         border-radius:var(--fang-radius-lg,16px);background:var(--fang-surface-high);
         box-shadow:var(--fang-card-shadow-lift)}
       .st-mcp-head{display:flex;align-items:center;justify-content:space-between;gap:var(--fang-space-8,8px)}
@@ -21,7 +21,7 @@ export const CSS_MCP = `
         border-radius:var(--fang-radius-md,12px);background:var(--fang-bg);font-family:var(--fang-font-mono);
         font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-secondary);white-space:pre}
 
-      .st-mcp-status{display:flex;align-items:center;gap:var(--st-space-6,6px);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-mcp-status{display:flex;align-items:center;gap:var(--st-mcp-status-gap);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
       .st-mcp-dot{width:var(--st-mcp-dot);height:var(--st-mcp-dot);border-radius:var(--fang-radius-pill);background:var(--fang-ink-tertiary);flex:none}
       .st-mcp-connected{color:var(--fang-ink-secondary)}
       .st-mcp-connected .st-mcp-dot{background:var(--fang-accent)}

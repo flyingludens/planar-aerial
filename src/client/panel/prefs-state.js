@@ -8,7 +8,7 @@
  * these is a fact about the manuscript, so none of them travels with it.
  */
 import { React } from '../shared/react.js'
-import { usePersisted } from '../shared/hooks.js'
+import { usePersisted } from 'fang-style'
 import { normalizeTypography } from '../shared/logic.js'
 import { normalizeAutoSave } from '../shared/save-queue.js'
 import { resolveGestures, currentPlatform } from '../shared/gestures.js'

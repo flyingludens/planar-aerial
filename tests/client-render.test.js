@@ -1277,7 +1277,7 @@ test('the thinking state survives the panel being rebuilt, and so does the answe
   // `useState`, so the thinking row vanished on the way out and an answer that arrived while the
   // writer was elsewhere was written into a component that no longer existed: it was lost.
   //
-  // The state now lives in the dock store (`useDockState`), which outlives the mount. This drives
+  // The state now lives in the session store (`useSessionState`), which outlives the mount. This drives
   // the real path: start a continuation, unmount the panel mid-flight, mount a fresh one, and
   // check that the wait is still on screen — then let the answer land and check it arrives.
   let release

@@ -6,7 +6,10 @@ test('fang-style 导出完整的组件与 hook 面', () => {
   const widgets = ['Drawer', 'Dialog', 'ConfirmDialog', 'Dropdown', 'FileButton',
     'Segmented', 'List', 'ListRow', 'SplitPane', 'TooltipLayer', 'Chevron']
   const hooks = ['useDismiss', 'usePersisted', 'useClosingAnimation', 'useSessionState']
-  for (const name of [...widgets, ...hooks]) {
+  // The localStorage helpers the panel's preference hooks sit on; the panel imports them from
+  // here and keeps only its own key names.
+  const storage = ['readStored', 'writeStored', 'storageAvailable']
+  for (const name of [...widgets, ...hooks, ...storage]) {
     assert.equal(typeof fang[name], 'function', `${name} 应该是函数`)
   }
   // SESSION_STORE 是状态仓对象（createStateStore 的结果），不是函数；检验它的接口。

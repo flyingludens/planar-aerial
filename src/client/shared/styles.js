@@ -81,6 +81,13 @@ export const CSS_SHARED = `
         --st-mcp-code-h:220px;
         --st-mcp-dot:7px;
         --st-mcp-z:6;
+        /* The endpoint card's inner padding. Between the scale's 16 and 24 steps: the card holds
+           a form, and both neighbours read wrong — 16 crowds the border, 24 matches the backdrop
+           the card floats on. It has carried 20px since the card was built. */
+        --st-mcp-panel-pad:20px;
+        /* The status row's gap between the dot and its label. Half a step: 4px glues the dot to
+           the text, 8px detaches them. */
+        --st-mcp-status-gap:6px;
         /* The menu glyph size. One step above the 16px interface icons so four rows at 16px type
            read as a list of destinations rather than as a column of small print, and below the
            label's own size so the glyph never outweighs the word it stands for. */

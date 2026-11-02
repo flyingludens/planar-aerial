@@ -6,9 +6,9 @@
  * effort level are chosen.
  */
 import { React, h } from '../shared/react.js'
-import { useNotice, useDismiss } from '../shared/hooks.js'
+import { useNotice } from '../shared/hooks.js'
 import { modelLabel } from '../shared/model-display.js'
-import { Dialog, Segmented } from 'fang-style'
+import { Dialog, Segmented, useDismiss } from 'fang-style'
 
 
 /**

@@ -19,20 +19,20 @@
  * @param t          - the translator, for status text.
  */
 import { React } from '../shared/react.js'
-import { useDockState } from '../shared/hooks.js'
+import { useSessionState } from 'fang-style'
 import { routeChatQuestion, SCAN_EMPTY, CHAT_EMPTY } from '../shared/logic.js'
 
 export function useAiActions({ api, bookFolder, chapter, book, adoptWritten, flushSave, dockScope, t }) {
-  const [proposal, setProposal] = useDockState(dockScope, 'proposal', null)
-  const [aiError, setAiError] = useDockState(dockScope, 'aiError', '')
-  const [aiBusy, setAiBusy] = useDockState(dockScope, 'aiBusy', false)
-  const [aiNote, setAiNote] = useDockState(dockScope, 'aiNote', '')
-  const [scan, setScan] = useDockState(dockScope, 'scan', SCAN_EMPTY)
-  const [chat, setChat] = useDockState(dockScope, 'chat', CHAT_EMPTY)
-  const [answers, setAnswers] = useDockState(dockScope, 'answers', [])
+  const [proposal, setProposal] = useSessionState(dockScope, 'proposal', null)
+  const [aiError, setAiError] = useSessionState(dockScope, 'aiError', '')
+  const [aiBusy, setAiBusy] = useSessionState(dockScope, 'aiBusy', false)
+  const [aiNote, setAiNote] = useSessionState(dockScope, 'aiNote', '')
+  const [scan, setScan] = useSessionState(dockScope, 'scan', SCAN_EMPTY)
+  const [chat, setChat] = useSessionState(dockScope, 'chat', CHAT_EMPTY)
+  const [answers, setAnswers] = useSessionState(dockScope, 'answers', [])
   // A failed read must NOT look like "no answers": an empty list and a failed read are different
   // facts, and swallowing the error here is how a load problem once became undiagnosable.
-  const [answersError, setAnswersError] = useDockState(dockScope, 'answersError', '')
+  const [answersError, setAnswersError] = useSessionState(dockScope, 'answersError', '')
   /**
    * Load the book's stored answers when it opens.
    *

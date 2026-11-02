@@ -10,12 +10,12 @@
  * @param dockScope  - the per-book key the dock store is bucketed by.
  */
 import { React } from '../shared/react.js'
-import { useDockState } from '../shared/hooks.js'
+import { useSessionState } from 'fang-style'
 
 export function useModels({ api, bookFolder, dockScope }) {
   // The panel's own failure channel. Every other writer reports there, so a failed model write
   // goes to the same place rather than to a corner of this hook.
-  const [, setAiError] = useDockState(dockScope, 'aiError', '')
+  const [, setAiError] = useSessionState(dockScope, 'aiError', '')
   /**
    * Which model the panel's own actions use. Fetched once per book: the roles rarely change,
    * and the status bar must not trigger a request every time it renders.

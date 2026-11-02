@@ -11,16 +11,19 @@
  */
 import { React, h } from '../shared/react.js'
 import {
-  useBookData, usePersisted, useClosingAnimation, useDockState,
+  useBookData,
 } from '../shared/hooks.js'
 import { findNode } from '../../../domain/tree.js'
 import { statusAfterText } from '../../../domain/book.js'
-import { STORAGE_KEYS, readStored, writeStored, storageAvailable } from '../shared/storage.js'
+import { STORAGE_KEYS } from '../shared/storage.js'
 import { RailIcon } from '../shared/icons.js'
 import { BookLibrary } from './library.js'
 import { WelcomePage } from './welcome.js'
 import { BoardIcon, ModelIcon, NotebookIcon, SlidersIcon, McpIcon } from '../shared/icons.js'
-import { TooltipLayer } from 'fang-style'
+import {
+  TooltipLayer, useSessionState, usePersisted, useClosingAnimation,
+  readStored, writeStored, storageAvailable,
+} from 'fang-style'
 import { RailTools, AboutBox } from './rail-tools.js'
 import { TreeNav, ChapterEditor } from './outline.js'
 import { StatusBar } from './status.js'
@@ -376,7 +379,7 @@ export function StoryPanelBody(props) {
    *
    * These live in the dock store rather than in plain state because the panel is rebuilt
    * whenever the host swaps the centre column, and the request that is running does not stop
-   * with it. See `useDockState`: without this the thinking row disappeared on a window switch
+   * with it. See `useSessionState`: without this the thinking row disappeared on a window switch
    * and the answer that arrived a moment later was dropped on the floor.
    */
   /**
@@ -391,9 +394,9 @@ export function StoryPanelBody(props) {
   const dockScope = `story:${book?.id ?? bookFolder ?? ''}`
   // Board work lives in the same dock store: a window switch unmounts the board page, but the
   // fetch and its result must survive it, and the main thinking row reads the same keys.
-  const [mosaicProposal, setMosaicProposal] = useDockState(dockScope, 'mosaicProposal', null)
-  const [mosaicBusy] = useDockState(dockScope, 'mosaicBusy', false)
-  const [mosaicNote] = useDockState(dockScope, 'mosaicNote', '')
+  const [mosaicProposal, setMosaicProposal] = useSessionState(dockScope, 'mosaicProposal', null)
+  const [mosaicBusy] = useSessionState(dockScope, 'mosaicBusy', false)
+  const [mosaicNote] = useSessionState(dockScope, 'mosaicNote', '')
   /**
    * Everything the panel asks the model to do, and the dock state its answers land in.
    *

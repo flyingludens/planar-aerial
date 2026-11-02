@@ -1,10 +1,11 @@
 /**
- * The hooks that own a whole job rather than a widget.
+ * The hooks that own a whole job rather than a widget — the writing domain's share of them.
  *
- * `useBookData` is the manuscript lifecycle — which book is on screen and what saving it means.
- * `useDockState` is the panel-wide dock store, shared by every window so a rebuild does not lose
- * an open suggestion. `usePersisted` and `useClosingAnimation` are the two behaviours every
- * overlay needs: remembering a preference, and rendering what was open while it slides out.
+ * `useBookData` is the manuscript lifecycle: which book is on screen and what saving it means.
+ * `useNotice` is how a page reports its own failure to the panel's status bar. The generic
+ * behaviours — the per-book session store, the persisted preferences, the closing animation,
+ * the dismiss gesture, and the localStorage helpers — live in fang-style and are imported
+ * from there at the call sites.
  *
  * These take `api` as an argument rather than importing it, which is what lets a test drive the
  * save path with a stub route service and no panel.
@@ -12,7 +13,6 @@
 import { React } from './react.js'
 import { emptyBookState } from './logic.js'
 import { sameBooks, createSaveQueue } from './save-queue.js'
-import { readStored, writeStored } from './storage.js'
 
 /**
  * The open book: reading it, holding it, and writing it back.
@@ -306,152 +306,6 @@ export function useBookData({ api, library, bookFolder, t, autoSaveMs, onLoaded 
     flushSave, adoptWritten, saveNow, updateBook,
   }
 }
-/**
- * State that has to outlive the component that owns it.
- *
- * The panel is unmounted and rebuilt whenever the host swaps what the centre column shows —
- * switching to a conversation and back, or the window losing and regaining focus. Everything
- * the AI actions keep in `useState` died with it: the thinking row vanished, and an answer
- * that arrived while the writer was elsewhere was written into a component that no longer
- * existed, so it was simply lost.
- *
- * This is a tiny external store, keyed by book. A component seeds its state from it on mount
- * and mirrors every write back into it, so a rebuilt panel finds whatever the previous one
- * had — including a request still in flight. The request itself keeps running: its closure
- * holds the OLD setter, and that setter still writes to this store, which notifies whichever
- * component is mounted now.
- *
- * Deliberately not React state lifted to a parent: there is no parent to lift it to. The host
- * owns the mount, and the panel is a leaf in its tree.
- */
-function createStateStore() {
-  const values = new Map()
-  const listeners = new Map()
-  return {
-    read(key, initial) { return values.has(key) ? values.get(key) : initial },
-    write(key, value) {
-      if (Object.is(values.get(key), value)) return
-      values.set(key, value)
-      for (const listener of [...(listeners.get(key) ?? [])]) listener(value)
-    },
-    subscribe(key, listener) {
-      if (!listeners.has(key)) listeners.set(key, new Set())
-      listeners.get(key).add(listener)
-      return () => { listeners.get(key)?.delete(listener) }
-    },
-  }
-}
-export const DOCK_STORE = createStateStore()
-
-/**
- * `useState` that survives the panel being unmounted, scoped to one book.
- *
- * Two things make this different from plain state, and both are load-bearing:
- *
- *  - The value is read from the store on EVERY render, not just the first. The scope is the
- *    open book's folder, and that is `undefined` until the writer picks a book — so the key
- *    changes once during the panel's life. A `useState` initialiser would have captured the
- *    empty-scope value and never looked again.
- *  - The updater form reads its base from the store. A request that finishes after the panel
- *    was rebuilt calls its old closure's setter, whose local `previous` belongs to a dead
- *    component; the store is the only truth both of them share.
- */
-export function useDockState(scope, key, initial) {
-  const storeKey = `${scope}::${key}`
-  const [, forceRender] = React.useState(0)
-  React.useEffect(() => DOCK_STORE.subscribe(storeKey, () => forceRender((n) => n + 1)), [storeKey])
-  const value = DOCK_STORE.read(storeKey, initial)
-  const set = (next) => {
-    const current = DOCK_STORE.read(storeKey, initial)
-    const resolved = typeof next === 'function' ? next(current) : next
-    // `write` publishes to the subscribers, this component among them, so the re-render is
-    // driven by the store and a stale setter still lands in the mounted panel.
-    DOCK_STORE.write(storeKey, resolved)
-  }
-  return [value, set]
-}
-
-/**
- * A preference that survives a reload, stored per browser.
- *
- * Both of the panel's own preferences — how the page looks, and how often typing is written
- * to disk — are properties of the person at this machine, not of the manuscript, so they live
- * in localStorage rather than in book.json. Each one had written out the same three steps:
- * read with a try, normalise whatever came back, and write with another try (a private-mode
- * browser throws on both, and that must never break the panel).
- *
- * @param key      - the storage key
- * @param decode   - turns a stored string (or null, meaning nothing stored) into a usable value
- * @param encode   - turns a value into the string to store
- * @param forced   - when defined, this wins over storage and writes are skipped: the profile
- *                   has decided the value and the settings page only reports it
- */
-export function usePersisted(key, decode, encode, forced) {
-  const locked = forced !== undefined
-  const [value, setValue] = React.useState(() => {
-    if (locked) return forced
-    try { return decode(readStored(key)) } catch { return decode(null) }
-  })
-  const update = (next) => {
-    const resolved = typeof next === 'function' ? next(value) : next
-    setValue(resolved)
-    if (locked) return
-    writeStored(key, encode(resolved))
-  }
-  return [value, update]
-}
-
-/**
- * Keep an overlay mounted long enough for its exit animation to be seen.
- *
- * `open` is what the panel's state says; the returned `mounted` is what the render uses and
- * `closing` is the class to put on the overlay's outermost node. Without this, closing was a
- * one-frame disappearance: the entrance was animated and the exit was not, so every overlay
- * left with a blink while it arrived with a slide.
- *
- * The duration is read from the stylesheet's own token, not repeated here: `--fang-duration-close`
- * is the single place the exit speed is decided, and a timer with its own number would drift
- * from the animation it is timing.
- */
-export function useClosingAnimation(value, durationMs = 140) {
-  // `value` is the thing being shown — a drawer's key, or null for none. A boolean would tell
-  // the overlay that it is open but not what it is open ON, and a closing panel has to keep
-  // rendering the page it was showing while the state has already moved on.
-  const open = value !== null && value !== undefined && value !== false
-  // A renderer with no animations has nothing to wait for. The Node render harness has no
-  // `window` at all, and a headless mount that lingered on a timer would make "the drawer is
-  // gone" tests depend on wall-clock time. The check is on the environment, not on a flag a
-  // caller has to remember to pass.
-  const animated = typeof window !== 'undefined'
-  const [mounted, setMounted] = React.useState(open === true)
-  const [closing, setClosing] = React.useState(false)
-  React.useEffect(() => {
-    if (open === true) {
-      // Re-opening during an exit cancels it: the overlay is back, so it must not be removed
-      // by the timer the previous close started.
-      setClosing(false)
-      setMounted(true)
-      return undefined
-    }
-    if (!mounted) return undefined
-    if (!animated) { setMounted(false); return undefined }
-    setClosing(true)
-    const timer = globalThis.setTimeout(() => { setClosing(false); setMounted(false) }, durationMs)
-    return () => clearTimeout(timer)
-  }, [open, mounted, durationMs, animated])
-  /**
-   * What the overlay should RENDER while it is on screen.
-   *
-   * The caller's `open` is not it: during the exit the state has already changed (the drawer
-   * is null, or another drawer's key), and an overlay that renders from the live state shows
-   * the NEW content inside the OLD frame — a settings page sliding out of the model panel, or
-   * a model page appearing behind a closing settings drawer. So the last value the overlay was
-   * actually open with is held here and used until it is unmounted.
-   */
-  const shown = React.useRef(open ? value : null)
-  if (open) shown.current = value
-  return { mounted, closing, shown: shown.current }
-}
 
 /**
  * Report a component's own failure to the panel's status bar.
@@ -472,37 +326,3 @@ export function useNotice(onNotice, text) {
   }, [onNotice, text])
 }
 
-/**
- * Close a floating menu the way every menu in the panel closes: a press outside its box, or
- * Escape. The caller's own pick closes it before this hook is ever involved.
- *
- * The ref is the menu's own box — a press inside it belongs to the menu (it may be a button
- * that toggles it), one outside means "put it away". Escape is kept from reaching the host,
- * whose own shortcuts would otherwise fire behind the closing menu. The composer's model menu
- * deliberately does NOT use this hook: its Escape drills out of a nested pane first, which is
- * a behaviour of its own.
- */
-export function useDismiss(rootRef, open, onClose) {
-  React.useEffect(() => {
-    if (!open) return undefined
-    if (typeof document === 'undefined' || typeof document.addEventListener !== 'function') return undefined
-    const onDown = (event) => {
-      const root = rootRef?.current
-      if (root !== null && root !== undefined && typeof root.contains === 'function' && root.contains(event.target)) return
-      onClose()
-    }
-    const onKey = (event) => {
-      if (event.key !== 'Escape') return
-      event.preventDefault()
-      onClose()
-    }
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('mousedown', onDown)
-      document.removeEventListener('keydown', onKey)
-    }
-    // onClose is deliberately out of the deps: it is a state setter at every call site, and
-    // rebinding the listeners on each render would buy nothing.
-  }, [rootRef, open])
-}

@@ -1044,30 +1044,6 @@ var STORAGE_KEYS = {
   typography: "dsh.storywriting.typography",
   autoSaveMs: "dsh.storywriting.autoSaveMs"
 };
-function storageAvailable() {
-  try {
-    return typeof window !== "undefined" && window.localStorage !== void 0 && window.localStorage !== null;
-  } catch {
-    return false;
-  }
-}
-function readStored(key) {
-  try {
-    if (typeof window === "undefined" || window.localStorage === void 0) return null;
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-function writeStored(key, value) {
-  try {
-    if (typeof window === "undefined" || window.localStorage === void 0) return false;
-    window.localStorage.setItem(key, value);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 // src/client/shared/react.js
 var React = require("react");
@@ -1473,6 +1449,32 @@ function Dialog({ title, children, onClose, size, bodyClassName, panelClassName,
   );
 }
 
+// ../Projects/fang-style/src/storage.js
+function storageAvailable() {
+  try {
+    return typeof window !== "undefined" && window.localStorage !== void 0 && window.localStorage !== null;
+  } catch {
+    return false;
+  }
+}
+function readStored(key) {
+  try {
+    if (typeof window === "undefined" || window.localStorage === void 0) return null;
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+function writeStored(key, value) {
+  try {
+    if (typeof window === "undefined" || window.localStorage === void 0) return false;
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // ../Projects/fang-style/src/hooks.js
 function createStateStore() {
   const values = /* @__PURE__ */ new Map();
@@ -1496,6 +1498,63 @@ function createStateStore() {
   };
 }
 var SESSION_STORE = createStateStore();
+function useSessionState(scope, key, initial) {
+  const storeKey = `${scope}::${key}`;
+  const [, forceRender] = import_react2.default.useState(0);
+  import_react2.default.useEffect(() => SESSION_STORE.subscribe(storeKey, () => forceRender((n) => n + 1)), [storeKey]);
+  const value = SESSION_STORE.read(storeKey, initial);
+  const set = (next) => {
+    const current = SESSION_STORE.read(storeKey, initial);
+    const resolved = typeof next === "function" ? next(current) : next;
+    SESSION_STORE.write(storeKey, resolved);
+  };
+  return [value, set];
+}
+function usePersisted(key, decode, encode, forced) {
+  const locked = forced !== void 0;
+  const [value, setValue] = import_react2.default.useState(() => {
+    if (locked) return forced;
+    try {
+      return decode(readStored(key));
+    } catch {
+      return decode(null);
+    }
+  });
+  const update = (next) => {
+    const resolved = typeof next === "function" ? next(value) : next;
+    setValue(resolved);
+    if (locked) return;
+    writeStored(key, encode(resolved));
+  };
+  return [value, update];
+}
+function useClosingAnimation(value, durationMs = 140) {
+  const open = value !== null && value !== void 0 && value !== false;
+  const animated = typeof window !== "undefined";
+  const [mounted, setMounted] = import_react2.default.useState(open === true);
+  const [closing, setClosing] = import_react2.default.useState(false);
+  import_react2.default.useEffect(() => {
+    if (open === true) {
+      setClosing(false);
+      setMounted(true);
+      return void 0;
+    }
+    if (!mounted) return void 0;
+    if (!animated) {
+      setMounted(false);
+      return void 0;
+    }
+    setClosing(true);
+    const timer = globalThis.setTimeout(() => {
+      setClosing(false);
+      setMounted(false);
+    }, durationMs);
+    return () => clearTimeout(timer);
+  }, [open, mounted, durationMs, animated]);
+  const shown = import_react2.default.useRef(open ? value : null);
+  if (open) shown.current = value;
+  return { mounted, closing, shown: shown.current };
+}
 function useDismiss(rootRef, open, onClose) {
   import_react2.default.useEffect(() => {
     if (!open) return void 0;
@@ -2848,113 +2907,12 @@ function useBookData({ api: api2, library, bookFolder, t, autoSaveMs, onLoaded }
     updateBook
   };
 }
-function createStateStore2() {
-  const values = /* @__PURE__ */ new Map();
-  const listeners = /* @__PURE__ */ new Map();
-  return {
-    read(key, initial) {
-      return values.has(key) ? values.get(key) : initial;
-    },
-    write(key, value) {
-      if (Object.is(values.get(key), value)) return;
-      values.set(key, value);
-      for (const listener of [...listeners.get(key) ?? []]) listener(value);
-    },
-    subscribe(key, listener) {
-      if (!listeners.has(key)) listeners.set(key, /* @__PURE__ */ new Set());
-      listeners.get(key).add(listener);
-      return () => {
-        listeners.get(key)?.delete(listener);
-      };
-    }
-  };
-}
-var DOCK_STORE = createStateStore2();
-function useDockState(scope, key, initial) {
-  const storeKey = `${scope}::${key}`;
-  const [, forceRender] = React.useState(0);
-  React.useEffect(() => DOCK_STORE.subscribe(storeKey, () => forceRender((n) => n + 1)), [storeKey]);
-  const value = DOCK_STORE.read(storeKey, initial);
-  const set = (next) => {
-    const current = DOCK_STORE.read(storeKey, initial);
-    const resolved = typeof next === "function" ? next(current) : next;
-    DOCK_STORE.write(storeKey, resolved);
-  };
-  return [value, set];
-}
-function usePersisted2(key, decode, encode, forced) {
-  const locked = forced !== void 0;
-  const [value, setValue] = React.useState(() => {
-    if (locked) return forced;
-    try {
-      return decode(readStored(key));
-    } catch {
-      return decode(null);
-    }
-  });
-  const update = (next) => {
-    const resolved = typeof next === "function" ? next(value) : next;
-    setValue(resolved);
-    if (locked) return;
-    writeStored(key, encode(resolved));
-  };
-  return [value, update];
-}
-function useClosingAnimation2(value, durationMs = 140) {
-  const open = value !== null && value !== void 0 && value !== false;
-  const animated = typeof window !== "undefined";
-  const [mounted, setMounted] = React.useState(open === true);
-  const [closing, setClosing] = React.useState(false);
-  React.useEffect(() => {
-    if (open === true) {
-      setClosing(false);
-      setMounted(true);
-      return void 0;
-    }
-    if (!mounted) return void 0;
-    if (!animated) {
-      setMounted(false);
-      return void 0;
-    }
-    setClosing(true);
-    const timer = globalThis.setTimeout(() => {
-      setClosing(false);
-      setMounted(false);
-    }, durationMs);
-    return () => clearTimeout(timer);
-  }, [open, mounted, durationMs, animated]);
-  const shown = React.useRef(open ? value : null);
-  if (open) shown.current = value;
-  return { mounted, closing, shown: shown.current };
-}
 function useNotice(onNotice, text) {
   React.useEffect(() => {
     if (typeof onNotice !== "function") return void 0;
     onNotice(typeof text === "string" ? text : "");
     return () => onNotice("");
   }, [onNotice, text]);
-}
-function useDismiss2(rootRef, open, onClose) {
-  React.useEffect(() => {
-    if (!open) return void 0;
-    if (typeof document === "undefined" || typeof document.addEventListener !== "function") return void 0;
-    const onDown = (event) => {
-      const root = rootRef?.current;
-      if (root !== null && root !== void 0 && typeof root.contains === "function" && root.contains(event.target)) return;
-      onClose();
-    };
-    const onKey = (event) => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      onClose();
-    };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [rootRef, open]);
 }
 
 // domain/ids.js
@@ -3558,7 +3516,7 @@ function MosaicGalleryCard({ id, kind, label, role, picture, onActivate, childre
 function MosaicCardMenu({ t, onEdit, onDelete }) {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
-  useDismiss2(rootRef, open, () => setOpen(false));
+  useDismiss(rootRef, open, () => setOpen(false));
   if (typeof onEdit !== "function" && typeof onDelete !== "function") return null;
   return h(
     "div",
@@ -6346,7 +6304,7 @@ function EffortAxis({ t, efforts, value, onPick }) {
 function ModelSelect({ t, groups, value, onChange }) {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
-  useDismiss2(rootRef, open, () => setOpen(false));
+  useDismiss(rootRef, open, () => setOpen(false));
   const name = modelLabel(t, value);
   const rows = [];
   for (const group of groups ?? []) {
@@ -7026,7 +6984,7 @@ function McpPanel({ t, info, error, loading, onClose, onLaunch }) {
 
 // src/client/panel/models-state.js
 function useModels({ api: api2, bookFolder, dockScope }) {
-  const [, setAiError] = useDockState(dockScope, "aiError", "");
+  const [, setAiError] = useSessionState(dockScope, "aiError", "");
   const [roleModels, setRoleModels] = React.useState(null);
   const [modelEpoch, setModelEpoch] = React.useState(0);
   const refreshModels = () => setModelEpoch((epoch) => epoch + 1);
@@ -7350,7 +7308,7 @@ function DetailPortrait({ t, entity, picture, busy, onPortrait, editable }) {
 function MosaicPick({ label, testId, value, options, onPick }) {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
-  useDismiss2(rootRef, open, () => setOpen(false));
+  useDismiss(rootRef, open, () => setOpen(false));
   const current = options.find((option) => option.value === value) ?? options[0];
   const pick = (next) => {
     setOpen(false);
@@ -8321,8 +8279,8 @@ function MosaicCheckHeader({ t, api: api2, bookFolder, book, chapter, mosaicProp
 }
 function MosaicReviewPage({ t, mosaic, book, updateBook, picked, onPick, api: api2, bookFolder, chapter, mosaicProposal, onProposal, decisions, onDecide, onApplyChanges, onCreate, onInspect, onPortrait, portraitOf, portraitBusyId, portraitError, onNotice }) {
   const boardScope = `story:${book?.id ?? bookFolder ?? ""}`;
-  const [busy, setBusy] = useDockState(boardScope, "mosaicBusy", false);
-  const [, setNote] = useDockState(boardScope, "mosaicNote", "");
+  const [busy, setBusy] = useSessionState(boardScope, "mosaicBusy", false);
+  const [, setNote] = useSessionState(boardScope, "mosaicNote", "");
   const [notice, setNotice] = React.useState("");
   useNotice(onNotice, notice);
   const parts = MosaicCheckHeader({
@@ -8597,8 +8555,8 @@ function VersionsPage({ t, book, bookFolder, api: api2, onAdoptWritten }) {
 }
 function WritingStylesPage({ t, api: api2, bookFolder, book, onNotice }) {
   const boardScope = `story:${book?.id ?? bookFolder ?? ""}`;
-  const [, setBoardBusy] = useDockState(boardScope, "mosaicBusy", false);
-  const [, setNote] = useDockState(boardScope, "mosaicNote", "");
+  const [, setBoardBusy] = useSessionState(boardScope, "mosaicBusy", false);
+  const [, setNote] = useSessionState(boardScope, "mosaicNote", "");
   const [state, setState] = React.useState(() => Array.isArray(book?.writingStyles) ? { writingStyles: book.writingStyles, activeId: book.activeWritingStyleId ?? "" } : null);
   const [error, setError] = React.useState("");
   const [epoch, setEpoch] = React.useState(0);
@@ -10150,14 +10108,14 @@ function useTreeEdits({ t, book, updateBook, chapter, selected, setSelected, cha
 
 // src/client/panel/ai-state.js
 function useAiActions({ api: api2, bookFolder, chapter, book, adoptWritten, flushSave, dockScope, t }) {
-  const [proposal, setProposal] = useDockState(dockScope, "proposal", null);
-  const [aiError, setAiError] = useDockState(dockScope, "aiError", "");
-  const [aiBusy, setAiBusy] = useDockState(dockScope, "aiBusy", false);
-  const [aiNote, setAiNote] = useDockState(dockScope, "aiNote", "");
-  const [scan, setScan] = useDockState(dockScope, "scan", SCAN_EMPTY);
-  const [chat, setChat] = useDockState(dockScope, "chat", CHAT_EMPTY);
-  const [answers, setAnswers] = useDockState(dockScope, "answers", []);
-  const [answersError, setAnswersError] = useDockState(dockScope, "answersError", "");
+  const [proposal, setProposal] = useSessionState(dockScope, "proposal", null);
+  const [aiError, setAiError] = useSessionState(dockScope, "aiError", "");
+  const [aiBusy, setAiBusy] = useSessionState(dockScope, "aiBusy", false);
+  const [aiNote, setAiNote] = useSessionState(dockScope, "aiNote", "");
+  const [scan, setScan] = useSessionState(dockScope, "scan", SCAN_EMPTY);
+  const [chat, setChat] = useSessionState(dockScope, "chat", CHAT_EMPTY);
+  const [answers, setAnswers] = useSessionState(dockScope, "answers", []);
+  const [answersError, setAnswersError] = useSessionState(dockScope, "answersError", "");
   React.useEffect(() => {
     if (bookFolder === void 0) return void 0;
     if (typeof api2.answers !== "function") return void 0;
@@ -10470,7 +10428,7 @@ function useAiActions({ api: api2, bookFolder, chapter, book, adoptWritten, flus
 
 // src/client/panel/prefs-state.js
 function usePreferences({ platform, saveInterval }) {
-  const [chordOverrides, updateChordOverrides] = usePersisted2(
+  const [chordOverrides, updateChordOverrides] = usePersisted(
     STORAGE_KEYS.chords,
     (raw) => {
       try {
@@ -10483,7 +10441,7 @@ function usePreferences({ platform, saveInterval }) {
   );
   const keyPlatform = platform ?? currentPlatform();
   const keys = resolveGestures(keyPlatform, chordOverrides);
-  const [typography, updateTypography] = usePersisted2(
+  const [typography, updateTypography] = usePersisted(
     STORAGE_KEYS.typography,
     (raw) => {
       try {
@@ -10494,7 +10452,7 @@ function usePreferences({ platform, saveInterval }) {
     },
     (value) => JSON.stringify(value)
   );
-  const [autoSaveMs, persistAutoSave] = usePersisted2(
+  const [autoSaveMs, persistAutoSave] = usePersisted(
     STORAGE_KEYS.autoSaveMs,
     (raw) => normalizeAutoSave(raw),
     (value) => String(value),
@@ -10593,6 +10551,13 @@ var CSS_SHARED = `
         --st-mcp-code-h:220px;
         --st-mcp-dot:7px;
         --st-mcp-z:6;
+        /* The endpoint card's inner padding. Between the scale's 16 and 24 steps: the card holds
+           a form, and both neighbours read wrong \u2014 16 crowds the border, 24 matches the backdrop
+           the card floats on. It has carried 20px since the card was built. */
+        --st-mcp-panel-pad:20px;
+        /* The status row's gap between the dot and its label. Half a step: 4px glues the dot to
+           the text, 8px detaches them. */
+        --st-mcp-status-gap:6px;
         /* The menu glyph size. One step above the 16px interface icons so four rows at 16px type
            read as a list of destinations rather than as a column of small print, and below the
            label's own size so the glyph never outweighs the word it stands for. */
@@ -11248,7 +11213,7 @@ var CSS_MCP = `
       .st-mcp-backdrop{position:absolute;inset:0;z-index:var(--st-mcp-z);display:flex;align-items:flex-start;justify-content:flex-end;
         padding:var(--fang-space-24,24px);background:color-mix(in srgb,var(--fang-bg,#000) 40%,transparent)}
       .st-mcp-panel{width:min(var(--st-mcp-w),100%);display:flex;flex-direction:column;gap:var(--fang-space-12,12px);
-        padding:var(--st-space-20,20px);border:var(--fang-hairline) solid var(--fang-ink-edge);
+        padding:var(--st-mcp-panel-pad);border:var(--fang-hairline) solid var(--fang-ink-edge);
         border-radius:var(--fang-radius-lg,16px);background:var(--fang-surface-high);
         box-shadow:var(--fang-card-shadow-lift)}
       .st-mcp-head{display:flex;align-items:center;justify-content:space-between;gap:var(--fang-space-8,8px)}
@@ -11264,7 +11229,7 @@ var CSS_MCP = `
         border-radius:var(--fang-radius-md,12px);background:var(--fang-bg);font-family:var(--fang-font-mono);
         font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-secondary);white-space:pre}
 
-      .st-mcp-status{display:flex;align-items:center;gap:var(--st-space-6,6px);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-mcp-status{display:flex;align-items:center;gap:var(--st-mcp-status-gap);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
       .st-mcp-dot{width:var(--st-mcp-dot);height:var(--st-mcp-dot);border-radius:var(--fang-radius-pill);background:var(--fang-ink-tertiary);flex:none}
       .st-mcp-connected{color:var(--fang-ink-secondary)}
       .st-mcp-connected .st-mcp-dot{background:var(--fang-accent)}
@@ -13107,18 +13072,18 @@ function StoryPanelBody(props) {
   const items = workspaceSnapshot?.items ?? [];
   const shellRef = React.useRef(null);
   const [drawer, setDrawer] = React.useState(null);
-  const [mosaicOpen, setMosaicOpen] = usePersisted2(
+  const [mosaicOpen, setMosaicOpen] = usePersisted(
     STORAGE_KEYS.mosaicOpen,
     (raw) => raw === "true",
     (value) => value === true ? "true" : "false"
   );
-  const [mosaicTab, setMosaicTab] = usePersisted2(
+  const [mosaicTab, setMosaicTab] = usePersisted(
     STORAGE_KEYS.mosaicTab,
     (raw) => typeof raw === "string" && raw !== "" ? raw : "relations",
     (value) => String(value)
   );
-  const drawerMotion = useClosingAnimation2(drawer);
-  const mosaicMotion = useClosingAnimation2(mosaicOpen === true ? mosaicOpen : null);
+  const drawerMotion = useClosingAnimation(drawer);
+  const mosaicMotion = useClosingAnimation(mosaicOpen === true ? mosaicOpen : null);
   React.useEffect(() => {
     if (mosaicOpen) {
       setRailHidden(true);
@@ -13142,7 +13107,7 @@ function StoryPanelBody(props) {
   const mcpInfo = typeof props.mcpInfo === "function" ? props.mcpInfo : void 0;
   const openHarness = typeof props.openHarness === "function" ? props.openHarness : void 0;
   const [railHidden, setRailHidden] = React.useState(true);
-  const railMotion = useClosingAnimation2(railHidden ? null : "rail");
+  const railMotion = useClosingAnimation(railHidden ? null : "rail");
   const [bookFolder, setBookFolder] = React.useState(void 0);
   const [startOpen, setStartOpen] = React.useState(false);
   const [startSeen, setStartSeen] = React.useState(() => readStored(STORAGE_KEYS.welcomeSeen) === "1" || readStored(STORAGE_KEYS.lastBook) !== null || !storageAvailable());
@@ -13266,9 +13231,9 @@ function StoryPanelBody(props) {
     removeTreeNode
   } = useTreeEdits({ t, book, updateBook, chapter, selected, setSelected, chapterId, setChapterId });
   const dockScope = `story:${book?.id ?? bookFolder ?? ""}`;
-  const [mosaicProposal, setMosaicProposal] = useDockState(dockScope, "mosaicProposal", null);
-  const [mosaicBusy] = useDockState(dockScope, "mosaicBusy", false);
-  const [mosaicNote] = useDockState(dockScope, "mosaicNote", "");
+  const [mosaicProposal, setMosaicProposal] = useSessionState(dockScope, "mosaicProposal", null);
+  const [mosaicBusy] = useSessionState(dockScope, "mosaicBusy", false);
+  const [mosaicNote] = useSessionState(dockScope, "mosaicNote", "");
   const {
     proposal,
     setProposal,
@@ -14005,7 +13970,7 @@ var index_default = {
   // Hooks that own a whole job rather than a widget. Exposed so they can be driven on their
   // own: `useBookData` is the book lifecycle, and testing it through a mounted panel would
   // test the panel's layout at the same time.
-  __hooks: { useBookData, useClosingAnimation: useClosingAnimation2, useBoardActions },
+  __hooks: { useBookData, useClosingAnimation, useBoardActions },
   __components: {
     StoryPanel: StoryPanelBody,
     StoryPanelBoundary,

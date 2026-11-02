@@ -6,9 +6,9 @@
  * and a body — and because none of them depends on another.
  */
 import { React, h } from '../shared/react.js'
-import { Dialog, FileButton, List, ListRow, SplitPane } from 'fang-style'
+import { Dialog, FileButton, List, ListRow, SplitPane, useSessionState } from 'fang-style'
 import { describeChange, renderManuscript } from './labels.js'
-import { useDockState, useNotice } from '../shared/hooks.js'
+import { useNotice } from '../shared/hooks.js'
 
 export const MOSAIC_TABS = [
   // The keys reuse the drawers' dictionary entries, so both languages are free. 提案 is a
@@ -198,8 +198,8 @@ export function VersionsPage({ t, book, bookFolder, api, onAdoptWritten }) {
  */
 export function WritingStylesPage({ t, api, bookFolder, book, onNotice }) {
   const boardScope = `story:${book?.id ?? bookFolder ?? ''}`
-  const [, setBoardBusy] = useDockState(boardScope, 'mosaicBusy', false)
-  const [, setNote] = useDockState(boardScope, 'mosaicNote', '')
+  const [, setBoardBusy] = useSessionState(boardScope, 'mosaicBusy', false)
+  const [, setNote] = useSessionState(boardScope, 'mosaicNote', '')
   const [state, setState] = React.useState(() => (Array.isArray(book?.writingStyles)
     ? { writingStyles: book.writingStyles, activeId: book.activeWritingStyleId ?? '' }
     : null))

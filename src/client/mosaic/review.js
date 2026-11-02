@@ -6,10 +6,10 @@
  * not rendered as a component — a hook inside it would land on the page's hook table.
  */
 import { React, h } from '../shared/react.js'
-import { Dropdown } from 'fang-style'
+import { Dropdown, useSessionState } from 'fang-style'
 import { kindLabel } from './labels.js'
 import { MosaicRelations } from './relations.js'
-import { useDockState, useNotice } from '../shared/hooks.js'
+import { useNotice } from '../shared/hooks.js'
 import { ENTITY_KINDS } from '../../../domain/schema.js'
 
 /**
@@ -340,8 +340,8 @@ export function MosaicReviewPage({ t, mosaic, book, updateBook, picked, onPick, 
   const boardScope = `story:${book?.id ?? bookFolder ?? ''}`
   // Busy lives in the dock store so a window switch cannot drop the fact that a request is
   // still running; the main thinking row reads the same keys.
-  const [busy, setBusy] = useDockState(boardScope, 'mosaicBusy', false)
-  const [, setNote] = useDockState(boardScope, 'mosaicNote', '')
+  const [busy, setBusy] = useSessionState(boardScope, 'mosaicBusy', false)
+  const [, setNote] = useSessionState(boardScope, 'mosaicNote', '')
   const [notice, setNotice] = React.useState('')
   // This page's messages go to the status bar like every other one. The hook lives HERE
   // because the header is called as a plain function — a hook in it would land on this

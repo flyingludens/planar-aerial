@@ -6,7 +6,7 @@
  * apart: a card that opens something is a button, a card that only holds a field is not.
  */
 import { React, h } from '../shared/react.js'
-import { useDismiss } from '../shared/hooks.js'
+import { useDismiss } from 'fang-style'
 
 /**
  * The picture area of a gallery card: the generated portrait when there is one, the first
