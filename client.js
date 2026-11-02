@@ -1340,7 +1340,6 @@ function Drawer({ title, children, onClose, size, bodyClassName, closing = false
       {
         className: "fang-drawer",
         role: "dialog",
-        "aria-modal": "true",
         "aria-label": title,
         // 宽度档，不是像素数：要给图示留地方的面板在宽度阶梯上报一档，样式表把档位
         // 变成确定宽度。不报档就随内容伸缩，适合只有两行的清单。
@@ -1796,6 +1795,9 @@ var FANG_TOKENS = `
            \u4EC0\u4E48\u90FD\u4E0D\u753B\u3002 */
         --fang-accent:#c3272b;
         --fang-on-accent:#ffffff;
+        /* \u5371\u9669\u52A8\u4F5C\u8272\uFF1A\u83DC\u5355\u91CC\u300C\u5220\u9664\u300D\u4E00\u7C7B\u7684\u6587\u5B57\u4E0E\u586B\u5145\u3002\u9ED8\u8BA4\u503C\u662F\u642C\u8FDB\u5E93\u4E4B\u524D\u9879\u76EE\u56DE\u9000
+           \u94FE\u6700\u7EC8\u89E3\u6790\u5230\u7684 #ec1313\uFF0C\u4E0D\u662F\u731C\u6D4B\u503C\u3002 */
+        --fang-danger:#ec1313;
         /* \u9875\u9762\u5730\u8272\uFF1A\u7EAF\u9ED1\u662F\u51B3\u5B9A\uFF0C\u4E0D\u662F\u6CBF\u7528\u5BBF\u4E3B\u7684 bg\u2014\u2014\u5BBF\u4E3B\u7684\u57FA\u8272\u5728\u8FD0\u884C\u7684\u6DF1\u8272\u4E3B\u9898\u4E0A
            \u662F\u4E00\u79CD\u7070\u3002\u5206\u5C42\u8868\u9762\u5728\u5B83\u4E0A\u9762\u8BFB\u4F5C\u6D6E\u8D77\u7684\u4E00\u5C42\u3002 */
         --fang-bg:#000;
@@ -1903,6 +1905,9 @@ var FANG_TOKENS = `
         --fang-btn-height-xl:48px;
         --fang-btn-height-lg:36px;
         --fang-btn-height-sm:26px;
+        /* \u9ED8\u8BA4\u6863\uFF1A\u89C4\u5219\u53EF\u4EE5\u76F4\u63A5\u8BFB --fang-btn-height\uFF0C\u4E0D\u5FC5\u5404\u81EA\u80CC\u7740\u56DE\u9000\u94FE\uFF1B\u8981\u53D8\u6863\u7684
+           \u53D8\u4F53\u5728\u5143\u7D20\u4E0A\u8986\u76D6\u5B83\uFF08xl \u5C31\u662F\u8FD9\u4E48\u505A\u7684\uFF09\u3002 */
+        --fang-btn-height:var(--fang-btn-height-lg);
         /* \u63A7\u4EF6\u884C\u9AD8\uFF1A\u83DC\u5355\u884C\u662F\u4E00\u884C\u6587\u5B57\u52A0\u5B83\u7684\u5185\u8FB9\u8DDD\uFF0C\u4E24\u4E2A\u56DE\u7B54\u540C\u4E00\u4E2A\u95EE\u9898\u7684\u83DC\u5355\u4E0D\u80FD\u4E00\u4E2A
            34 \u4E00\u4E2A 32\u3002 */
         --fang-row-height:34px;
@@ -1921,6 +1926,16 @@ var FANG_TOKENS = `
           0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 8%, transparent),
           0 2px 4px color-mix(in srgb, var(--fang-ink-primary) 9%, transparent),
           0 12px 26px color-mix(in srgb, var(--fang-ink-primary) 10%, transparent);
+        /* \u4E24\u4E2A\u6D6E\u5C42\u9634\u5F71\uFF1A\u4E0B\u62C9\u6E05\u5355\u548C\u5F39\u7A97\u3002\u540C\u4E00\u4E2A\u914D\u65B9\u2014\u2014\u53D1\u4E1D\u63A5\u89E6\u5C42\u52A0\u4E00\u5C42\u8FDC\u8DDD\u8F6F\u73AF\u5883
+           \u5C42\u2014\u2014\u73AF\u5883\u5C42\u6BD4\u5361\u7247\u9634\u5F71\u94FA\u5F97\u66F4\u5BBD\uFF0812px 32px \u5BF9 6px 16px\uFF09\uFF0C\u6D6E\u5728\u6B63\u6587\u4E4B\u4E0A
+           \u7684\u4E1C\u897F\u5F71\u5B50\u4E5F\u7529\u5F97\u66F4\u8FDC\u3002\u989C\u8272\u4ECD\u662F\u58A8\u8272\u7684 mix\uFF1A\u5199\u6B7B\u7684\u9ED1\u5728\u8FD1\u9ED1\u5730\u9762\u4E0A\u770B\u4E0D\u89C1\uFF0C
+           \u6362\u4E3B\u9898\u65F6\u4E5F\u4E0D\u7528\u5BBF\u4E3B\u53E6\u914D\u6D77\u62D4\u3002 */
+        --fang-menu-shadow:
+          0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 8%, transparent),
+          0 12px 32px color-mix(in srgb, var(--fang-ink-primary) 16%, transparent);
+        --fang-dialog-shadow:
+          0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 8%, transparent),
+          0 12px 32px color-mix(in srgb, var(--fang-ink-primary) 20%, transparent);
         /* \u5361\u7247\u7684\u72B6\u6001\u52A8\u6548\uFF1A\u9634\u5F71\u3001\u4F4D\u79FB\u3001\u63CF\u8FB9\u540C\u4E00\u4E2A\u65F6\u957F\u3002 */
         --fang-card-motion:box-shadow 140ms ease-in-out,
           transform 140ms ease-in-out,
@@ -2106,7 +2121,7 @@ var FANG_COMPONENTS = `
          \u800C\u5E93\u6302\u5728\u5BBF\u4E3B\u4F1A\u88C1\u526A\u5185\u5BB9\u7684\u5217\u91CC\uFF0C\u88AB\u88C1\u7684\u7956\u5148\u4E4B\u4E0A\u653E fixed \u8986\u76D6\u5C42\u53EA\u4F1A\u5207\u8FB9\u3001\u504F\u4F4D\u3002 */
       .fang-dialog{width:min(var(--fang-dialog-width),100%);display:flex;flex-direction:column;gap:var(--fang-padding-md);padding:var(--fang-padding-xl);
         border-radius:var(--fang-radius-panel);corner-shape:round;border:var(--fang-hairline) solid var(--fang-border-edge);
-        background:var(--fang-surface-high);box-shadow:0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04);
+        background:var(--fang-surface-high);box-shadow:var(--fang-dialog-shadow);
         font-family:var(--fang-font-family);font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);color:var(--fang-ink-primary)}
       .fang-dialog-title{font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong)}
       /* \u9605\u8BFB\u578B\u5F39\u7A97\uFF1A\u5934\u90E8\u56FA\u5B9A\uFF08\u5E26\u5173\u95ED\u94AE\uFF09\uFF0C\u6B63\u6587\u6EDA\u52A8\u3002\u9762\u677F\u9650\u9AD8\uFF0C\u957F\u6587\u4FDD\u6301\u4E00\u4E2A\u5F39\u7A97
@@ -2151,7 +2166,7 @@ var FANG_COMPONENTS = `
         display:flex;flex-direction:column;min-width:100%;max-width:min(320px,calc(100vw - 48px));
         max-height:min(46vh,320px);overflow:auto;padding:var(--fang-space-4);
         border-radius:var(--fang-radius-md);corner-shape:round;background:var(--fang-surface-high);
-        box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.12);
+        box-shadow:var(--fang-menu-shadow);
         scrollbar-width:thin}
       .fang-dropdown-option{display:block;width:100%;padding:var(--fang-space-8) var(--fang-space-12);
         border:none;border-radius:var(--fang-radius-sm);corner-shape:round;background:transparent;
@@ -2201,9 +2216,9 @@ var FANG_COMPONENTS = `
          \u7070\u5C42\u4E0A\u2014\u2014\u4E00\u5F20\u6D6E\u8D77\u7684\u5361\uFF0C\u800C\u4E0D\u662F\u6BD4\u9875\u9762\u66F4\u6697\u7684\u6DF7\u8272\u3002 */
       .fang-tip{position:absolute;z-index:var(--fang-layer-menu);transform:translateX(-50%);
         pointer-events:none;padding:var(--fang-space-4) var(--fang-space-12);
-        border:var(--fang-hairline) solid color-mix(in srgb, #fff 14%, transparent);border-radius:var(--fang-radius-sm);corner-shape:round;
+        border:var(--fang-hairline) solid color-mix(in srgb, var(--fang-highlight) 14%, transparent);border-radius:var(--fang-radius-sm);corner-shape:round;
         background:var(--fang-surface);
-        color:#fff;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-highlight);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
         white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, #000 30%, transparent)}
       .fang-tip::after{content:'';position:absolute;top:calc(-1 * var(--fang-space-4));left:calc(50% - var(--fang-space-4));
         width:var(--fang-space-8);height:var(--fang-space-8);background:inherit;
@@ -10498,6 +10513,7 @@ var CSS_BRIDGE = `
         --fang-radius-lg:var(--dsw-radius-lg,16px);
         --fang-radius-panel:var(--dsw-radius-panel,28px);
         --fang-focus-ring-width:var(--dsw-focus-ring-width,2px);
+        --fang-danger:var(--dsw-alias-state-error-primary,#ec1313);
       }
 `;
 var CSS_SHARED = `
@@ -11116,13 +11132,6 @@ var CSS_LIBRARY = `
          by ignoring one of the two. */
       .st-book-open{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);flex:1 1 auto;min-width:0;
         background:none;border:none;padding:0;text-align:left;font-family:inherit;color:inherit;cursor:pointer}
-      /* The backdrop is re-declared here on purpose: the dim reads the host theme's base
-         colour, not the library's pure black, so the scrim matches whichever theme is loaded.
-         Everything else about the dialog \u2014 sizing, shape, surface, shadow \u2014 is the library
-         .fang-dialog rule's job, and nothing here shadows it. */
-      .fang-backdrop{position:absolute;inset:0;z-index:var(--fang-layer-modal);display:flex;align-items:center;justify-content:center;
-        padding:var(--fang-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,#f2f3f5) 62%, transparent);
-        backdrop-filter:blur(2px)}
       /* A labelled field inside a dialog: the label sits above its control, one line of small text. */
       .st-dialog-field{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);min-width:0}
       /* A segmented control is a compact choice, not a full-width field. As a flex child of the
@@ -12491,8 +12500,11 @@ var CSS_CARDS = `
         font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         color:var(--fang-ink-primary);cursor:pointer}
       .st-card-menu-item:hover{background:var(--fang-hover-fill)}
-      .st-card-menu-item.fang-danger{color:var(--dsw-alias-state-error-primary,#ec1313)}
-      .st-card-menu-item.fang-danger:hover{background:var(--dsw-alias-state-error-primary,#ec1313);color:#fff}
+      /* \u5220\u9664\u884C\u7684\u7EA2\u8272\uFF1A\u4EE4\u724C\u7684\u9ED8\u8BA4\u503C\u548C\u5BBF\u4E3B\u6620\u5C04\u90FD\u7531\u5E93\u7ED9\u51FA\uFF08--fang-danger\uFF0C\u6865\u63A5\u6620\u5C04\u5230
+         \u5BBF\u4E3B\u72B6\u6001\u8272\uFF09\uFF0C\u89C4\u5219\u7559\u5728\u8FD9\u91CC\u2014\u2014\u5E93\u7684\u6837\u5F0F\u8868\u4E0D\u8BB8\u51FA\u73B0\u672C\u9879\u76EE\u7684\u7C7B\u540D\uFF0C\u800C\u8FD9\u6761\u5FC5\u987B
+         \u590D\u5408\u5728\u6E05\u5355\u884C\u7C7B\u4E0A\u624D\u538B\u5F97\u8FC7\u5B83\u7684\u57FA\u8272\u3002 */
+      .st-card-menu-item.fang-danger{color:var(--fang-danger)}
+      .st-card-menu-item.fang-danger:hover{background:var(--fang-danger);color:var(--fang-on-accent)}
       .st-mosaic-card:hover{box-shadow:var(--dsw-shadow-lv3,0 2px 4px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.1))}
       .st-mosaic-card:active{cursor:grabbing}
       /* Both lines sit on the scrim, so both are chosen for a dark backing rather than for the

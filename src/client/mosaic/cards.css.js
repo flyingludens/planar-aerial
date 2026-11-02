@@ -105,8 +105,11 @@ export const CSS_CARDS = `
         font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         color:var(--fang-ink-primary);cursor:pointer}
       .st-card-menu-item:hover{background:var(--fang-hover-fill)}
-      .st-card-menu-item.fang-danger{color:var(--dsw-alias-state-error-primary,#ec1313)}
-      .st-card-menu-item.fang-danger:hover{background:var(--dsw-alias-state-error-primary,#ec1313);color:#fff}
+      /* 删除行的红色：令牌的默认值和宿主映射都由库给出（--fang-danger，桥接映射到
+         宿主状态色），规则留在这里——库的样式表不许出现本项目的类名，而这条必须
+         复合在清单行类上才压得过它的基色。 */
+      .st-card-menu-item.fang-danger{color:var(--fang-danger)}
+      .st-card-menu-item.fang-danger:hover{background:var(--fang-danger);color:var(--fang-on-accent)}
       .st-mosaic-card:hover{box-shadow:var(--dsw-shadow-lv3,0 2px 4px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.1))}
       .st-mosaic-card:active{cursor:grabbing}
       /* Both lines sit on the scrim, so both are chosen for a dark backing rather than for the

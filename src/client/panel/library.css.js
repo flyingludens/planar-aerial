@@ -72,13 +72,6 @@ export const CSS_LIBRARY = `
          by ignoring one of the two. */
       .st-book-open{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);flex:1 1 auto;min-width:0;
         background:none;border:none;padding:0;text-align:left;font-family:inherit;color:inherit;cursor:pointer}
-      /* The backdrop is re-declared here on purpose: the dim reads the host theme's base
-         colour, not the library's pure black, so the scrim matches whichever theme is loaded.
-         Everything else about the dialog — sizing, shape, surface, shadow — is the library
-         .fang-dialog rule's job, and nothing here shadows it. */
-      .fang-backdrop{position:absolute;inset:0;z-index:var(--fang-layer-modal);display:flex;align-items:center;justify-content:center;
-        padding:var(--fang-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,#f2f3f5) 62%, transparent);
-        backdrop-filter:blur(2px)}
       /* A labelled field inside a dialog: the label sits above its control, one line of small text. */
       .st-dialog-field{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);min-width:0}
       /* A segmented control is a compact choice, not a full-width field. As a flex child of the

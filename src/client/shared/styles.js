@@ -27,6 +27,7 @@ export const CSS_BRIDGE = `
         --fang-radius-lg:var(--dsw-radius-lg,16px);
         --fang-radius-panel:var(--dsw-radius-panel,28px);
         --fang-focus-ring-width:var(--dsw-focus-ring-width,2px);
+        --fang-danger:var(--dsw-alias-state-error-primary,#ec1313);
       }
 `
 

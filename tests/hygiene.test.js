@@ -253,9 +253,6 @@ test('a class is not given two rules unless the second is a deliberate override'
     'fang-scroll',
     // The xl size is a compound variant of the same button, not a second control.
     'fang-btn',
-    // The project re-declares the backdrop's dim so the scrim reads the host theme's base
-    // colour; see the note where library.css.js declares it.
-    'fang-backdrop',
     // The library re-declares the drawer inside a narrow-viewport media query: below 640px
     // the panel takes the full width and drops the inner radius.
     'fang-drawer',
