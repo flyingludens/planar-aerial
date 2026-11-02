@@ -424,9 +424,12 @@ import * as fang from 'fang-style'
 test('fang-style 导出完整的组件与 hook 面', () => {
   const widgets = ['Drawer', 'Dialog', 'ConfirmDialog', 'Dropdown', 'FileButton',
     'Segmented', 'List', 'ListRow', 'SplitPane', 'TooltipLayer', 'Chevron']
-  const hooks = ['useDismiss', 'usePersisted', 'useClosingAnimation', 'useSessionState', 'SESSION_STORE']
+  const hooks = ['useDismiss', 'usePersisted', 'useClosingAnimation', 'useSessionState']
   for (const name of [...widgets, ...hooks]) {
     assert.equal(typeof fang[name], 'function', `${name} 应该是函数`)
+  }
+  for (const method of ['read', 'write', 'subscribe']) {
+    assert.equal(typeof fang.SESSION_STORE[method], 'function', `SESSION_STORE.${method} 应该是函数`)
   }
 })
 
