@@ -44,12 +44,15 @@ Projects/fang-style/
 
 1. **前缀与形状**：CSS 类一律 `fang-` 前缀、块_部位_状态三段式（`fang-dropdown-list`）；CSS 变量一律 `--fang-`、`类别-名称[-刻度]`；React 组件大驼峰不加前缀；hook `use` + 动词；文件短横线小写与主导出同名。
 2. **不与系统命名近似**：不出现裸 `.button`、`.dialog` 这类与 HTML/ARIA 撞脸的名字；不模仿宿主 `--dsw-*` 构词；状态用 `data-*` 属性（`data-open`、`data-active`），不加状态类。
-3. **一个概念一个词**：内距 `inset`、宽度 `width`、文字色 `ink`、表面色 `surface`、描边浓度 `ink-edge`；数字刻度用数字（`--fang-space-8`），角色刻度用角色名（`--fang-text-md`、`--fang-width-reading`）。
+3. **一个概念一个词**：宽度 `width`、文字色 `ink`、表面色 `surface`、描边浓度 `ink-edge`；内边距用 `pad`，不用 `inset`（CSS 自有 `inset` 定位属性，撞系统命名）；数字刻度用数字（`--fang-space-8`），角色刻度用角色名（`--fang-text-md`、`--fang-width-reading`）。
 4. **随搬家修掉的含糊名**：
    - `--st-w-*` → `--fang-width-narrow/compact/medium/reading/wide/max`（`w` 是缩写）
    - `.st-mid` → `.fang-main`
    - `--st-seg-h`（现有重复声明，28/26 两个值）→ `--fang-seg-height`，修掉冲突
    - `--st-btn-h-*` → `--fang-btn-height-*`
+   - `--st-inset-*` → `--fang-pad-xs/sm/md/xl`
+
+**业务名不进库**：`--st-board-gap` / `--st-board-inset` 这类带业务词的令牌留在项目，作为项目侧别名指向库的通用刻度（`--fang-space-*` / `--fang-pad-*`）；库内部样式只读通用刻度，不认识任何业务词。
 
 ## 抽象边界
 
