@@ -225,7 +225,7 @@ test('a class is not given two rules unless the second is a deliberate override'
   // Some duplicates ARE deliberate: a reduced-motion override, or a state variant that adds one
   // property. Those are listed here, with the reason, so a new accidental one fails.
   const deliberate = new Set([
-    'st-scroll', 'st-mid', 'st-root', 'st-shell', 'st-sheet', 'st-desk', 'st-editor-wrap',
+    'st-scroll', 'st-mid', 'st-root', 'st-shell', 'st-desk', 'st-editor-wrap',
     'st-dock-slot', 'st-status-flash', 'st-ai-dock-busy', 'st-ai-dock', 'st-ai-thinking-label',
     // The detail drawer's slide-in has a reduced-motion twin: the same class, a fade instead of a
     // translation, so the only difference between the two rules is the animation it names.

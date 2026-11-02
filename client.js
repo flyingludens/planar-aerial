@@ -3,9 +3,11 @@ window.__ModuleLoader__.load({
   factory(require) {
     var module = { exports: {} };
     var exports = module.exports;
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -19,6 +21,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/client/index.js
@@ -61,7 +71,6 @@ var ZH = {
   "label.deleteManifestOnly": "\u53EA\u4ECE\u4E66\u5E93\u79FB\u9664\uFF0C\u76EE\u5F55\u548C\u6587\u4EF6\u4FDD\u7559\u5728\u78C1\u76D8\u4E0A\u3002",
   "label.emptyNode": "\u7A7A",
   "label.charCount": "{n} \u5B57",
-  "action.ok": "\u786E\u5B9A",
   "label.writeBeforeContinue": "\u5148\u5199\u4E00\u70B9\u5185\u5BB9\uFF0CAI \u624D\u80FD\u63A5\u7740\u5F80\u4E0B\u5199\u3002",
   "label.noRelationships": "\u8FD8\u6CA1\u6709\u4EBA\u7269\u5173\u7CFB\u3002",
   "action.close": "\u5173\u95ED",
@@ -150,6 +159,48 @@ var ZH = {
   "rail.exportEmpty": "\u8FD9\u90E8\u4F5C\u54C1\u8FD8\u6CA1\u6709\u4EFB\u4F55\u6B63\u6587\uFF0C\u6CA1\u6709\u53EF\u5BFC\u51FA\u7684\u5185\u5BB9\u3002",
   "rail.exportDone": "\u5DF2\u5BFC\u51FA {name}",
   "rail.savedNow": "\u5DF2\u4FDD\u5B58",
+  "rail.context": "\u4E0A\u4E0B\u6587",
+  "tab.context": "\u4E0A\u4E0B\u6587",
+  // The context page. Groups say how far a part reaches; every part is named for what it is.
+  "context.part.writingStyle": "\u884C\u6587\u89C4\u8303",
+  "context.part.bookMeta": "\u4E66\u540D\u4E0E\u4F53\u88C1",
+  "context.part.chapterList": "\u7AE0\u8282\u6E05\u5355",
+  "context.part.globalSummary": "\u5168\u4E66\u6897\u6982",
+  "context.part.settingCards": "\u8BBE\u5B9A\u5361",
+  "context.part.boardDigest": "\u677F\u9762\u6E05\u5355",
+  "context.part.suspectFacts": "\u53EF\u7591\u4E8B\u5B9E",
+  "context.part.chapterCast": "\u672C\u7AE0\u4EBA\u7269",
+  "context.part.chapterRelations": "\u672C\u7AE0\u5173\u7CFB",
+  "context.part.chapterSummary": "\u672C\u7AE0\u6897\u6982",
+  "context.part.otherSummaries": "\u5176\u4ED6\u7AE0\u6897\u6982",
+  "context.part.previousChapterText": "\u4E0A\u4E00\u7AE0\u539F\u6587",
+  "context.part.nextChapterText": "\u4E0B\u4E00\u7AE0\u539F\u6587",
+  "context.part.caretWindows": "\u5149\u6807\u7A97\u53E3",
+  "context.part.chapterText": "\u672C\u7AE0\u6B63\u6587",
+  "context.part.toolHints": "\u5DE5\u5177\u6307\u5F15",
+  "context.scenes": "\u573A\u666F",
+  "context.systemPrompt": "\u7CFB\u7EDF\u63D0\u793A\u8BCD",
+  "context.scene.continue": "\u7EED\u5199",
+  "context.scene.suggest": "\u6539\u5199",
+  "context.scene.chat": "\u804A\u5929",
+  "context.scene.review": "\u5BA1\u9605",
+  "context.scene.critique": "\u9510\u8BC4",
+  "context.scene.consistency": "\u4E00\u81F4\u6027",
+  "context.scene.overview.chapter": "\u7AE0\u8282\u6897\u6982",
+  "context.scene.overview.global": "\u5168\u4E66\u6897\u6982",
+  "context.scene.mosaic.check": "\u677F\u9762\u68C0\u67E5",
+  "context.scene.mosaic.ask": "\u677F\u9762\u95EE\u7B54",
+  "context.scene.mosaic.relate": "\u5173\u7CFB\u63D0\u53D6",
+  "context.scene.writingStyle": "\u98CE\u683C\u63D0\u53D6",
+  "context.scene.harness": "\u4F1A\u8BDD\u5F00\u573A",
+  "context.readonly": "\u53EA\u8BFB",
+  "context.official": "\u5B98\u65B9",
+  "context.replaced": "\u5DF2\u66FF\u6362",
+  "context.empty": "\uFF08\u7A7A\uFF09",
+  "context.officialVersion": "\u5B98\u65B9\u7248\u672C",
+  "context.myVersion": "\u6211\u7684\u7248\u672C",
+  "context.replace": "\u7528\u6211\u7684\u526F\u672C\u66FF\u6362",
+  "context.revert": "\u56DE\u9000",
   "action.send": "\u53D1\u9001",
   "label.snapshotLabel": "\u624B\u52A8\u5FEB\u7167",
   "chapter.defaultTitle": "\u7B2C{n}\u7AE0",
@@ -380,6 +431,9 @@ var ZH = {
   // the badge that marks an edge as history rather than present state.
   "mosaic.untitled": "\u672A\u547D\u540D",
   "mosaic.retired": "\u5DF2\u9690\u53BB",
+  "mosaic.direction": "\u5173\u7CFB\u65B9\u5411",
+  "mosaic.subject": "\u4E3B\u4F53",
+  "mosaic.object": "\u5BA2\u4F53",
   "mosaic.beliefs": "\u4EBA\u7269\u8BA4\u77E5",
   "mosaic.log": "\u53D8\u66F4\u8BB0\u5F55",
   "mosaic.statuses": "\u72B6\u6001",
@@ -560,6 +614,47 @@ var EN = {
   "rail.exportEmpty": "This book has no prose yet, so there is nothing to export.",
   "rail.exportDone": "Exported {name}",
   "rail.savedNow": "Saved",
+  "rail.context": "Context",
+  "tab.context": "Context",
+  "context.part.writingStyle": "Writing style",
+  "context.part.bookMeta": "Title and genre",
+  "context.part.chapterList": "Chapters",
+  "context.part.globalSummary": "Book summary",
+  "context.part.settingCards": "Setting cards",
+  "context.part.boardDigest": "Board digest",
+  "context.part.suspectFacts": "Suspect facts",
+  "context.part.chapterCast": "Chapter cast",
+  "context.part.chapterRelations": "Chapter relations",
+  "context.part.chapterSummary": "Chapter summary",
+  "context.part.otherSummaries": "Other summaries",
+  "context.part.previousChapterText": "Previous chapter",
+  "context.part.nextChapterText": "Next chapter",
+  "context.part.caretWindows": "Caret windows",
+  "context.part.chapterText": "Chapter text",
+  "context.part.toolHints": "Tool hints",
+  "context.scenes": "Scenes",
+  "context.systemPrompt": "System prompt",
+  "context.scene.continue": "Continue",
+  "context.scene.suggest": "Rewrite",
+  "context.scene.chat": "Chat",
+  "context.scene.review": "Copy-edit",
+  "context.scene.critique": "Critique",
+  "context.scene.consistency": "Continuity",
+  "context.scene.overview.chapter": "Chapter summary",
+  "context.scene.overview.global": "Book summary",
+  "context.scene.mosaic.check": "Board check",
+  "context.scene.mosaic.ask": "Board Q&A",
+  "context.scene.mosaic.relate": "Relation extraction",
+  "context.scene.writingStyle": "Style extraction",
+  "context.scene.harness": "Session opening",
+  "context.readonly": "Read-only",
+  "context.official": "Official",
+  "context.replaced": "Replaced",
+  "context.empty": "(empty)",
+  "context.officialVersion": "Official version",
+  "context.myVersion": "My version",
+  "context.replace": "Replace with my copy",
+  "context.revert": "Revert",
   "action.send": "Send",
   panel: "Planar Aerial",
   "brand.full": "Planar Aerial",
@@ -591,7 +686,6 @@ var EN = {
   "label.deleteManifestOnly": "Remove it from the shelf only; the folder and files stay on disk.",
   "label.emptyNode": "empty",
   "label.charCount": "{n} chars",
-  "action.ok": "OK",
   "label.writeBeforeContinue": "Write something first so the AI has somewhere to continue from.",
   "label.noRelationships": "No relationships yet.",
   "action.close": "Close",
@@ -823,6 +917,9 @@ var EN = {
   // Same keys as the Chinese block: the canvas labels and the retired badge.
   "mosaic.untitled": "Untitled",
   "mosaic.retired": "Retired",
+  "mosaic.direction": "Direction",
+  "mosaic.subject": "Subject",
+  "mosaic.object": "Object",
   "mosaic.beliefs": "Beliefs",
   "mosaic.log": "Change log",
   "mosaic.statuses": "Statuses",
@@ -975,6 +1072,1111 @@ function writeStored(key, value) {
 // src/client/shared/react.js
 var React = require("react");
 var h = React.createElement;
+
+// src/client/shared/icons.js
+function PanelIcon(props) {
+  const size = props?.size ?? 16;
+  return h(
+    "svg",
+    {
+      viewBox: "0 0 64 64",
+      width: size,
+      height: size,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 5
+    },
+    h("rect", { x: 8, y: 10, width: 48, height: 44, rx: 6 }),
+    h("path", { d: "M20 24h24M20 34h24M20 44h14", strokeLinecap: "round" })
+  );
+}
+function RailIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-icon-lg",
+      viewBox: "0 0 16 16",
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      // Same weight in both states. The dimming was how the host marks an inactive toggle, but here
+      // the toggle is the way IN to the contents — dimming it made the one control a writer needs
+      // first look like the least available thing in the row.
+      opacity: 1
+    },
+    h("path", { d: "M2.5 4h11" }),
+    h("path", { d: "M2.5 8h8" }),
+    h("path", { d: "M2.5 12h9" })
+  );
+}
+function BoardIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.5,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    // A square puzzle piece: a full-height body, a tab on the top edge and a notch on the right.
+    // The old piece was wide and shallow, so at the same 18px box it looked a size smaller than
+    // the page and layer glyphs. This one is drawn on the full 16-unit grid with no transform.
+    h("path", { d: "M3 13V4h2.4a1.6 1.6 0 1 1 3.2 0H13v2.4a1.6 1.6 0 1 0 0 3.2V13z" })
+  );
+}
+function NotebookIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.5,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("path", { d: "M3.2 2.8h6.2l3.4 3.4v7H3.2z" }),
+    h("path", { d: "M9.4 2.8v3.4h3.4" }),
+    h("path", { d: "m5.2 10.8 3.9-3.9 1.4 1.4-3.9 3.9-1.8.4z" })
+  );
+}
+function ModelIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("path", { d: "M2.5 5.5 8 2.5l5.5 3-5.5 3z" }),
+    h("path", { d: "M2.5 10.5 8 13.5l5.5-3" })
+  );
+}
+function SlidersIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round"
+    },
+    h("path", { d: "M2.5 5h11M2.5 11h11" }),
+    h("circle", { cx: 5.5, cy: 5, r: 1.6 }),
+    h("circle", { cx: 10.5, cy: 11, r: 1.6 })
+  );
+}
+function ContextIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round"
+    },
+    h("path", { d: "M3 4.5h10M3 8h7M3 11.5h10" })
+  );
+}
+function BackIcon() {
+  return h("svg", {
+    className: "st-icon-md",
+    viewBox: "0 0 16 16",
+    "aria-hidden": true,
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, h("path", { d: "M9.5 4 5.5 8 9.5 12" }));
+}
+function ShelfIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("path", { d: "M2.5 3.5h4v9h-4zM9 3.5h4.5v9H9z" }),
+    h("path", { d: "M2.5 12.5h11" })
+  );
+}
+function McpIcon() {
+  return h(
+    "svg",
+    { viewBox: "0 0 16 16", width: 16, height: 16, "aria-hidden": true, fill: "none", stroke: "currentColor", "stroke-width": 1.3 },
+    h("circle", { cx: 3.2, cy: 8, r: 1.6 }),
+    h("circle", { cx: 12.8, cy: 3.6, r: 1.6 }),
+    h("circle", { cx: 12.8, cy: 12.4, r: 1.6 }),
+    h("path", { d: "M4.7 7.2l6.5-2.8M4.7 8.8l6.5 2.8" })
+  );
+}
+function FolderIcon() {
+  return h(
+    "svg",
+    { viewBox: "0 0 16 16", width: 16, height: 16, "aria-hidden": true, fill: "none", stroke: "currentColor", "stroke-width": 1.4 },
+    h("path", { d: "M2.5 4.5h4l1.2 1.5h5.8v6.5h-11z", "stroke-linejoin": "round" })
+  );
+}
+function StartIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("path", { d: "M8 2.5v3.2M8 10.3v3.2M2.5 8h3.2M10.3 8h3.2" }),
+    h("path", { d: "m4.1 4.1 2.2 2.2M9.7 9.7l2.2 2.2M11.9 4.1 9.7 6.3M6.3 9.7l-2.2 2.2" })
+  );
+}
+function SaveIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("path", { d: "M3 3.5h7.5L13 6v6.5H3z" }),
+    h("path", { d: "M5.5 3.5v3h4v-3M5.5 9.5h5v3h-5z" })
+  );
+}
+function ExportIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("path", { d: "M8 2.5v7.5M8 10 5 7M8 10l3-3" }),
+    h("path", { d: "M2.5 11v2.5h11V11" })
+  );
+}
+function InfoIcon() {
+  return h(
+    "svg",
+    {
+      className: "st-bar-icon",
+      viewBox: "0 0 16 16",
+      width: 18,
+      height: 18,
+      "aria-hidden": true,
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    },
+    h("circle", { cx: 8, cy: 8, r: 5.5 }),
+    h("path", { d: "M8 7.2v3.6" }),
+    h("path", { d: "M8 5.1h.01" })
+  );
+}
+
+// ../Projects/fang-style/src/react.js
+var import_react2 = __toESM(require("react"), 1);
+var h2 = import_react2.default.createElement;
+
+// ../Projects/fang-style/src/widgets/overlays.js
+function Drawer({ title, children, onClose, size, bodyClassName, closing = false, closeLabel = "\u5173\u95ED" }) {
+  import_react2.default.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return h2(
+    "div",
+    {
+      className: `fang-backdrop${closing ? " fang-closing" : ""}`,
+      role: "presentation",
+      onMouseDown: (e) => {
+        if (e.target === e.currentTarget) onClose();
+      }
+    },
+    h2(
+      "div",
+      {
+        className: "fang-drawer",
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-label": title,
+        // 宽度档，不是像素数：要给图示留地方的面板在宽度阶梯上报一档，样式表把档位
+        // 变成确定宽度。不报档就随内容伸缩，适合只有两行的清单。
+        "data-size": size,
+        style: size === void 0 ? void 0 : { "--fang-drawer-max": `var(--fang-width-${size})` }
+      },
+      h2(
+        "div",
+        { className: "fang-drawer-head" },
+        h2("h2", { className: "fang-drawer-title" }, title),
+        h2("span", { className: "fang-spacer" }),
+        h2("button", {
+          type: "button",
+          className: "fang-btn fang-btn-ghost",
+          title: closeLabel,
+          onClick: onClose
+        }, "\u2715")
+      ),
+      h2("div", { className: `fang-drawer-body${bodyClassName === void 0 ? "" : ` ${bodyClassName}`}` }, children)
+    )
+  );
+}
+function ConfirmDialog({ title, children, confirmLabel = "\u786E\u5B9A", cancelLabel = "\u53D6\u6D88", onConfirm, onCancel, busy, danger = true }) {
+  import_react2.default.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onCancel();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onCancel]);
+  return h2(
+    "div",
+    {
+      className: "fang-backdrop",
+      role: "presentation",
+      onMouseDown: (e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }
+    },
+    h2(
+      "div",
+      {
+        className: "fang-dialog",
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-label": title
+      },
+      h2("div", { className: "fang-dialog-title" }, title),
+      h2("div", { className: "fang-dialog-body" }, ...children ?? []),
+      h2(
+        "div",
+        { className: "fang-dialog-actions" },
+        h2("button", { type: "button", className: "fang-btn", onClick: onCancel }, cancelLabel),
+        h2("button", {
+          type: "button",
+          className: `fang-btn fang-btn-primary${danger ? " fang-danger" : ""}`,
+          disabled: busy === true,
+          onClick: onConfirm
+        }, confirmLabel)
+      )
+    )
+  );
+}
+function Dialog({ title, children, onClose, size, bodyClassName, panelClassName, backdropClassName, closeLabel = "\u5173\u95ED" }) {
+  import_react2.default.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  const body = Array.isArray(children) ? children : children === void 0 ? [] : [children];
+  return h2(
+    "div",
+    {
+      className: `fang-backdrop${backdropClassName === void 0 ? "" : ` ${backdropClassName}`}`,
+      role: "presentation",
+      onMouseDown: (e) => {
+        if (e.target === e.currentTarget) onClose();
+      }
+    },
+    h2(
+      "div",
+      {
+        className: `fang-dialog fang-dialog-panel${panelClassName === void 0 ? "" : ` ${panelClassName}`}`,
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-label": title,
+        style: size === void 0 ? void 0 : { "--fang-dialog-width": `var(--fang-width-${size})` }
+      },
+      h2(
+        "div",
+        { className: "fang-dialog-head" },
+        h2("h2", { className: "fang-dialog-title" }, title),
+        h2("span", { className: "fang-spacer" }),
+        h2("button", { type: "button", className: "fang-btn fang-btn-ghost", title: closeLabel, onClick: onClose }, "\u2715")
+      ),
+      h2("div", { className: `fang-dialog-body fang-dialog-scroll${bodyClassName === void 0 ? "" : ` ${bodyClassName}`}` }, ...body)
+    )
+  );
+}
+
+// ../Projects/fang-style/src/hooks.js
+function createStateStore() {
+  const values = /* @__PURE__ */ new Map();
+  const listeners = /* @__PURE__ */ new Map();
+  return {
+    read(key, initial) {
+      return values.has(key) ? values.get(key) : initial;
+    },
+    write(key, value) {
+      if (Object.is(values.get(key), value)) return;
+      values.set(key, value);
+      for (const listener of [...listeners.get(key) ?? []]) listener(value);
+    },
+    subscribe(key, listener) {
+      if (!listeners.has(key)) listeners.set(key, /* @__PURE__ */ new Set());
+      listeners.get(key).add(listener);
+      return () => {
+        listeners.get(key)?.delete(listener);
+      };
+    }
+  };
+}
+var SESSION_STORE = createStateStore();
+function useDismiss(rootRef, open, onClose) {
+  import_react2.default.useEffect(() => {
+    if (!open) return void 0;
+    if (typeof document === "undefined" || typeof document.addEventListener !== "function") return void 0;
+    const onDown = (event) => {
+      const root = rootRef?.current;
+      if (root !== null && root !== void 0 && typeof root.contains === "function" && root.contains(event.target)) return;
+      onClose();
+    };
+    const onKey = (event) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      onClose();
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [rootRef, open]);
+}
+
+// ../Projects/fang-style/src/widgets/dropdown.js
+function Chevron({ open, direction }) {
+  const down = direction !== "right";
+  return h2("svg", {
+    className: down ? "fang-chevron" : "fang-chevron-right",
+    viewBox: "0 0 16 16",
+    width: 12,
+    height: 12,
+    "aria-hidden": true,
+    ...down ? { "data-open": open === true ? "true" : "false" } : {},
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, h2("path", { d: down ? "M4 6.5 8 10.5 12 6.5" : "M6.5 4 10.5 8 6.5 12" }));
+}
+function Dropdown({ label, value, options, onChange, testId, className }) {
+  const [open, setOpen] = import_react2.default.useState(false);
+  const rootRef = import_react2.default.useRef(null);
+  useDismiss(rootRef, open, () => setOpen(false));
+  const rows = Array.isArray(options) ? options : [];
+  const current = rows.find((option) => option.value === value) ?? rows[0];
+  const pick = (next) => {
+    setOpen(false);
+    onChange(next);
+  };
+  return h2(
+    "div",
+    {
+      className: `fang-dropdown${className === void 0 ? "" : ` ${className}`}`,
+      ref: rootRef,
+      "data-testid": testId
+    },
+    h2(
+      "button",
+      {
+        type: "button",
+        className: "fang-dropdown-button",
+        "aria-haspopup": "listbox",
+        "aria-expanded": open ? "true" : "false",
+        "aria-label": label,
+        onClick: () => setOpen((was) => !was),
+        onKeyDown: (event) => {
+          if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+          event.preventDefault();
+          const at = rows.findIndex((option) => option.value === value);
+          const step = event.key === "ArrowDown" ? 1 : -1;
+          const next = rows[Math.min(rows.length - 1, Math.max(0, (at < 0 ? 0 : at) + step))];
+          if (next !== void 0) pick(next.value);
+        }
+      },
+      h2("span", { className: "fang-dropdown-value" }, current === void 0 ? "" : current.label),
+      h2(Chevron, { open })
+    ),
+    open ? h2(
+      "div",
+      { className: "fang-dropdown-list", role: "listbox", "aria-label": label },
+      rows.map((option) => h2("button", {
+        key: option.value,
+        type: "button",
+        className: "fang-dropdown-option",
+        role: "option",
+        "aria-selected": option.value === value ? "true" : "false",
+        onClick: () => pick(option.value)
+      }, option.label))
+    ) : null
+  );
+}
+
+// ../Projects/fang-style/src/widgets/file-button.js
+function FileButton({ label, accept, onFile, className, testId }) {
+  const inputRef = import_react2.default.useRef(null);
+  return h2(
+    "span",
+    { className: `fang-file-button${className === void 0 ? "" : ` ${className}`}` },
+    h2("button", {
+      type: "button",
+      className: "fang-btn",
+      onClick: () => {
+        if (inputRef.current !== null && typeof inputRef.current.click === "function") inputRef.current.click();
+      }
+    }, label),
+    h2("input", {
+      ref: inputRef,
+      type: "file",
+      className: "fang-file-input",
+      accept,
+      tabIndex: -1,
+      "aria-hidden": "true",
+      "data-testid": testId,
+      onChange: (event) => {
+        const file = event?.target?.files?.[0];
+        if (file !== void 0 && typeof onFile === "function") onFile(file);
+        if (event?.target !== void 0) event.target.value = "";
+      }
+    })
+  );
+}
+
+// ../Projects/fang-style/src/widgets/segmented.js
+function Segmented({ label, options, value, onChange, testId, disabled = false }) {
+  return h2(
+    "div",
+    { className: "fang-segmented", role: "group", "aria-label": label },
+    options.map((option) => h2("button", {
+      key: option.value,
+      type: "button",
+      className: "fang-segmented-item",
+      "data-testid": testId === void 0 ? void 0 : `${testId}-${option.value}`,
+      "aria-pressed": option.value === value ? "true" : "false",
+      disabled: disabled === true,
+      onClick: () => onChange(option.value)
+    }, option.label))
+  );
+}
+
+// ../Projects/fang-style/src/widgets/list.js
+function SplitPane({ list, detail, listProps, detailProps }) {
+  const rows = Array.isArray(list) ? list : list === void 0 ? [] : [list];
+  const body = Array.isArray(detail) ? detail : detail === void 0 ? [] : [detail];
+  return h2(
+    "div",
+    { className: "fang-split" },
+    h2("div", { className: "fang-split-list", ...listProps ?? {} }, ...rows),
+    h2("section", { className: "fang-split-detail", ...detailProps ?? {} }, ...body)
+  );
+}
+function List({ className, children, ...rest }) {
+  const rows = Array.isArray(children) ? children : children === void 0 ? [] : [children];
+  return h2("div", {
+    className: `fang-list${className === void 0 ? "" : ` ${className}`}`,
+    ...rest
+  }, ...rows);
+}
+function ListRow({ className, active, onActivate, children, ...rest }) {
+  const rows = Array.isArray(children) ? children : children === void 0 ? [] : [children];
+  const interactive = typeof onActivate === "function";
+  return h2(interactive ? "button" : "div", {
+    ...interactive ? { type: "button", onClick: onActivate } : {},
+    ...rest,
+    className: `fang-list-row${className === void 0 ? "" : ` ${className}`}`,
+    "data-active": active === true ? "true" : void 0
+  }, ...rows);
+}
+
+// ../Projects/fang-style/src/widgets/tooltip.js
+function TooltipLayer({ rootRef }) {
+  const [tip, setTip] = import_react2.default.useState(null);
+  const held = import_react2.default.useRef(null);
+  import_react2.default.useEffect(() => {
+    const root = rootRef?.current;
+    if (root === null || root === void 0) return void 0;
+    let timer = null;
+    const hide = () => {
+      if (timer !== null) {
+        globalThis.clearTimeout(timer);
+        timer = null;
+      }
+      const heldTip = held.current;
+      if (heldTip !== null) {
+        heldTip.el.setAttribute("title", heldTip.title);
+        held.current = null;
+      }
+      setTip(null);
+    };
+    const show = (el) => {
+      const text = el.getAttribute("title");
+      if (text === null || text === "") return;
+      held.current = { el, title: text };
+      el.removeAttribute("title");
+      timer = globalThis.setTimeout(() => {
+        const rect = el.getBoundingClientRect();
+        const shellRect = root.getBoundingClientRect();
+        setTip({
+          text,
+          left: Math.max(8, Math.min(rect.left + rect.width / 2 - shellRect.left, shellRect.width - 8)),
+          top: rect.bottom - shellRect.top + 6
+        });
+      }, 400);
+    };
+    const onOver = (e) => {
+      const el = e.target?.closest?.("[title]");
+      if (el === null || el === void 0 || el === held.current?.el) return;
+      hide();
+      show(el);
+    };
+    const onOut = (e) => {
+      const heldTip = held.current;
+      if (heldTip === null) return;
+      const to = e.relatedTarget;
+      if (to !== null && to !== void 0 && heldTip.el.contains(to)) return;
+      hide();
+    };
+    root.addEventListener("pointerover", onOver, true);
+    root.addEventListener("pointerout", onOut, true);
+    root.addEventListener("pointerdown", hide, true);
+    return () => {
+      root.removeEventListener("pointerover", onOver, true);
+      root.removeEventListener("pointerout", onOut, true);
+      root.removeEventListener("pointerdown", hide, true);
+      hide();
+    };
+  }, [rootRef]);
+  if (tip === null) return null;
+  return h2("div", { className: "fang-tip", role: "tooltip", style: { left: tip.left, top: tip.top } }, tip.text);
+}
+
+// ../Projects/fang-style/src/tokens.css.js
+var FANG_TOKENS = `
+      .fang-shell{
+        /* \u5F3A\u8C03\u8272\u53EA\u6709\u4E00\u4E2A\u51FA\u5904\uFF1A\u7126\u70B9\u73AF\u3001\u9009\u4E2D\u6001\u3001\u5361\u7247\u63CF\u8FB9\u3001\u4E3B\u6309\u94AE\u90FD\u8BFB\u8FD9\u4E00\u4E2A\u53D8\u91CF\u3002
+           \u6731\u7EA2 #c3272b \u662F\u5E93\u81EA\u5DF1\u7684\u989C\u8272\uFF0C\u4E0D\u662F\u5BBF\u4E3B\u7684\u54C1\u724C\u8272\u2014\u2014\u5BBF\u4E3B\u54C1\u724C\u5728\u6DF1\u8272\u4E3B\u9898\u4E0A
+           \u8FD1\u767D\uFF0C\u7528\u5B83\u753B\u7684\u4E00\u5207\u90FD\u4F1A\u6D88\u5931\u5728\u8FD1\u9ED1\u7684\u9875\u9762\u4E0A\u3002\u5199\u5B57\u9762\u91CF\u800C\u4E0D\u662F var() \u56DE\u9000\uFF1A
+           \u56DE\u9000\u503C\u662F\u53E6\u4E00\u4E2A var() \u65F6\u4E0D\u662F\u56DE\u9000\uFF0C\u65E0\u4E3B\u9898\u73AF\u5883\u4E0B\u6574\u6761\u58F0\u660E\u5931\u6548\uFF0C\u4E00\u5207\u5B89\u9759\u5730
+           \u4EC0\u4E48\u90FD\u4E0D\u753B\u3002 */
+        --fang-accent:#c3272b;
+        --fang-on-accent:#ffffff;
+        /* \u9875\u9762\u5730\u8272\uFF1A\u7EAF\u9ED1\u662F\u51B3\u5B9A\uFF0C\u4E0D\u662F\u6CBF\u7528\u5BBF\u4E3B\u7684 bg\u2014\u2014\u5BBF\u4E3B\u7684\u57FA\u8272\u5728\u8FD0\u884C\u7684\u6DF1\u8272\u4E3B\u9898\u4E0A
+           \u662F\u4E00\u79CD\u7070\u3002\u5206\u5C42\u8868\u9762\u5728\u5B83\u4E0A\u9762\u8BFB\u4F5C\u6D6E\u8D77\u7684\u4E00\u5C42\u3002 */
+        --fang-bg:#000;
+        /* \u6587\u5B57\u58A8\u8272\u4E09\u5C42\uFF1A\u6807\u9898\u4E0E\u6570\u503C\uFF08primary\uFF09\u3001\u6B63\u6587\u4E0E\u63A7\u4EF6\uFF08secondary\uFF09\u3001\u6807\u7B7E\u3001\u5143\u6570\u636E
+           \u548C\u7981\u7528\u6587\u6848\uFF08tertiary\uFF09\u3002\u9ED8\u8BA4\u503C\u76F4\u63A5\u53D6\u6DF1\u8272\u4E3B\u9898\u7684\u58A8\u8272\uFF0C\u5BBF\u4E3B\u7F3A\u5931\u65F6\u5E93\u4ECD\u53EF\u8BFB\u3002 */
+        --fang-ink-primary:#f2f2f3;
+        --fang-ink-secondary:#b8b8bd;
+        --fang-ink-tertiary:#8e8e93;
+        /* \u4E24\u4E2A\u8868\u9762\u5C42\u4E0E\u4E09\u6863\u63CF\u8FB9\u3002\u63CF\u8FB9\u662F\u767D\u8272\u7684\u4F4E\u900F\u660E\u5EA6\u800C\u4E0D\u662F\u9ED1\u8272\u7684\u2014\u2014\u9ED1\u8272\u7684\u4F4E\u900F\u660E\u5EA6
+           \u63CF\u8FB9\u753B\u5728\u8FD1\u9ED1\u5E95\u4E0A\u7B49\u4E8E\u6CA1\u6709\u3002\u5BBF\u4E3B\u63A5\u5165\u65F6\u5728\u6865\u63A5\u91CC\u8986\u76D6\u8FD9\u51E0\u4E2A\u4EE4\u724C\u3002 */
+        --fang-bg-layer-1:#1c1c1e;
+        --fang-bg-layer-2:#2c2c2e;
+        --fang-border-hair:#ffffff14;
+        --fang-border-edge:#ffffff1f;
+        --fang-border-strong:#ffffff29;
+        --fang-focus-ring-width:2px;
+        /* \u95F4\u8DDD\u523B\u5EA6\uFF1A\u516D\u6863\uFF0C4px \u57FA\u51C6\u30022px \u662F\u53D1\u4E1D\u7EA7\u7684\u4E00\u6B65\uFF0C\u5176\u4F59\u5E03\u5C40\u8DDD\u79BB\u90FD\u5728 4/8/12/16/24
+           \u91CC\u3002\u523B\u5EA6\u6309\u503C\u547D\u540D\u800C\u4E0D\u662F\u6309\u5927\u5C0F\uFF08sm/md/lg\uFF09\u2014\u2014\u540D\u5B57\u662F\u89C2\u70B9\uFF0C\u6570\u5B57\u662F\u4E8B\u5B9E\u3002 */
+        --fang-space-2:2px;
+        --fang-space-4:4px;
+        --fang-space-8:8px;
+        --fang-space-12:12px;
+        --fang-space-16:16px;
+        --fang-space-24:24px;
+        /* \u5185\u8FB9\u8DDD\u523B\u5EA6\uFF1A\u63A7\u4EF6\u7684\u5185\u90E8\u7559\u767D\u53EA\u6709\u8FD9\u56DB\u6863\uFF0C\u4E0D\u5199\u4E00\u6B21\u6027\u6570\u503C\u3002 */
+        --fang-padding-xs:var(--fang-space-4);
+        --fang-padding-sm:var(--fang-space-8);
+        --fang-padding-md:var(--fang-space-12);
+        --fang-padding-xl:var(--fang-space-24);
+        /* \u5706\u89D2\u523B\u5EA6\uFF1A\u4E94\u6863\u52A0\u4E00\u4E2A pill\u3002pill \u4E0D\u662F\u5C3A\u5BF8\uFF0C\u662F\u300C\u5706\u5230\u76D2\u5B50\u5141\u8BB8\u4E3A\u6B62\u300D\u7684\u5F62\u72B6\uFF0C
+           4px \u7684\u70B9\u548C 30px \u7684\u80F6\u56CA\u9760\u5B83\u540C\u6837\u6210\u7ACB\u3002 */
+        --fang-radius-xs:4px;
+        --fang-radius-sm:8px;
+        --fang-radius-md:12px;
+        --fang-radius-lg:16px;
+        --fang-radius-panel:28px;
+        --fang-radius-pill:999px;
+        /* \u753B\u6DF1\u5EA6\u7528\u7684\u4E24\u79CD\u58A8\uFF1A\u9634\u5F71\u662F\u67D0\u4E2A\u900F\u660E\u5EA6\u7684\u9ED1\uFF0C\u6D6E\u8D77\u5361\u7247\u9876\u7F18\u7684\u9AD8\u5149\u662F\u767D\u3002 */
+        --fang-shade:0,0,0;
+        --fang-highlight:#fff;
+        /* \u952E\u76D8\u7126\u70B9\u58A8\u8272\uFF1A\u4E0D\u662F\u5BBF\u4E3B\u7684\u7126\u70B9\u8272\uFF08\u6709\u7684\u4E3B\u9898\u628A\u5B83\u8BBE\u6210\u900F\u660E\uFF0C\u7126\u70B9\u5C31\u4E0D\u53EF\u89C1\u4E86\uFF09\u3002
+           \u4ECE\u4E3B\u58A8\u8272\u8C03\u51FA\u6765\uFF0C\u5728\u7EAF\u9ED1\u5730\u3001\u7070\u8272\u5C42\u548C\u5F3A\u8C03\u8272\u586B\u5145\u4E0A\u90FD\u8BFB\u5F97\u51FA\uFF1B\u6BCF\u6761\u89C4\u5219\u81EA\u5E26
+           \u81EA\u5DF1\u7684\u73AF\u51E0\u4F55\u3002 */
+        --fang-focus-ink:color-mix(in srgb, var(--fang-ink-primary) 45%, transparent);
+        /* \u4E24\u4E2A\u6D6E\u8D77\u8868\u9762\uFF1A\u4ECE\u5C42\u8272\u5411\u5730\u8272\u8C03 72%\uFF0C\u4E00\u6B65\u53EF\u89C1\u7684\u5206\u79BB\uFF0C\u800C\u4E0D\u662F\u6574\u6BB5\u843D\u5DEE\u3002\u5361\u7247\u3001
+           \u4FA7\u680F\u3001\u83DC\u5355\u548C\u6C14\u6CE1\u843D\u5728 surface\uFF1B\u8F93\u5165\u6846\u3001\u9009\u4E2D\u80F6\u56CA\u548C\u62BD\u5C49\u843D\u5728 surface-high\u3002 */
+        --fang-surface:color-mix(in srgb, var(--fang-bg-layer-1) 72%, var(--fang-bg));
+        --fang-surface-high:color-mix(in srgb, var(--fang-bg-layer-2) 72%, var(--fang-bg));
+        /* \u9009\u4E2D\u3001\u60AC\u505C\u3001\u6309\u4E0B\u4E09\u6001\u586B\u5145\u3002\u9009\u4E2D\u628A\u58A8\u8272\u8C03\u8FDB\u8868\u9762\uFF0C\u5728\u4E24\u79CD\u4E3B\u9898\u4E0B\u90FD\u6BD4\u300C\u6CA1\u9009\u4E2D\u300D
+           \u660E\u663E\uFF1B\u60AC\u505C\u523B\u610F\u6BD4\u9009\u4E2D\u5B89\u9759\u2014\u2014\u60AC\u505C\u8BF4\u300C\u6307\u9488\u5728\u8FD9\u513F\u300D\uFF0C\u9009\u4E2D\u8BF4\u300C\u5F00\u7740\u7684\u5C31\u662F\u8FD9\u4E2A\u300D\uFF1B
+           \u6309\u4E0B\u5728\u4E24\u8005\u4E4B\u95F4\u3002 */
+        --fang-selected-fill:color-mix(in srgb, var(--fang-ink-primary) 18%, var(--fang-surface));
+        --fang-hover-fill:color-mix(in srgb, var(--fang-ink-primary) 9%, var(--fang-surface));
+        --fang-active-fill:color-mix(in srgb, var(--fang-ink-primary) 14%, var(--fang-surface));
+        --fang-list-hover:var(--fang-hover-fill);
+        /* \u58A8\u8272\u6D53\u5EA6\u56DB\u6863\uFF0C\u7531\u6DE1\u5230\u6D53\uFF1Awhisper 3%\uFF08\u51E0\u4E4E\u4E0D\u5728\u573A\u7684\u8BB0\u53F7\uFF09\u3001hair 8%\uFF08\u5185\u886C
+           \u5206\u9694\u7EBF\uFF09\u3001edge 14%\uFF08\u6240\u6709\u53EF\u89C1\u63CF\u8FB9\u4E0E\u73AF\uFF09\u3001faint 45%\uFF08\u4ECD\u8981\u8BFB\u5F97\u51FA\u5B57\u7B26\u7684\u5360\u4F4D
+           \u5B57\u5F62\uFF09\u3002\u5199\u6210\u6574\u6BB5 color-mix\uFF0C\u89C4\u5219\u58F0\u660E\u7684\u662F\u5B83\u8981\u7684\u90A3\u4E00\u6863\uFF0C\u4E0D\u662F\u767E\u5206\u6BD4\u3002 */
+        --fang-ink-whisper:color-mix(in srgb, var(--fang-ink-primary) 3%, transparent);
+        --fang-ink-hair:color-mix(in srgb, var(--fang-ink-primary) 8%, transparent);
+        --fang-ink-edge:color-mix(in srgb, var(--fang-ink-primary) 14%, transparent);
+        --fang-ink-faint:color-mix(in srgb, var(--fang-ink-primary) 45%, transparent);
+        /* \u5B57\u53F7\u56DB\u6863\uFF0C\u6309\u89D2\u8272\u6311\u7684\uFF1Asm 12/18 \u7ED9\u5FBD\u6807\u3001\u8BA1\u6570\u3001\u952E\u5E3D\uFF1Bmd 13/20 \u662F\u5DE5\u4F5C\u5B57\u53F7\uFF0C
+           \u51E0\u4E4E\u6BCF\u4E2A\u63A7\u4EF6\u90FD\u7EE7\u627F\u5B83\uFF1Blg 16/24 \u7ED9\u5206\u533A\u4E0E\u5F39\u7A97\u6807\u9898\uFF1Bxl 20/28 \u7ED9\u9875\u9762\u6807\u9898\u3002
+           \u6BCF\u4E00\u6863\u81EA\u5E26\u884C\u9AD8\u2014\u2014\u5B57\u53F7\u548C\u884C\u9AD8\u662F\u4E00\u4E2A\u51B3\u5B9A\uFF0C\u62C6\u5F00\u5199\u4E24\u8FB9\u5C31\u4F1A\u6F02\u3002 */
+        --fang-font-size-sm:12px;
+        --fang-line-height-sm:18px;
+        --fang-font-size-md:13px;
+        --fang-line-height-md:20px;
+        --fang-font-size-lg:16px;
+        --fang-line-height-lg:24px;
+        --fang-font-size-xl:20px;
+        --fang-line-height-xl:28px;
+        /* \u4E24\u79CD\u884C\u8DDD\u8282\u594F\uFF1A1.6 \u7ED9\u5361\u7247\u548C\u62BD\u5C49\u91CC\u7684\u754C\u9762\u6563\u6587\uFF0C1.65 \u7ED9\u624B\u7A3F\u672C\u8EAB\u3002 */
+        --fang-line-height-ui:1.6;
+        --fang-line-height-reading:1.65;
+        /* \u5B57\u4F53\u65CF\u53EA\u58F0\u660E\u4E00\u6B21\u3002CJK \u5B57\u4F53\u9010\u4E2A\u70B9\u540D\uFF1A\u4E0D\u70B9\u540D\u65F6 CJK \u56DE\u9000\u6309\u5E73\u53F0\u6311\uFF0C\u540C\u4E00\u4EFD\u6587\u6863
+           \u5728\u4E24\u53F0\u673A\u5668\u4E0A\u5BBD\u5EA6\u4E0D\u540C\u3002\u6808\u5199\u6210\u5B57\u9762\u91CF\u800C\u4E0D\u662F\u8BFB\u5BBF\u4E3B\u53D8\u91CF\uFF1A\u5E93\u7684\u6587\u5B57\u5EA6\u91CF\u662F\u81EA\u5DF1\u7684\u3002 */
+        --fang-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",Roboto,sans-serif;
+        /* \u4E09\u4E2A\u5B57\u91CD\uFF1A\u89C4\u5219\u58F0\u660E\u610F\u56FE\uFF0C\u4E0D\u5199\u6570\u5B57\u3002 */
+        --fang-font-weight-normal:400;
+        --fang-font-weight-medium:500;
+        --fang-font-weight-strong:600;
+        /* \u7B49\u5BBD\u6808\uFF1A\u952E\u5E3D\u4E0E\u6A21\u578B id\u3002 */
+        --fang-font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+        /* \u56FE\u6807\u56DB\u6863\uFF1A12 \u884C\u5185\u300114 \u5C0F\u52A8\u4F5C\u300116 \u63A7\u4EF6\u300118 \u6807\u9898\u884C\u4E0E\u4FA7\u680F\u3002 */
+        --fang-icon-xs:12px;
+        --fang-icon-sm:14px;
+        --fang-icon-md:16px;
+        --fang-icon-lg:18px;
+        /* \u5BBD\u5EA6\u9636\u68AF\uFF1A\u5F39\u7A97\u4E0E\u62BD\u5C49\u62A5\u89D2\u8272\u540D\uFF08narrow/compact/...\uFF09\u800C\u4E0D\u662F\u80CC\u6570\u5B57\uFF0C\u4E24\u4E2A\u88C5
+           \u540C\u7C7B\u5185\u5BB9\u7684\u5F39\u7A97\u56E0\u6B64\u4E0D\u4F1A\u5DEE\u51FA\u4E24\u767E\u50CF\u7D20\u3002 */
+        --fang-width-narrow:340px;
+        --fang-width-compact:440px;
+        --fang-width-medium:620px;
+        --fang-width-reading:720px;
+        --fang-width-wide:820px;
+        --fang-width-max:980px;
+
+        /* ---- \u7EC4\u4EF6\u51E0\u4F55 ---- */
+        /* \u6807\u9898\u884C\u7684\u9AD8\u5EA6\uFF1A\u62BD\u5C49\u4ECE\u5B83\u4E0B\u9762\u5F00\u59CB\uFF0C\u8FD9\u4E2A\u6570\u4E0D\u80FD\u548C\u5B83\u63CF\u8FF0\u7684\u90A3\u4E00\u884C\u6F02\u5F00\u3002 */
+        --fang-titlebar-height:68px;
+        /* \u6309\u94AE\u9AD8\u5EA6\u9636\u68AF\uFF1A\u72EC\u7ACB\u6309\u94AE\u4E00\u6863\uFF0C\u6587\u672C\u884C\u5185\u7684\u8BB0\u53F7\u4E00\u6863\u3002\u884C\u4E0E\u8F93\u5165\u6846\u8BFB\u4E0A\u9762\u7684\u884C\u9AD8
+           \u523B\u5EA6\u2014\u2014\u6309\u94AE\u548C\u884C\u662F\u4E24\u67B6\u68AF\u5B50\u3002 */
+        --fang-btn-height-xl:48px;
+        --fang-btn-height-lg:36px;
+        --fang-btn-height-sm:26px;
+        /* \u63A7\u4EF6\u884C\u9AD8\uFF1A\u83DC\u5355\u884C\u662F\u4E00\u884C\u6587\u5B57\u52A0\u5B83\u7684\u5185\u8FB9\u8DDD\uFF0C\u4E24\u4E2A\u56DE\u7B54\u540C\u4E00\u4E2A\u95EE\u9898\u7684\u83DC\u5355\u4E0D\u80FD\u4E00\u4E2A
+           34 \u4E00\u4E2A 32\u3002 */
+        --fang-row-height:34px;
+        --fang-row-height-compact:26px;
+        --fang-hit-target:44px;
+        /* \u5361\u7247\u63CF\u8FB9\u7684\u90A3\u6839\u53D1\u4E1D\uFF1A1x \u4E0B\u534A\u50CF\u7D20\u30012x \u4E0B\u4E00\u50CF\u7D20\uFF0C\u6D4F\u89C8\u5668\u81EA\u5DF1\u53D6\u6574\uFF1B\u6837\u5F0F\u8868\u91CC
+           \u6BCF\u5C42\u9634\u5F71\u7684\u7B2C\u4E00\u5C42\u90FD\u8BFB\u5B83\uFF0C\u63CF\u8FB9\u548C\u538B\u5728\u63CF\u8FB9\u4E0A\u7684\u9634\u5F71\u4E0D\u4F1A\u6F02\u5F00\u3002 */
+        --fang-hairline:.5px;
+        /* \u5361\u7247\u9634\u5F71\u4E24\u79CD\u72B6\u6001\uFF1A\u8D34\u5730\u4E0E\u6D6E\u8D77\u3002\u5B58\u7684\u662F\u914D\u65B9\u672C\u8EAB\u2014\u2014\u53D1\u4E1D\u63A5\u89E6\u5C42\u3001\u8FD1\u8DDD\u73AF\u5883\u5C42\u3001
+           \u8FDC\u8DDD\u8F6F\u5C42\u2014\u2014\u989C\u8272\u90FD\u662F\u58A8\u8272\u7684 color-mix\uFF0C\u968F\u4EE4\u724C\u8D70\u3002 */
+        --fang-card-shadow:
+          0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 6%, transparent),
+          0 1px 2px color-mix(in srgb, var(--fang-ink-primary) 7%, transparent),
+          0 6px 16px color-mix(in srgb, var(--fang-ink-primary) 6%, transparent);
+        --fang-card-shadow-lift:
+          0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 8%, transparent),
+          0 2px 4px color-mix(in srgb, var(--fang-ink-primary) 9%, transparent),
+          0 12px 26px color-mix(in srgb, var(--fang-ink-primary) 10%, transparent);
+        /* \u5361\u7247\u7684\u72B6\u6001\u52A8\u6548\uFF1A\u9634\u5F71\u3001\u4F4D\u79FB\u3001\u63CF\u8FB9\u540C\u4E00\u4E2A\u65F6\u957F\u3002 */
+        --fang-card-motion:box-shadow 140ms ease-in-out,
+          transform 140ms ease-in-out,
+          border-color 140ms ease-in-out;
+        /* \u9762\u677F\u9634\u5F71\uFF1A\u7ED9\u4ECE\u9875\u9762\u6ED1\u5165\u7684\u6574\u5757\u8868\u9762\u7528\u3002\u65B9\u5411\u4E0D\u80FD\u5171\u7528\u4E00\u4E2A\u4EE4\u724C\u2014\u2014\u4ECE\u53F3\u8FDB\u7684\u628A\u5F71\u5B50
+           \u7529\u5411\u5DE6\uFF0C\u4ECE\u5DE6\u8FDB\u7684\u7529\u5411\u53F3\u3002\u843D\u70B9\u523B\u610F\u77ED\uFF1A6px \u504F\u79FB\u52A0 20px \u6A21\u7CCA\u521A\u597D\u628A\u8868\u9762\u6258\u79BB
+           \u9875\u9762\uFF0C\u518D\u5BBD\u5C31\u8BFB\u4F5C\u60AC\u7A7A\u3002\u989C\u8272\u6C38\u8FDC\u662F\u58A8\u8272\u7684 mix\uFF0C\u4E0D\u662F\u5199\u6B7B\u7684\u9ED1\u3002 */
+        --fang-panel-shadow-left:
+          0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 8%, transparent),
+          -6px 0 20px color-mix(in srgb, var(--fang-ink-primary) 10%, transparent);
+        --fang-panel-shadow-right:
+          0 0 0 var(--fang-hairline) color-mix(in srgb, var(--fang-ink-primary) 8%, transparent),
+          6px 0 20px color-mix(in srgb, var(--fang-ink-primary) 10%, transparent);
+        /* \u9762\u677F\u7684\u5185\u7F18\u5149\uFF1A\u9876\u7F18\u4E00\u9053\u7EC6\u4EAE\u7EBF\uFF0C\u8BA9\u8868\u9762\u8BFB\u5F97\u51FA\u539A\u5EA6\uFF0C\u800C\u4E0D\u662F\u4E00\u5757\u6F06\u3002inset\uFF0C
+           \u56E0\u4E3A\u771F\u5B9E\u7684\u5149\u4F1A\u64E6\u4EAE\u8FD9\u6761\u8FB9\u800C\u4E0D\u662F\u5B83\u7684\u5916\u4FA7\u3002 */
+        --fang-panel-rim:
+          inset 0 1px 0 0 color-mix(in srgb, var(--fang-ink-primary) 6%, transparent);
+        /* \u5C42\u7EA7\u8868\uFF1A\u6240\u6709\u8986\u76D6\u5C42\u7684 z \u90FD\u4ECE\u8FD9\u91CC\u53D6\uFF0C\u987A\u5E8F\u5373\u89C4\u5219\u2014\u2014\u4FA7\u680F\u6700\u4F4E\uFF0C\u83DC\u5355\u5176\u4E0A\uFF0C
+           \u62BD\u5C49\u66F4\u9AD8\uFF0C\u72B6\u6001\u6D6E\u5C42\u5728\u4E00\u5207\u4E4B\u4E0A\u3002 */
+        --fang-layer-rail:30;
+        --fang-layer-menu:60;
+        --fang-layer-drawer:75;
+        --fang-layer-status:80;
+        --fang-layer-modal:90;
+        /* \u8986\u76D6\u5C42\u52A8\u6548\u5BF9\uFF1A\u5F00\u5408\u5171\u7528\u4E00\u4E2A\u65F6\u957F\uFF0C\u5173\u95E8\u6BD4\u5F00\u95E8\u5FEB\u2014\u2014\u5165\u573A\u8981\u8BFB\uFF0C\u9000\u573A\u53EA\u9700\u8BA9\u8DEF\u3002 */
+        --fang-duration-open:180ms;
+        --fang-duration-close:140ms;
+        /* \u4FA7\u680F\u7684\u5BBD\u5EA6\u3002 */
+        --fang-rail-w:264px;
+        /* \u9875\u9762\u7559\u767D\uFF1A\u6846\u67B6\u4E24\u4FA7\u7684\u5185\u8FB9\u8DDD\uFF0C\u5BBD\u4E8E\u4EFB\u4F55\u95F4\u8DDD\u6863\uFF0C\u8FB9\u4E0A\u7684\u7A7A\u6C14\u8981\u591F\u753B\u5E03\u8BFB\u4F5C\u753B\u5E03\u3002 */
+        --fang-frame-gutter:28px;
+        /* \u62BD\u5C49\u4E0E\u5F39\u7A97\u7684\u9ED8\u8BA4\u5C3A\u5BF8\u3002 */
+        --fang-drawer-max:var(--fang-width-wide);
+        --fang-dialog-width:var(--fang-width-compact);
+        --fang-dialog-max-h:760px;
+        /* \u4E3B\u4ECE\u5206\u680F\uFF1A\u5DE6\u5217\u7684\u5BBD\uFF0C\u548C\u5206\u680F\u4E0D\u518D\u7F29\u5C0F\u7684\u5730\u677F\uFF08\u518D\u5C0F\u5C31\u6539\u4E3A\u6EDA\u52A8\uFF09\u3002 */
+        --fang-split-list-w:220px;
+        --fang-split-min-h:320px;
+        /* \u5206\u6BB5\u63A7\u4EF6\u7684\u8F68\u9053\u9AD8\u5EA6\u3002\u540C\u4E00\u540D\u4E0B\u66FE\u6709\u8FC7 28 \u4E0E 26 \u4E24\u4E2A\u503C\uFF0C\u8FD9\u91CC\u4FEE\u6210\u4E00\u4E2A\u3002 */
+        --fang-segmented-height:28px;
+        /* \u6E05\u5355\u884C\u7684\u7AD6\u5411\u5185\u8FB9\u8DDD\uFF1A\u4E00\u76F4\u4EE5\u6765\u7684\u5B9E\u9645\u503C\u3002\u95F4\u8DDD\u523B\u5EA6\u523B\u610F\u6CA1\u6709 10 \u8FD9\u4E00\u6863\uFF0C
+           \u6240\u4EE5\u7ED9\u5B83\u4E00\u4E2A\u81EA\u5DF1\u7684\u540D\u5B57\uFF0C\u800C\u4E0D\u662F\u8BA9\u5B83\u53D8\u6210\u89C4\u5219\u91CC\u7684\u88F8\u6570\u5B57\u3002 */
+        --fang-list-row-padding-y:10px;
+      }
+`;
+
+// ../Projects/fang-style/src/frame.css.js
+var FANG_FRAME = `
+      .fang-root,.fang-root *,.fang-shell *{box-sizing:border-box}
+      /* \u6392\u7248\u58F0\u660E\u5728\u6BCF\u4E2A\u89C4\u5219\u90FD\u5750\u5728\u91CC\u9762\u7684\u90A3\u4E00\u4E2A\u5143\u7D20\u4E0A\uFF1A\u5B57\u4F53\u65CF\u5728\u8FD9\u91CC\u800C\u4E0D\u662F\u5206\u6563\u5230\u6BCF\u4E2A
+         \u7EC4\u4EF6\uFF0C\u5DE5\u4F5C\u5B57\u53F7\u4E5F\u5728\u8FD9\u91CC\u2014\u2014\u4E0D\u8BBE\u5B57\u53F7\u7684\u89C4\u5219\u7EE7\u627F 13/20\u3002 */
+      .fang-shell{font-family:var(--fang-font-family);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);
+        display:flex;flex-direction:column;height:100%;min-height:0;min-width:0;
+        background:var(--fang-bg);color:var(--fang-ink-primary)}
+      /* \u6807\u9898\u884C\u3002\u4E0D\u8BBE\u56FA\u5B9A\u9AD8\uFF1A\u884C\u5C31\u662F\u5B83\u7684\u5185\u5BB9\uFF08\u4E00\u6392 36px \u7684\u80F6\u56CA\uFF09\u52A0\u4E0A\u4E0B\u5185\u8FB9\u8DDD\uFF0C\u6240\u4EE5
+         \u6C38\u8FDC\u4E0D\u4F1A\u88C1\u6389\u81EA\u5DF1\u7684\u63A7\u4EF6\u3002\u5185\u8FB9\u8DDD\u628A\u884C\u4FDD\u6301\u5728\u8986\u76D6\u5C42\u5185\u8FB9\u8DDD\u58F0\u660E\u7684\u9AD8\u5EA6\u2014\u2014\u884C\u548C
+         \u5185\u8FB9\u8DDD\u4E00\u8D77\u52A8\u3002\u5DE6\u4FA7\u7559\u767D\u989D\u5916\u8BFB\u4E00\u4E2A\u5BBF\u4E3B\u7BA1\u7406\u7684\u504F\u79FB\u91CF\uFF08--dsh-frame-leading-
+         clearance\uFF0C\u9ED8\u8BA4 0\uFF09\uFF1A\u5BBF\u4E3B\u6536\u8D77\u81EA\u5DF1\u7684\u4FA7\u680F\u65F6\u62AC\u5347\u5B83\uFF0C\u6846\u67B6\u884C\u9996\u7684\u63A7\u4EF6\u4E0D\u4E22\u5EA7\u4F4D\u3002 */
+      .fang-titlebar{display:flex;align-items:center;gap:var(--fang-space-8);flex:none;margin-bottom:var(--fang-space-16);min-width:0;
+        padding-top:var(--fang-space-16);padding-bottom:var(--fang-space-8);
+        padding-left:max(var(--fang-space-16), calc(var(--dsh-frame-leading-clearance, 0) + var(--fang-space-8)));padding-right:var(--fang-space-12);
+        border-bottom:var(--fang-hairline) solid var(--fang-border-edge)}
+      /* \u63CF\u8FB9\u753B\u5728\u5143\u7D20\u81EA\u5DF1\u7684\u76D2\u5B50\u4E0A\uFF0C\u5143\u7D20\u7684\u5185\u8FB9\u8DDD\u5D4C\u4E0D\u8FDB\u5B83\u2014\u2014\u80FD\u5D4C\u8FDB\u7684\u53EA\u6709\u5BB9\u5668\u6216\u5916\u8FB9\u8DDD\u3002
+         \u58F3\u81EA\u5DF1\u7684\u6807\u9898\u884C\u6CA1\u6709\u5BB9\u5668\uFF0C\u6240\u4EE5\u628A\u540C\u6837\u7684\u4E24\u4E2A\u5185\u8FB9\u8DDD\u58F0\u660E\u6210\u5916\u8FB9\u8DDD\uFF0C\u5206\u9694\u7EBF\u5171\u7528\u4E00\u5957
+         \u51E0\u4F55\uFF1A\u540C\u6837\u7684\u4FA7\u8FB9\u7559\u767D\u3001\u540C\u6837\u7684\u79BB\u9876\u843D\u5DEE\u3002 */
+      .fang-shell>.fang-titlebar{margin-top:var(--fang-space-8);margin-left:var(--fang-frame-gutter);margin-right:var(--fang-frame-gutter)}
+      .fang-title{margin:0;font-size:var(--fang-font-size-xl);line-height:var(--fang-line-height-xl);font-weight:var(--fang-font-weight-strong);color:var(--fang-ink-primary);
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:0 1 auto}
+
+      /* \u6846\u67B6\uFF1A\u4FA7\u680F\u3001\u9875\u9762\u5217\uFF0C\u548C\u5B83\u4EEC\u91CC\u9762\u7684\u6EDA\u52A8\u533A\u3002 */
+      .fang-root{display:flex;flex:1 1 auto;min-height:0;min-width:0;width:100%;overflow:hidden}
+      .fang-col{display:flex;flex-direction:column;min-height:0;min-width:0}
+      /* \u4FA7\u680F\u662F\u8986\u76D6\u5C42\uFF0C\u4E0D\u662F\u4E00\u5217\uFF1A\u76D6\u4F4F\u9875\u9762\u5DE6\u7F18\uFF0C\u4ECE\u90A3\u91CC\u6ED1\u5165\u3002inset-block \u9876\u5230 0 \u52A0
+         left:0 \u8BA9\u5361\u7247\u8D34\u4F4F\u9762\u677F\u5DE6\u7F18\u3001\u4E0A\u4E0B\u65E0\u7F1D\uFF0C\u53EA\u6709\u53F3\u4FA7\u5706\u89D2\u2014\u2014\u53E6\u5916\u4E24\u4E2A\u89D2\u8D34\u7740\u6846\u67B6\u3002
+         \u5B9A\u4F4D\u4E0A\u4E0B\u6587\u662F\u6807\u9898\u884C\u4E4B\u4E0B\u7684\u8FD9\u5C42\uFF1A\u5361\u7247\u5FC5\u987B\u591F\u5230\u9762\u677F\u5E95\u7F18\u3002 */
+      .fang-rail-layer{position:absolute;z-index:var(--fang-layer-rail);
+        inset:var(--fang-titlebar-height) 0 0 0;
+        /* \u662F\u4E00\u5C42\uFF0C\u4E0D\u662F\u4E00\u5757\u9762\uFF1A\u4E0D\u753B\u4EFB\u4F55\u4E1C\u897F\u4E5F\u4E0D\u63A5\u70B9\u51FB\uFF0C\u6536\u8D77\u7684\u4FA7\u680F\u4E0D\u80FD\u541E\u6389\u9875\u9762
+           \u81EA\u5DF1\u7684\u70B9\u51FB\u3002 */
+        pointer-events:none}
+      .fang-rail{position:absolute;inset:0 auto 0 0;width:var(--fang-rail-w);pointer-events:auto;
+        display:flex;flex-direction:column;min-height:0;
+        background:var(--fang-surface);border:none;
+        border-radius:0 var(--fang-radius-lg) var(--fang-radius-lg) 0;
+        /* \u5DE6\u8FDB\u5361\u7247\u7684\u5F71\u5B50\uFF1A\u5B83\u951A\u5728\u5DE6\u6846\u4E0A\u3001\u4ECE\u5DE6\u7F18\u8FDB\u6765\uFF0C\u5F71\u5B50\u7529\u5411\u53F3\uFF0C\u80CC\u79BB\u951A\u70B9\u3002 */
+        box-shadow:var(--fang-panel-rim),var(--fang-panel-shadow-right);
+        animation:fang-rail-in var(--fang-duration-open) var(--ds-ease-in-out,ease-in-out) both}
+      @keyframes fang-rail-in{from{transform:translateX(-18px);opacity:0}to{transform:none;opacity:1}}
+      /* \u79BB\u573A\u662F\u5165\u573A\u5012\u653E\uFF0C\u800C\u4E14\u66F4\u5FEB\uFF1A\u9000\u573A\u53EA\u9700\u8981\u8BA9\u8DEF\u3002\u6536\u8D77\u7684\u8986\u76D6\u5C42\u5728\u65F6\u957F\u5185\u4FDD\u7559\u8282\u70B9\uFF0C
+         \u52A8\u753B\u624D\u88AB\u770B\u89C1\uFF0C\u800C\u4E0D\u662F\u5E27\u4E0E\u5E27\u4E4B\u95F4\u51ED\u7A7A\u6D88\u5931\u3002 */
+      .fang-closing .fang-rail{animation:fang-rail-out var(--fang-duration-close) var(--ds-ease-in-out,ease-in-out) both}
+      @keyframes fang-rail-out{from{transform:none;opacity:1}to{transform:translateX(-18px);opacity:0}}
+      .fang-rail-collapsed{display:none}
+      /* \u906E\u7EB1\u662F\u900F\u660E\u7684\uFF1A\u4FA7\u680F\u5F00\u7740\u65F6\u9875\u9762\u4ECD\u53EF\u8BFB\uFF0C\u538B\u5728\u624B\u7A3F\u4E0A\u7684\u4E00\u5C42\u53D8\u6697\u4F1A\u6BC1\u6389\u77A5\u4E00\u773C\u76EE\u5F55
+         \u7684\u610F\u4E49\u3002 */
+      .fang-rail-scrim{position:absolute;inset:0;z-index:calc(var(--fang-layer-rail) - 1);background:transparent}
+      /* \u8FD9\u51E0\u4E2A\u95F4\u8DDD\u539F\u672C\u662F\u5199\u5728\u4E2A\u522B\u5143\u7D20\u4E0A\u7684\u884C\u5185\u6837\u5F0F\u3002\u5B83\u4EEC\u548C\u4E0A\u9762\u7684\u523B\u5EA6\u662F\u540C\u6837\u7684\u6863\u4F4D\uFF0C
+         \u6309\u7528\u9014\u547D\u540D\u2014\u2014\u4E24\u884C\u4E4B\u95F4\u7684\u8DDD\u79BB\u3001\u5B57\u6BB5\u4E0B\u9762\u63D0\u793A\u7684\u8DDD\u79BB\u2014\u2014JSX \u8BF4\u6E05\u95F4\u8DDD\u662F\u5E72\u4EC0\u4E48
+         \u7684\uFF0C\u6570\u5B57\u548C\u6240\u6709\u5176\u4ED6\u6570\u5B57\u4F4F\u5728\u4E00\u8D77\u3002 */
+      .fang-gap-under-row{margin-bottom:var(--fang-space-12)}
+      .fang-gap-under-hint{margin-bottom:var(--fang-space-8)}
+      .fang-gap-over-row{margin-top:var(--fang-space-8)}
+      .fang-gap-over-section{margin-top:var(--fang-space-12)}
+      .fang-main{flex:1 1 auto;min-width:0}
+      .fang-rail-toggle{display:inline-flex;align-items:center;justify-content:center;
+        /* \u547D\u4E2D\u7684\u662F\u5171\u4EAB\u76EE\u6807\u6863\uFF0C\u4E0D\u662F\u7D27\u51D1\u884C\u6863\uFF1A\u5B83\u662F\u6807\u9898\u884C\u7684\u7B2C\u4E00\u4E2A\u63A7\u4EF6\uFF0C\u540C\u6392\u6309\u94AE\u90FD\u5728
+           36px\uFF0C\u540C\u4E00\u6863\u5B83\u624D\u548C\u522B\u7684\u4E1C\u897F\u4E00\u6837\u591F\u5F97\u7740\u3002 */
+        width:var(--fang-btn-height-lg);height:var(--fang-btn-height-lg);padding:0;
+        border:none;background:transparent;color:var(--fang-ink-primary);cursor:pointer;white-space:nowrap;
+        border-radius:var(--fang-radius-pill);flex:none;corner-shape:round}
+      /* \u4FA7\u680F\u81EA\u5DF1\u7684\u6EDA\u52A8\u76D2\u586B\u6EE1\u5361\u7247\uFF1A\u7AE0\u8282\u7A0D\u591A\u7684\u4E66\u91CC\u6811\u90FD\u6BD4\u5361\u7247\u957F\uFF0C\u6309\u5185\u5BB9\u5B9A\u9AD8\u7684\u76D2\u5B50\u4F1A\u628A
+         \u6700\u540E\u4E00\u884C\u63A8\u8FC7\u5E95\u7F18\uFF0C\u800C\u4E0D\u662F\u6EDA\u5230\u5B83\u3002 */
+      .fang-rail .fang-scroll{flex:1 1 auto;min-height:0}
+      .fang-scroll{overflow:auto;padding:var(--fang-space-12);min-height:0;min-width:0}
+      /* \u884C\u4E0E\u5360\u4F4D\u3002 */
+      .fang-row{display:flex;gap:var(--fang-space-8);align-items:center;min-width:0}
+      .fang-spacer{flex:1 1 auto;min-width:0}
+      .fang-muted{color:var(--fang-ink-tertiary);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm)}
+      /* \u5171\u4EAB\u7684\u4E3B\u4ECE\u5206\u680F\u3002 */
+      .fang-split{display:flex;gap:var(--fang-space-12);flex:1 1 auto;min-height:var(--fang-split-min-h);min-width:0}
+      .fang-split-list{flex:0 0 var(--fang-split-list-w);min-width:0;min-height:0;
+        display:flex;flex-direction:column;overflow:hidden;padding:0}
+      .fang-split-detail{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0;
+        overflow:hidden;border:var(--fang-hairline) solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-md);corner-shape:round;background:var(--fang-surface)}
+      .fang-split-detail-head{display:flex;align-items:baseline;gap:var(--fang-space-8);flex:none;
+        padding:var(--fang-space-12) var(--fang-space-16);
+        border-bottom:var(--fang-hairline) solid var(--fang-ink-hair)}
+      .fang-split-detail-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+        font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong);
+        color:var(--fang-ink-primary)}
+      .fang-split-detail-meta{flex:none;margin-left:auto;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
+      .fang-split-detail-body{flex:1 1 auto;min-height:0;overflow:auto;
+        display:flex;flex-direction:column;gap:var(--fang-space-12);padding:var(--fang-space-16)}
+      .fang-list-row-meta{min-width:0;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary)}
+`;
+
+// ../Projects/fang-style/src/components.css.js
+var FANG_COMPONENTS = `
+      /* \u80CC\u677F\u3002\u5F39\u7A97\u4E0E\u62BD\u5C49\u5171\u7528\u4E00\u4E2A\u7C7B\uFF1A\u516C\u5171\u9AA8\u67B6\u662F\u5F39\u7A97\u7684\u2014\u2014\u5C45\u4E2D\u3001\u8C03\u6697\u3001\u6A21\u7CCA\uFF0C\u538B\u5728
+         modal \u5C42\uFF1B\u62BD\u5C49\u7684\u80CC\u677F\u4E0D\u662F\u6A21\u6001\uFF0C\u7531\u4E0B\u9762\u4E00\u6761\u6309\u5B50\u5143\u7D20\u533A\u5206\u7684\u89C4\u5219\u63A5\u7BA1\u51E0\u4F55\u3002 */
+      .fang-backdrop{position:absolute;inset:0;z-index:var(--fang-layer-modal);display:flex;align-items:center;justify-content:center;
+        padding:var(--fang-space-24);background:color-mix(in srgb, var(--fang-bg) 62%, transparent);
+        backdrop-filter:blur(2px)}
+      /* \u62BD\u5C49\u7684\u80CC\u677F\u4E0D\u8C03\u6697\uFF1A\u6ED1\u5165\u7684\u9762\u677F\u4E0D\u662F\u6A21\u6001\uFF0C\u65C1\u8FB9\u7684\u6B63\u6587\u4FDD\u6301\u53EF\u8BFB\u3001\u4ECD\u662F\u6B63\u5728\u5DE5\u4F5C\u7684
+         \u8868\u9762\u3002\u53D8\u6697\u8BF4\u4E86\u300C\u5173\u6389\u4E4B\u524D\u4E0D\u8BB8\u7528\u300D\uFF0C\u800C\u62BD\u5C49\u662F\u5199\u4F5C\u65F6\u67E5\u9605\u7684\u53C2\u8003\u2014\u2014\u5B83\u7684\u5206\u79BB\u9760
+         \u9762\u677F\u81EA\u5DF1\u7684\u98DE\u51FA\u9634\u5F71\u3002\u8FD9\u5C42\u4FDD\u7559\u662F\u56E0\u4E3A\u5B83\u662F\u70B9\u51FB\u6536\u8D77\u7684\u76EE\u6807\u548C\u5B9A\u4F4D\u4E0A\u4E0B\u6587\u3002 */
+      .fang-backdrop:has(> .fang-drawer){inset:var(--fang-titlebar-height) 0 0 0;z-index:var(--fang-layer-drawer);
+        align-items:stretch;justify-content:flex-end;padding:0;background:transparent;backdrop-filter:none}
+      /* \u62BD\u5C49\uFF1A\u4ECE\u53F3\u7F18\u8FDB\u6765\u7684\u9762\u677F\uFF0C\u5168\u9AD8\uFF0C\u53EA\u5728\u5185\u4FA7\u5706\u89D2\u2014\u2014\u8D34\u6846\u7684\u4E24\u4E2A\u89D2\u4FDD\u6301\u76F4\u89D2\u3002
+         \u6DF1\u5EA6\u662F\u4E24\u4EF6\u4E8B\uFF1A\u98DE\u51FA\u9634\u5F71\uFF08\u7529\u5411\u5DE6\uFF0C\u6765\u7684\u65B9\u5411\uFF09\u52A0\u9876\u7F18\u7684\u5185\u7F18\u5149\u3002 */
+      .fang-drawer{display:flex;flex-direction:column;
+        height:100%;max-height:none;overflow:hidden;
+        border:none;border-radius:var(--fang-radius-panel) 0 0 var(--fang-radius-panel);
+        background:var(--fang-surface-high);
+        box-shadow:var(--fang-panel-rim),var(--fang-panel-shadow-left);
+        font-family:var(--fang-font-family);font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-primary);animation:fang-drawer-in var(--fang-duration-open) var(--ds-ease-in-out,ease-in-out) both;
+        /* \u5BBD\u5EA6\u8DDF\u968F\u5185\u5BB9\uFF0C\u800C\u4E0D\u662F\u6863\u4F4D\uFF1A\u5185\u5BB9\u8981\u591A\u5BBD\u5C31\u53D6\u591A\u5BBD\uFF0C\u6709\u5730\u677F\u8BA9\u5355\u884C\u9762\u677F\u4E0D\u6210\u6761\uFF0C
+           \u6709\u4E0A\u9650\u53EF\u88AB\u9875\u9762\u62AC\u9AD8\uFF0C\u518D\u88AB\u7A97\u53E3\u5C01\u9876\u3002\u62A5\u4E86\u5BBD\u5EA6\u6863\u7684\u9762\u677F\u4FDD\u6301\u6863\u5BBD\u3002 */
+        width:fit-content;min-width:min(320px,100%);
+        max-width:min(var(--fang-drawer-max),100%)}
+      .fang-drawer[data-size]{width:var(--fang-drawer-max)}
+      @keyframes fang-drawer-in{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+      .fang-closing .fang-drawer{animation:fang-drawer-out var(--fang-duration-close) var(--ds-ease-in-out,ease-in-out) both}
+      @keyframes fang-drawer-out{from{transform:none;opacity:1}to{transform:translateX(24px);opacity:0}}
+      .fang-closing .fang-backdrop:has(> .fang-drawer){animation:fang-scrim-out var(--fang-duration-close) ease both}
+      @keyframes fang-scrim-out{from{opacity:1}to{opacity:0}}
+      @media (max-width: 640px){
+        /* \u8FD9\u4E2A\u5BBD\u5EA6\u4EE5\u4E0B\u5185\u5BB9\u65E0\u6CD5\u5728\u6BD4\u7A97\u53E3\u7A84\u7684\u5217\u91CC\u6392\u5F00\u81EA\u5DF1\uFF0C\u9762\u677F\u5360\u6EE1\u5168\u5BBD\u3001\u53BB\u6389\u5185\u4FA7
+           \u5706\u89D2\u3002 */
+        .fang-drawer{width:100%;min-width:0;border-radius:0}
+      }
+      .fang-drawer-head{display:flex;align-items:center;gap:var(--fang-space-8);padding:var(--fang-space-16) var(--fang-space-16) var(--fang-space-12);flex:none;
+        border-bottom:var(--fang-hairline) solid var(--fang-border-edge)}
+      .fang-drawer-title{margin:0;font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong)}
+      .fang-drawer-body{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--fang-space-16)}
+
+      /* \u5F39\u7A97\uFF1A\u9762\u677F\u4E0A\u5C45\u4E2D\u7684\u4E00\u5F20\u5706\u89D2\u5361\u3002absolute \u800C\u4E0D\u662F fixed\u2014\u2014fixed \u662F\u300C\u5BF9\u7740\u89C6\u53E3\u300D\uFF0C
+         \u800C\u5E93\u6302\u5728\u5BBF\u4E3B\u4F1A\u88C1\u526A\u5185\u5BB9\u7684\u5217\u91CC\uFF0C\u88AB\u88C1\u7684\u7956\u5148\u4E4B\u4E0A\u653E fixed \u8986\u76D6\u5C42\u53EA\u4F1A\u5207\u8FB9\u3001\u504F\u4F4D\u3002 */
+      .fang-dialog{width:min(var(--fang-dialog-width),100%);display:flex;flex-direction:column;gap:var(--fang-padding-md);padding:var(--fang-padding-xl);
+        border-radius:var(--fang-radius-panel);corner-shape:round;border:var(--fang-hairline) solid var(--fang-border-edge);
+        background:var(--fang-surface-high);box-shadow:0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04);
+        font-family:var(--fang-font-family);font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);color:var(--fang-ink-primary)}
+      .fang-dialog-title{font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong)}
+      /* \u9605\u8BFB\u578B\u5F39\u7A97\uFF1A\u5934\u90E8\u56FA\u5B9A\uFF08\u5E26\u5173\u95ED\u94AE\uFF09\uFF0C\u6B63\u6587\u6EDA\u52A8\u3002\u9762\u677F\u9650\u9AD8\uFF0C\u957F\u6587\u4FDD\u6301\u4E00\u4E2A\u5F39\u7A97
+         \u800C\u4E0D\u662F\u957F\u6210\u4E00\u9875\u3002 */
+      .fang-dialog-panel{max-height:min(84vh,var(--fang-dialog-max-h))}
+      .fang-dialog-head{display:flex;align-items:center;gap:var(--fang-space-8);flex:none}
+      .fang-dialog-scroll{flex:1 1 auto;min-height:0;overflow:auto}
+      .fang-dialog-body{display:flex;flex-direction:column;gap:var(--fang-space-8);color:var(--fang-ink-secondary)}
+      .fang-dialog-actions{display:flex;justify-content:flex-end;gap:var(--fang-space-8);margin-top:var(--fang-space-4)}
+
+      /* \u6E05\u5355\uFF1A\u7AE0\u8282\u3001\u63D0\u6848\u3001\u5FEB\u7167\u90FD\u662F\u300C\u4E00\u5217\u53EF\u6BD4\u8F83\u7684\u884C\u300D\u2014\u2014\u6BCF\u884C\u81EA\u5E26\u53D1\u4E1D\u63CF\u8FB9\uFF0C\u884C\u95F4\u65E0\u7F1D\uFF0C
+         \u6307\u9488\u4E0B\u7684\u884C\u6D6E\u8D77\uFF0C\u9009\u4E2D\u662F\u540C\u4E00\u4E2A\u6D6E\u8D77\u52A0\u66F4\u91CD\u7684\u586B\u5145\u3002 */
+      .fang-list{display:flex;flex-direction:column;gap:var(--fang-space-2);min-width:0;min-height:0;flex:1 1 auto;overflow:auto;
+        padding:var(--fang-space-4);
+        border:var(--fang-hairline) solid var(--fang-ink-edge);border-radius:var(--fang-radius-md);corner-shape:round;
+        background:var(--fang-surface)}
+      .fang-list-row{position:relative;display:flex;flex-direction:column;gap:var(--fang-space-2);
+        width:100%;min-width:0;box-sizing:border-box;
+        padding:var(--fang-list-row-padding-y) var(--fang-space-12);
+        border:none;background:transparent;text-align:left;font-family:inherit;
+        color:var(--fang-ink-primary);
+        border-radius:var(--fang-radius-sm);corner-shape:round;
+        transition:background var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out)}
+      .fang-list-row:hover{background:var(--fang-list-hover)}
+      .fang-list-row[data-active="true"]{background:var(--fang-selected-fill);
+        color:var(--fang-ink-primary)}
+      button.fang-list-row{cursor:pointer}
+
+      /* \u4E0B\u62C9\uFF1A\u539F\u751F\u7684\u9009\u9879\u5217\u8868\u753B\u5728\u7CFB\u7EDF\u5F39\u5C42\u91CC\uFF0C\u4E0D\u7406\u4F1A\u9762\u677F\u7684\u53E0\u653E\u6B21\u5E8F\u8FD8\u4F1A\u88AB\u62BD\u5C49\u88C1\u6389\uFF1B
+         \u8FD9\u4E2A\u5217\u8868\u662F\u9762\u677F\u7684\u5B50\u5143\u7D20\uFF0C\u6C38\u8FDC\u5728\u5B83\u4E0A\u9762\u3002 */
+      .fang-dropdown{position:relative;display:inline-flex;min-width:0;max-width:100%}
+      .fang-dropdown-button{box-sizing:border-box;display:inline-flex;align-items:center;gap:var(--fang-space-8);
+        width:100%;height:var(--fang-row-height);padding:0 var(--fang-space-12);
+        border:none;border-radius:var(--fang-radius-sm);background:var(--fang-surface);
+        color:var(--fang-ink-primary);font-family:inherit;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);text-align:left;
+        cursor:pointer;outline:none;white-space:nowrap}
+      .fang-dropdown-button:hover{background:var(--fang-hover-fill)}
+      .fang-dropdown-button:focus-visible{box-shadow:0 0 0 var(--fang-focus-ring-width) var(--fang-focus-ink)}
+      .fang-dropdown-value{min-width:0;overflow:hidden;text-overflow:ellipsis}
+      .fang-dropdown-list{position:absolute;z-index:var(--fang-layer-menu);top:calc(100% + 4px);left:0;
+        display:flex;flex-direction:column;min-width:100%;max-width:min(320px,calc(100vw - 48px));
+        max-height:min(46vh,320px);overflow:auto;padding:var(--fang-space-4);
+        border-radius:var(--fang-radius-md);corner-shape:round;background:var(--fang-surface-high);
+        box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.12);
+        scrollbar-width:thin}
+      .fang-dropdown-option{display:block;width:100%;padding:var(--fang-space-8) var(--fang-space-12);
+        border:none;border-radius:var(--fang-radius-sm);corner-shape:round;background:transparent;
+        color:var(--fang-ink-primary);font-family:inherit;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);text-align:left;
+        cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .fang-dropdown-option:hover{background:var(--fang-hover-fill)}
+      .fang-dropdown-option[aria-selected="true"]{background:var(--fang-selected-fill);
+        color:var(--fang-ink-primary);font-weight:var(--fang-font-weight-strong)}
+      /* \u6587\u4EF6\u9009\u62E9\uFF1A\u53EF\u89C1\u7684\u63A7\u4EF6\u662F\u5E93\u7684\u6309\u94AE\uFF0Cinput \u672C\u4F53\u85CF\u8D77\u6765\u3002 */
+      .fang-file-button{display:inline-flex;align-items:center;min-width:0}
+      .fang-file-input{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
+
+      /* \u6309\u94AE\uFF1A\u5E26\u60AC\u505C\u6C34\u6D17\u7684\u6587\u5B57\uFF0C\u4E0D\u662F\u63CF\u8FB9\u5C0F\u80F6\u56CA\u2014\u2014\u73AF\u7740\u63CF\u8FB9\u7684\u5199\u4F5C\u9762\u8BFB\u4F5C\u8868\u5355\u3002
+         \u7B49\u9AD8\u80F6\u56CA\uFF1A\u4E00\u4E2A\u9AD8\u5EA6\u4EE4\u724C\uFF0C\u5F62\u72B6\u7531 pill \u534A\u5F84\u95ED\u5408\uFF0C\u53EA\u88C5\u56FE\u6807\u7684\u5706\u6309\u94AE\u4ECE\u7B49\u5BBD\u7B49\u9AD8
+         \u81EA\u7136\u5F97\u51FA\u3002 */
+      .fang-btn{font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        height:var(--fang-btn-height,var(--fang-btn-height-lg));min-width:var(--fang-btn-height,var(--fang-btn-height-lg));
+        padding:0 var(--fang-space-12);
+        display:inline-flex;align-items:center;justify-content:center;
+        border-radius:var(--fang-radius-pill);border:none;corner-shape:round;
+        background:transparent;color:var(--fang-ink-secondary);cursor:pointer;white-space:nowrap;flex:none}
+      .fang-btn:hover:not(:disabled){background:var(--fang-hover-fill);color:var(--fang-ink-primary)}
+      .fang-btn:active:not(:disabled){background:var(--fang-active-fill);color:var(--fang-ink-primary)}
+      .fang-btn:focus-visible{box-shadow:0 0 0 var(--fang-focus-ring-width) var(--fang-focus-ink);outline:none}
+      .fang-btn:disabled{opacity:.45;cursor:not-allowed}
+      /* \u80AF\u5B9A\u6309\u94AE\u586B\u5F3A\u8C03\u8272\uFF0C\u50CF\u5176\u4ED6\u4E00\u5207\u300C\u5C31\u662F\u5B83\u300D\u7684\u4E1C\u897F\u3002\u6A2A\u5411\u5185\u8FB9\u8DDD\u6BD4\u522B\u7684\u6309\u94AE\u9AD8\u4E00\u6B65\uFF1A
+         \u80F6\u56CA\u4E24\u7AEF\u7684\u5F27\u662F\u5F62\u72B6\u91CC\u6700\u5BBD\u7684\u4E1C\u897F\uFF0C\u7AEF\u70B9\u4E4B\u95F4\u90A3\u6BB5\u76F4\u7684\u8DD1\u8D77\u6765\u624D\u8BFB\u4F5C\u80F6\u56CA\uFF0C\u77ED\u6807\u7B7E
+         \u9700\u8981\u8FD9\u70B9\u4F59\u91CF\u628A\u5B83\u4EAE\u51FA\u6765\u3002 */
+      .fang-btn-primary{background:var(--fang-accent);color:var(--fang-on-accent);
+        padding:0 var(--fang-space-16)}
+      .fang-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--fang-accent) 86%, #000000);color:var(--fang-on-accent)}
+      /* \u4E00\u9875\u53EA\u6709\u4E00\u4E2A\u52A8\u4F5C\u65F6\u7684\u4E3B\u6309\u94AE\u5C3A\u5BF8\uFF1A\u540C\u4E00\u67B6\u68AF\u5B50\u4E0A\u7684\u4E00\u6863\uFF0C\u9AD8\u3001\u5B57\u8DDD\u3001\u5185\u8FB9\u8DDD\u4E00\u8D77\u52A8\u3002 */
+      .fang-btn.fang-btn-xl{--fang-btn-height:var(--fang-btn-height-xl);font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        padding:0 var(--fang-space-24)}
+      .fang-btn-ghost{background:transparent;padding:0 var(--fang-space-8);color:var(--fang-ink-tertiary)}
+      .fang-btn-ghost:hover:not(:disabled){background:var(--fang-hover-fill);color:var(--fang-ink-primary)}
+      .fang-btn-ghost:active:not(:disabled){background:var(--fang-active-fill);color:var(--fang-ink-primary)}
+      /* \u53EA\u88C5\u56FE\u6807\u7684\u6309\u94AE\u548C\u5176\u4ED6\u6309\u94AE\u662F\u540C\u4E00\u4E2A 36px \u63A7\u4EF6\uFF1A\u4E00\u4E2A\u9AD8\u5EA6\u4EE4\u724C\u3001\u4E00\u4E2A pill \u534A\u5F84\u3001
+         \u6CA1\u6709\u6587\u5B57\u5185\u8FB9\u8DDD\uFF0C\u52A0\u4E00\u5708\u53D1\u4E1D\u5185\u63CF\u8FB9\u8BA9\u5B83\u6D6E\u51FA\u5E95\u8272\u3002 */
+      .fang-btn-ghost.fang-btn-icon{padding:0;background:var(--fang-bg);
+        box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-ink-edge)}
+      /* \u6309\u4E0B\u6001\uFF08aria-pressed\uFF09\uFF1A\u9009\u4E2D\u586B\u5145\u3002 */
+      .fang-btn[aria-pressed="true"]:not(:disabled),.fang-btn[aria-pressed="true"]:hover:not(:disabled){background:var(--fang-selected-fill);color:var(--fang-ink-primary)}
+
+      /* \u5DE5\u5177\u63D0\u793A\uFF1A\u4ECE\u63A7\u4EF6\u5411\u4E0B\u7684\u6DF1\u8272\u6C14\u6CE1\uFF0C\u5E26\u4E00\u4E2A\u6307\u56DE\u5B83\u7684\u5C0F\u5C16\u3002\u5750\u5728\u6240\u6709\u6D6E\u5C42\u5171\u7528\u7684
+         \u7070\u5C42\u4E0A\u2014\u2014\u4E00\u5F20\u6D6E\u8D77\u7684\u5361\uFF0C\u800C\u4E0D\u662F\u6BD4\u9875\u9762\u66F4\u6697\u7684\u6DF7\u8272\u3002 */
+      .fang-tip{position:absolute;z-index:var(--fang-layer-menu);transform:translateX(-50%);
+        pointer-events:none;padding:var(--fang-space-4) var(--fang-space-12);
+        border:var(--fang-hairline) solid color-mix(in srgb, #fff 14%, transparent);border-radius:var(--fang-radius-sm);corner-shape:round;
+        background:var(--fang-surface);
+        color:#fff;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, #000 30%, transparent)}
+      .fang-tip::after{content:'';position:absolute;top:calc(-1 * var(--fang-space-4));left:calc(50% - var(--fang-space-4));
+        width:var(--fang-space-8);height:var(--fang-space-8);background:inherit;
+        transform:rotate(45deg);border-radius:var(--fang-hairline)}
+
+      /* \u884C\u5185\u5C0F\u8BB0\u53F7\uFF1A\u884C\u5C3E\u7684\u5F00\u5408\u7BAD\u5934\u3002 */
+      .fang-chevron{flex:0 0 auto;width:var(--fang-icon-xs);height:var(--fang-icon-xs);color:var(--fang-ink-tertiary);
+        transition:transform 120ms ease}
+      .fang-chevron[data-open="true"]{transform:rotate(180deg)}
+      .fang-chevron-right{flex:0 0 auto;width:var(--fang-icon-xs);height:var(--fang-icon-xs);color:var(--fang-ink-tertiary)}
+
+      /* \u5206\u6BB5\u9009\u62E9\uFF1A\u4E00\u6761\u8F68\u9053\uFF0C\u9009\u4E2D\u7684\u6863\u4F4D\u6D6E\u5728\u8F68\u5185\u3002\u8F68\u9053\u6709\u786E\u5B9A\u7684\u9AD8\u5EA6\u3002 */
+      .fang-segmented{display:inline-flex;align-items:center;gap:var(--fang-space-2);min-width:0;padding:var(--fang-space-2);
+        height:var(--fang-segmented-height);
+        border-radius:var(--fang-radius-pill);corner-shape:round;background:var(--fang-surface);
+        box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-border-hair)}
+      .fang-segmented-item{font-family:inherit;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);padding:var(--fang-space-2) var(--fang-space-12);
+        border:none;border-radius:var(--fang-radius-pill);background:transparent;corner-shape:round;
+        color:var(--fang-ink-secondary);cursor:pointer;white-space:nowrap}
+      .fang-segmented-item:hover{background:var(--fang-hover-fill);color:var(--fang-ink-primary)}
+      .fang-segmented-item:active{background:var(--fang-active-fill)}
+      .fang-segmented-item:focus-visible{outline:none;
+        box-shadow:0 0 0 var(--fang-focus-ring-width) var(--fang-focus-ink)}
+      .fang-segmented-item[aria-pressed="true"]{background:var(--fang-selected-fill);
+        color:var(--fang-ink-primary);
+        box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-border-strong)}
+`;
+
+// ../Projects/fang-style/src/styles.js
+var FANG_CSS = `${FANG_TOKENS}
+${FANG_FRAME}
+${FANG_COMPONENTS}`;
 
 // src/client/shared/logic.js
 function diffWords(before, after) {
@@ -1646,7 +2848,7 @@ function useBookData({ api: api2, library, bookFolder, t, autoSaveMs, onLoaded }
     updateBook
   };
 }
-function createStateStore() {
+function createStateStore2() {
   const values = /* @__PURE__ */ new Map();
   const listeners = /* @__PURE__ */ new Map();
   return {
@@ -1667,7 +2869,7 @@ function createStateStore() {
     }
   };
 }
-var DOCK_STORE = createStateStore();
+var DOCK_STORE = createStateStore2();
 function useDockState(scope, key, initial) {
   const storeKey = `${scope}::${key}`;
   const [, forceRender] = React.useState(0);
@@ -1680,7 +2882,7 @@ function useDockState(scope, key, initial) {
   };
   return [value, set];
 }
-function usePersisted(key, decode, encode, forced) {
+function usePersisted2(key, decode, encode, forced) {
   const locked = forced !== void 0;
   const [value, setValue] = React.useState(() => {
     if (locked) return forced;
@@ -1698,7 +2900,7 @@ function usePersisted(key, decode, encode, forced) {
   };
   return [value, update];
 }
-function useClosingAnimation(value, durationMs = 140) {
+function useClosingAnimation2(value, durationMs = 140) {
   const open = value !== null && value !== void 0 && value !== false;
   const animated = typeof window !== "undefined";
   const [mounted, setMounted] = React.useState(open === true);
@@ -1732,7 +2934,7 @@ function useNotice(onNotice, text) {
     return () => onNotice("");
   }, [onNotice, text]);
 }
-function useDismiss(rootRef, open, onClose) {
+function useDismiss2(rootRef, open, onClose) {
   React.useEffect(() => {
     if (!open) return void 0;
     if (typeof document === "undefined" || typeof document.addEventListener !== "function") return void 0;
@@ -1753,582 +2955,6 @@ function useDismiss(rootRef, open, onClose) {
       document.removeEventListener("keydown", onKey);
     };
   }, [rootRef, open]);
-}
-
-// src/client/shared/ui.js
-function Chevron({ open, direction }) {
-  const down = direction !== "right";
-  return h("svg", {
-    className: down ? "st-seat-chevron" : "st-seat-cell-chevron",
-    viewBox: "0 0 16 16",
-    width: 12,
-    height: 12,
-    "aria-hidden": true,
-    ...down ? { "data-open": open === true ? "true" : "false" } : {},
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.6,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }, h("path", { d: down ? "M4 6.5 8 10.5 12 6.5" : "M6.5 4 10.5 8 6.5 12" }));
-}
-function Dropdown({ label, value, options, onChange, testId, className }) {
-  const [open, setOpen] = React.useState(false);
-  const rootRef = React.useRef(null);
-  useDismiss(rootRef, open, () => setOpen(false));
-  const rows = Array.isArray(options) ? options : [];
-  const current = rows.find((option) => option.value === value) ?? rows[0];
-  const pick = (next) => {
-    setOpen(false);
-    onChange(next);
-  };
-  return h(
-    "div",
-    {
-      className: `st-dropdown${className === void 0 ? "" : ` ${className}`}`,
-      ref: rootRef,
-      "data-testid": testId
-    },
-    h(
-      "button",
-      {
-        type: "button",
-        className: "st-dropdown-button",
-        "aria-haspopup": "listbox",
-        "aria-expanded": open ? "true" : "false",
-        "aria-label": label,
-        onClick: () => setOpen((was) => !was),
-        onKeyDown: (event) => {
-          if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-          event.preventDefault();
-          const at = rows.findIndex((option) => option.value === value);
-          const step = event.key === "ArrowDown" ? 1 : -1;
-          const next = rows[Math.min(rows.length - 1, Math.max(0, (at < 0 ? 0 : at) + step))];
-          if (next !== void 0) pick(next.value);
-        }
-      },
-      h("span", { className: "st-dropdown-value" }, current === void 0 ? "" : current.label),
-      h(Chevron, { open })
-    ),
-    open ? h(
-      "div",
-      { className: "st-dropdown-list", role: "listbox", "aria-label": label },
-      rows.map((option) => h("button", {
-        key: option.value,
-        type: "button",
-        className: "st-dropdown-option",
-        role: "option",
-        "aria-selected": option.value === value ? "true" : "false",
-        onClick: () => pick(option.value)
-      }, option.label))
-    ) : null
-  );
-}
-function FileButton({ label, accept, onFile, className, testId }) {
-  const inputRef = React.useRef(null);
-  return h(
-    "span",
-    { className: `st-file-button${className === void 0 ? "" : ` ${className}`}` },
-    h("button", {
-      type: "button",
-      className: "st-btn",
-      onClick: () => {
-        if (inputRef.current !== null && typeof inputRef.current.click === "function") inputRef.current.click();
-      }
-    }, label),
-    h("input", {
-      ref: inputRef,
-      type: "file",
-      className: "st-file-input",
-      accept,
-      tabIndex: -1,
-      "aria-hidden": "true",
-      "data-testid": testId,
-      onChange: (event) => {
-        const file = event?.target?.files?.[0];
-        if (file !== void 0 && typeof onFile === "function") onFile(file);
-        if (event?.target !== void 0) event.target.value = "";
-      }
-    })
-  );
-}
-function Drawer({ t, title, children, onClose, size, bodyClassName, closing = false }) {
-  React.useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-  return h(
-    "div",
-    {
-      className: `st-sheet-backdrop${closing ? " st-closing" : ""}`,
-      role: "presentation",
-      onMouseDown: (e) => {
-        if (e.target === e.currentTarget) onClose();
-      }
-    },
-    h(
-      "div",
-      {
-        className: "st-sheet",
-        role: "dialog",
-        "aria-modal": "true",
-        "aria-label": title,
-        // A named tier, not a pixel count: a page that needs room for a diagram asks for a rung on
-        // the width ladder, and the stylesheet turns that rung into a fixed width. Without one the
-        // panel sizes to its content, which is right for a two-item list.
-        "data-size": size,
-        style: size === void 0 ? void 0 : { "--st-sheet-max": `var(--st-w-${size})` }
-      },
-      h(
-        "div",
-        { className: "st-sheet-head" },
-        h("h2", { className: "st-sheet-title" }, title),
-        h("span", { className: "st-spacer" }),
-        h("button", {
-          type: "button",
-          className: "st-btn st-btn-ghost",
-          title: t("action.close"),
-          onClick: onClose
-        }, "\u2715")
-      ),
-      h("div", { className: `st-sheet-body${bodyClassName === void 0 ? "" : ` ${bodyClassName}`}` }, children)
-    )
-  );
-}
-function ConfirmDialog({ t, title, children, confirmLabel, cancelLabel, onConfirm, onCancel, busy, danger = true }) {
-  React.useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onCancel();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onCancel]);
-  return h(
-    "div",
-    {
-      className: "st-backdrop",
-      role: "presentation",
-      onMouseDown: (e) => {
-        if (e.target === e.currentTarget) onCancel();
-      }
-    },
-    h(
-      "div",
-      {
-        className: "st-dialog",
-        role: "dialog",
-        "aria-modal": "true",
-        "aria-label": title
-      },
-      h("div", { className: "st-dialog-title" }, title),
-      h("div", { className: "st-dialog-body" }, ...children ?? []),
-      h(
-        "div",
-        { className: "st-dialog-actions" },
-        h("button", { type: "button", className: "st-btn", onClick: onCancel }, cancelLabel ?? t("action.cancel")),
-        h("button", {
-          type: "button",
-          className: `st-btn st-btn-primary${danger ? " st-danger" : ""}`,
-          disabled: busy === true,
-          onClick: onConfirm
-        }, confirmLabel ?? t("action.ok"))
-      )
-    )
-  );
-}
-function PanelIcon(props) {
-  const size = props?.size ?? 16;
-  return h(
-    "svg",
-    {
-      viewBox: "0 0 64 64",
-      width: size,
-      height: size,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 5
-    },
-    h("rect", { x: 8, y: 10, width: 48, height: 44, rx: 6 }),
-    h("path", { d: "M20 24h24M20 34h24M20 44h14", strokeLinecap: "round" })
-  );
-}
-function RailIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-icon-lg",
-      viewBox: "0 0 16 16",
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      // Same weight in both states. The dimming was how the host marks an inactive toggle, but here
-      // the toggle is the way IN to the contents — dimming it made the one control a writer needs
-      // first look like the least available thing in the row.
-      opacity: 1
-    },
-    h("path", { d: "M2.5 4h11" }),
-    h("path", { d: "M2.5 8h8" }),
-    h("path", { d: "M2.5 12h9" })
-  );
-}
-function BoardIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.5,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    // A square puzzle piece: a full-height body, a tab on the top edge and a notch on the right.
-    // The old piece was wide and shallow, so at the same 18px box it looked a size smaller than
-    // the page and layer glyphs. This one is drawn on the full 16-unit grid with no transform.
-    h("path", { d: "M3 13V4h2.4a1.6 1.6 0 1 1 3.2 0H13v2.4a1.6 1.6 0 1 0 0 3.2V13z" })
-  );
-}
-function NotebookIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.5,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("path", { d: "M3.2 2.8h6.2l3.4 3.4v7H3.2z" }),
-    h("path", { d: "M9.4 2.8v3.4h3.4" }),
-    h("path", { d: "m5.2 10.8 3.9-3.9 1.4 1.4-3.9 3.9-1.8.4z" })
-  );
-}
-function ModelIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("path", { d: "M2.5 5.5 8 2.5l5.5 3-5.5 3z" }),
-    h("path", { d: "M2.5 10.5 8 13.5l5.5-3" })
-  );
-}
-function SlidersIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round"
-    },
-    h("path", { d: "M2.5 5h11M2.5 11h11" }),
-    h("circle", { cx: 5.5, cy: 5, r: 1.6 }),
-    h("circle", { cx: 10.5, cy: 11, r: 1.6 })
-  );
-}
-function BackIcon() {
-  return h("svg", {
-    className: "st-icon-md",
-    viewBox: "0 0 16 16",
-    "aria-hidden": true,
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }, h("path", { d: "M9.5 4 5.5 8 9.5 12" }));
-}
-function ShelfIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("path", { d: "M2.5 3.5h4v9h-4zM9 3.5h4.5v9H9z" }),
-    h("path", { d: "M2.5 12.5h11" })
-  );
-}
-function McpIcon() {
-  return h(
-    "svg",
-    { viewBox: "0 0 16 16", width: 16, height: 16, "aria-hidden": true, fill: "none", stroke: "currentColor", "stroke-width": 1.3 },
-    h("circle", { cx: 3.2, cy: 8, r: 1.6 }),
-    h("circle", { cx: 12.8, cy: 3.6, r: 1.6 }),
-    h("circle", { cx: 12.8, cy: 12.4, r: 1.6 }),
-    h("path", { d: "M4.7 7.2l6.5-2.8M4.7 8.8l6.5 2.8" })
-  );
-}
-function FolderIcon() {
-  return h(
-    "svg",
-    { viewBox: "0 0 16 16", width: 16, height: 16, "aria-hidden": true, fill: "none", stroke: "currentColor", "stroke-width": 1.4 },
-    h("path", { d: "M2.5 4.5h4l1.2 1.5h5.8v6.5h-11z", "stroke-linejoin": "round" })
-  );
-}
-function StartIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("path", { d: "M8 2.5v3.2M8 10.3v3.2M2.5 8h3.2M10.3 8h3.2" }),
-    h("path", { d: "m4.1 4.1 2.2 2.2M9.7 9.7l2.2 2.2M11.9 4.1 9.7 6.3M6.3 9.7l-2.2 2.2" })
-  );
-}
-function SaveIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("path", { d: "M3 3.5h7.5L13 6v6.5H3z" }),
-    h("path", { d: "M5.5 3.5v3h4v-3M5.5 9.5h5v3h-5z" })
-  );
-}
-function ExportIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("path", { d: "M8 2.5v7.5M8 10 5 7M8 10l3-3" }),
-    h("path", { d: "M2.5 11v2.5h11V11" })
-  );
-}
-function InfoIcon() {
-  return h(
-    "svg",
-    {
-      className: "st-bar-icon",
-      viewBox: "0 0 16 16",
-      width: 18,
-      height: 18,
-      "aria-hidden": true,
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    },
-    h("circle", { cx: 8, cy: 8, r: 5.5 }),
-    h("path", { d: "M8 7.2v3.6" }),
-    h("path", { d: "M8 5.1h.01" })
-  );
-}
-function TooltipLayer({ rootRef }) {
-  const [tip, setTip] = React.useState(null);
-  const held = React.useRef(null);
-  React.useEffect(() => {
-    const root = rootRef?.current;
-    if (root === null || root === void 0) return void 0;
-    let timer = null;
-    const hide = () => {
-      if (timer !== null) {
-        globalThis.clearTimeout(timer);
-        timer = null;
-      }
-      const heldTip = held.current;
-      if (heldTip !== null) {
-        heldTip.el.setAttribute("title", heldTip.title);
-        held.current = null;
-      }
-      setTip(null);
-    };
-    const show = (el) => {
-      const text = el.getAttribute("title");
-      if (text === null || text === "") return;
-      held.current = { el, title: text };
-      el.removeAttribute("title");
-      timer = globalThis.setTimeout(() => {
-        const rect = el.getBoundingClientRect();
-        const shellRect = root.getBoundingClientRect();
-        setTip({
-          text,
-          left: Math.max(8, Math.min(rect.left + rect.width / 2 - shellRect.left, shellRect.width - 8)),
-          top: rect.bottom - shellRect.top + 6
-        });
-      }, 400);
-    };
-    const onOver = (e) => {
-      const el = e.target?.closest?.("[title]");
-      if (el === null || el === void 0 || el === held.current?.el) return;
-      hide();
-      show(el);
-    };
-    const onOut = (e) => {
-      const heldTip = held.current;
-      if (heldTip === null) return;
-      const to = e.relatedTarget;
-      if (to !== null && to !== void 0 && heldTip.el.contains(to)) return;
-      hide();
-    };
-    root.addEventListener("pointerover", onOver, true);
-    root.addEventListener("pointerout", onOut, true);
-    root.addEventListener("pointerdown", hide, true);
-    return () => {
-      root.removeEventListener("pointerover", onOver, true);
-      root.removeEventListener("pointerout", onOut, true);
-      root.removeEventListener("pointerdown", hide, true);
-      hide();
-    };
-  }, [rootRef]);
-  if (tip === null) return null;
-  return h("div", { className: "st-tip", role: "tooltip", style: { left: tip.left, top: tip.top } }, tip.text);
-}
-function SegGroup({ label, options, value, onChange, testId, disabled = false }) {
-  return h(
-    "div",
-    { className: "st-seg", role: "group", "aria-label": label },
-    options.map((option) => h("button", {
-      key: option.value,
-      type: "button",
-      className: "st-seg-item",
-      "data-testid": testId === void 0 ? void 0 : `${testId}-${option.value}`,
-      "aria-pressed": option.value === value ? "true" : "false",
-      disabled: disabled === true,
-      onClick: () => onChange(option.value)
-    }, option.label))
-  );
-}
-function SplitPane({ list, detail, listProps, detailProps }) {
-  const rows = Array.isArray(list) ? list : list === void 0 ? [] : [list];
-  const body = Array.isArray(detail) ? detail : detail === void 0 ? [] : [detail];
-  return h(
-    "div",
-    { className: "st-split" },
-    h("div", { className: "st-split-list", ...listProps ?? {} }, ...rows),
-    h("section", { className: "st-split-detail", ...detailProps ?? {} }, ...body)
-  );
-}
-function List({ className, children, ...rest }) {
-  const rows = Array.isArray(children) ? children : children === void 0 ? [] : [children];
-  return h("div", {
-    className: `st-list${className === void 0 ? "" : ` ${className}`}`,
-    ...rest
-  }, ...rows);
-}
-function ListRow({ className, active, onActivate, children, ...rest }) {
-  const rows = Array.isArray(children) ? children : children === void 0 ? [] : [children];
-  const interactive = typeof onActivate === "function";
-  return h(interactive ? "button" : "div", {
-    ...interactive ? { type: "button", onClick: onActivate } : {},
-    ...rest,
-    className: `st-list-row${className === void 0 ? "" : ` ${className}`}`,
-    "data-active": active === true ? "true" : void 0
-  }, ...rows);
-}
-function Dialog({ t, title, children, onClose, size, bodyClassName, panelClassName, backdropClassName }) {
-  React.useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-  const body = Array.isArray(children) ? children : children === void 0 ? [] : [children];
-  return h(
-    "div",
-    {
-      className: `st-backdrop${backdropClassName === void 0 ? "" : ` ${backdropClassName}`}`,
-      role: "presentation",
-      onMouseDown: (e) => {
-        if (e.target === e.currentTarget) onClose();
-      }
-    },
-    h(
-      "div",
-      {
-        className: `st-dialog st-dialog-panel${panelClassName === void 0 ? "" : ` ${panelClassName}`}`,
-        role: "dialog",
-        "aria-modal": "true",
-        "aria-label": title,
-        style: size === void 0 ? void 0 : { "--st-dialog-w": `var(--st-w-${size})` }
-      },
-      h(
-        "div",
-        { className: "st-dialog-head" },
-        h("h2", { className: "st-dialog-title" }, title),
-        h("span", { className: "st-spacer" }),
-        h("button", { type: "button", className: "st-btn st-btn-ghost", title: t("action.close"), onClick: onClose }, "\u2715")
-      ),
-      h("div", { className: `st-dialog-body st-dialog-scroll${bodyClassName === void 0 ? "" : ` ${bodyClassName}`}` }, ...body)
-    )
-  );
 }
 
 // domain/ids.js
@@ -2864,11 +3490,11 @@ function NewBookDialog({ t, draft, busy, error, onDraft, onCancel, onCreate, onO
       h(
         "div",
         { className: "st-newbook-actions" },
-        typeof onOpen === "function" ? h("button", { type: "button", className: "st-btn st-btn-ghost st-newbook-open", onClick: onOpen }, t("action.open")) : null,
-        h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: onCancel }, t("action.cancel")),
+        typeof onOpen === "function" ? h("button", { type: "button", className: "fang-btn fang-btn-ghost st-newbook-open", onClick: onOpen }, t("action.open")) : null,
+        h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: onCancel }, t("action.cancel")),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-primary",
+          className: "fang-btn fang-btn-primary",
           disabled: busy || draft.trim() === "",
           onClick: onCreate
         }, busy ? "\u2026" : t("action.create"))
@@ -2932,7 +3558,7 @@ function MosaicGalleryCard({ id, kind, label, role, picture, onActivate, childre
 function MosaicCardMenu({ t, onEdit, onDelete }) {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
-  useDismiss(rootRef, open, () => setOpen(false));
+  useDismiss2(rootRef, open, () => setOpen(false));
   if (typeof onEdit !== "function" && typeof onDelete !== "function") return null;
   return h(
     "div",
@@ -2972,7 +3598,7 @@ function MosaicCardMenu({ t, onEdit, onDelete }) {
       }, t("action.editCard")) : null,
       typeof onDelete === "function" ? h("button", {
         type: "button",
-        className: "st-card-menu-item st-danger",
+        className: "st-card-menu-item fang-danger",
         role: "menuitem",
         onClick: (e) => {
           e.stopPropagation?.();
@@ -3163,13 +3789,13 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
       // library IS the panel, and a back arrow pointing nowhere would be a dead control.
       typeof onBack === "function" && backTitle ? h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost st-btn-icon st-library-back",
+        className: "fang-btn fang-btn-ghost fang-btn-icon st-library-back",
         title: t("label.backToBook", { title: backTitle }),
         "aria-label": t("label.backToBook", { title: backTitle }),
         onClick: onBack
       }, h(BackIcon)) : null,
       h("h2", { className: "st-library-title" }, t("label.library")),
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       h("span", { className: "st-caption" }, t("label.bookCount", { n: books.length }))
     ),
     // The shelf is the SAME card as the board's gallery — one component, one size, one set of
@@ -3254,7 +3880,7 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
       renaming === null ? null : h(
         "div",
         { className: "st-book-card st-book-new st-book-form" },
-        h("div", { className: "st-muted st-gap-under-hint" }, t("label.renameBookHint")),
+        h("div", { className: "fang-muted st-gap-under-hint" }, t("label.renameBookHint")),
         h("input", {
           className: "st-input",
           autoFocus: true,
@@ -3272,9 +3898,9 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
         }),
         h(
           "div",
-          { className: "st-row st-gap-over-row" },
-          h("button", { type: "button", className: "st-btn st-btn-primary", disabled: busy || draftTitle.trim() === "", onClick: commitRename }, t("action.rename")),
-          h("button", { type: "button", className: "st-btn", onClick: () => setRenaming(null) }, t("action.cancel"))
+          { className: "fang-row st-gap-over-row" },
+          h("button", { type: "button", className: "fang-btn fang-btn-primary", disabled: busy || draftTitle.trim() === "", onClick: commitRename }, t("action.rename")),
+          h("button", { type: "button", className: "fang-btn", onClick: () => setRenaming(null) }, t("action.cancel"))
         )
       )
     ),
@@ -3302,7 +3928,6 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
     // preselected. A second question buried in the card was too easy to hit by accident.
     // It sits OUTSIDE the gallery: a dialog is not a card and must not be laid out as one.
     confirming === null ? null : h(ConfirmDialog, {
-      t,
       busy,
       title: t("label.deleteBookConfirm", { title: confirming.title }),
       children: [
@@ -3562,7 +4187,7 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
     h(GlyphField),
     hasBook && typeof onBack === "function" ? h("button", {
       type: "button",
-      className: "st-btn st-btn-ghost st-btn-icon st-welcome-back",
+      className: "fang-btn fang-btn-ghost fang-btn-icon st-welcome-back",
       title: t("welcome.back"),
       "aria-label": t("welcome.back"),
       onClick: onBack
@@ -3589,12 +4214,12 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
             { className: "st-welcome-actions" },
             primary !== void 0 && primary !== null ? primary : h(
               "button",
-              { type: "button", className: "st-btn st-btn-primary st-btn-xl", onClick: begin },
+              { type: "button", className: "fang-btn fang-btn-primary fang-btn-xl", onClick: begin },
               t("welcome.begin")
             ),
             books.length > 0 && typeof onLibrary === "function" ? h(
               "button",
-              { type: "button", className: "st-btn st-btn-ghost st-btn-flow", onClick: enterShelf },
+              { type: "button", className: "fang-btn fang-btn-ghost st-btn-flow", onClick: enterShelf },
               h("span", { className: "st-btn-flow-label" }, t("welcome.library"))
             ) : null
           ),
@@ -3665,7 +4290,7 @@ function downloadText(text, name) {
   }, 0);
   return true;
 }
-function RailTools({ t, book, onStart, onShelf, onOpen, onSave, onExport, onNotice, onAbout, saving }) {
+function RailTools({ t, book, onStart, onShelf, onOpen, onContext, onSave, onExport, onNotice, onAbout, saving }) {
   const [busy, setBusy] = React.useState(false);
   const hasBook = book !== null && book !== void 0;
   const exportNow = async () => {
@@ -3730,6 +4355,18 @@ function RailTools({ t, book, onStart, onShelf, onOpen, onSave, onExport, onNoti
           disabled: typeof onOpen !== "function",
           onClick: () => {
             if (typeof onOpen === "function") onOpen();
+          }
+        }),
+        // Right under 打开目录: both answer "what is this book made of", one on disk and one in
+        // the model's context.
+        h(RailTool, {
+          t,
+          icon: h(ContextIcon),
+          label: t("rail.context"),
+          testId: "rail-context",
+          disabled: !hasBook || typeof onContext !== "function",
+          onClick: () => {
+            if (typeof onContext === "function") onContext();
           }
         }),
         h(RailTool, {
@@ -3804,7 +4441,7 @@ function AboutBox({ t, onClose }) {
   return h(
     "div",
     {
-      className: "st-backdrop",
+      className: "fang-backdrop",
       role: "presentation",
       onMouseDown: (event) => {
         if (event.target === event.currentTarget) onClose();
@@ -3812,23 +4449,23 @@ function AboutBox({ t, onClose }) {
     },
     h(
       "div",
-      { className: "st-dialog", role: "dialog", "aria-modal": "true", "aria-label": t("rail.about") },
-      h("div", { className: "st-dialog-title" }, t("rail.about")),
+      { className: "fang-dialog", role: "dialog", "aria-modal": "true", "aria-label": t("rail.about") },
+      h("div", { className: "fang-dialog-title" }, t("rail.about")),
       h(
         "div",
-        { className: "st-dialog-body" },
+        { className: "fang-dialog-body" },
         rows.map((row) => h(
           "div",
-          { key: row.key, className: "st-row st-gap-under-hint" },
-          h("span", { className: "st-muted" }, row.name),
-          h("span", { className: "st-spacer" }),
+          { key: row.key, className: "fang-row st-gap-under-hint" },
+          h("span", { className: "fang-muted" }, row.name),
+          h("span", { className: "fang-spacer" }),
           h("span", null, row.value)
         ))
       ),
       h(
         "div",
-        { className: "st-dialog-actions" },
-        h("button", { type: "button", className: "st-btn", onClick: onClose }, t("action.close"))
+        { className: "fang-dialog-actions" },
+        h("button", { type: "button", className: "fang-btn", onClick: onClose }, t("action.close"))
       )
     )
   );
@@ -4058,7 +4695,7 @@ function ChatComposer({ t, busy, catalog, modelCurrent, efforts, onModelChange, 
     h(
       "div",
       { className: "st-chat-row" },
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       h(
         "div",
         { className: "st-chat-trailing" },
@@ -4302,7 +4939,7 @@ function AiThinking({ t, question, beats: given }) {
   );
 }
 function AnswerLog({ t, answers, onInsert }) {
-  if (answers.length === 0) return h("div", { className: "st-muted" }, t("label.noAnswers"));
+  if (answers.length === 0) return h("div", { className: "fang-muted" }, t("label.noAnswers"));
   return h(
     "div",
     { className: "st-answers" },
@@ -4313,7 +4950,7 @@ function AnswerLog({ t, answers, onInsert }) {
         "div",
         { className: "st-answer-head" },
         h("span", { className: "st-answer-question" }, entry.question),
-        h("span", { className: "st-spacer" }),
+        h("span", { className: "fang-spacer" }),
         h(
           "span",
           { className: "st-caption" },
@@ -4370,10 +5007,10 @@ function ScanDock({ t, scan, onClose, onAgain, onCritique }) {
         { className: "st-scan-count" },
         isCritique ? t("scan.pointCount", { n: rows.length }) : t("scan.issueCount", { n: rows.length })
       ),
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost",
+        className: "fang-btn fang-btn-ghost",
         title: t("action.close"),
         "aria-label": t("action.close"),
         onClick: onClose
@@ -4559,7 +5196,7 @@ function TreeNav({ t, book, activeId, onSelect, onToggle, collapsed, onRename, o
         // visible button. A destructive action should not be the discoverable one.
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost st-node-rename",
+          className: "fang-btn fang-btn-ghost st-node-rename",
           title: t("action.renameNode"),
           "aria-label": t("action.renameNode"),
           onClick: (e) => {
@@ -4570,20 +5207,20 @@ function TreeNav({ t, book, activeId, onSelect, onToggle, collapsed, onRename, o
         }, "\u270E"),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost st-node-remove",
+          className: "fang-btn fang-btn-ghost st-node-remove",
           title: t("action.removeNode"),
           onClick: (e) => {
             e.stopPropagation();
             onRemove(node.id);
           }
         }, "\xD7"),
-        isContainer ? h("span", { className: "st-muted", style: { flex: "none" } }, String(node.children.length)) : h("span", { className: "st-muted", style: { flex: "none" } }, chars === 0 ? t("label.emptyNode") : t("label.charCount", { n: chars }))
+        isContainer ? h("span", { className: "fang-muted", style: { flex: "none" } }, String(node.children.length)) : h("span", { className: "fang-muted", style: { flex: "none" } }, chars === 0 ? t("label.emptyNode") : t("label.charCount", { n: chars }))
       ));
       if (isContainer && !folded) walk(node.children, depth + 1);
     }
   };
   walk(book?.nodes ?? [], 0);
-  if (rows.length === 0) return h("div", { className: "st-muted" }, t("label.emptyChapters"));
+  if (rows.length === 0) return h("div", { className: "fang-muted" }, t("label.emptyChapters"));
   return h("div", { className: "st-tree" }, rows);
 }
 function ChapterEditor(props) {
@@ -4902,7 +5539,7 @@ function ChapterEditor(props) {
       // Nothing else on this line. The chapter's word count and the save state both already have
       // a home in the status bar, and repeating them under the title made the header a read-out —
       // two places reporting the same number, which is two places that can disagree.
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       // The find bar is IN the header, not above the page: a row of its own pushed the manuscript
       // down every time it opened, and the writer lost their place in the text for a search.
       finding ? h(
@@ -4938,7 +5575,7 @@ function ChapterEditor(props) {
         h("span", { className: "st-find-count" }, query === "" ? "" : hits.length === 0 ? t("label.noMatches") : t("label.matchCount", { i: activeHit + 1, n: hits.length })),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost",
+          className: "fang-btn fang-btn-ghost",
           disabled: hits.length === 0,
           title: t("label.findPrev"),
           "aria-label": t("label.findPrev"),
@@ -4946,13 +5583,13 @@ function ChapterEditor(props) {
         }, "\u2191"),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost",
+          className: "fang-btn fang-btn-ghost",
           disabled: hits.length === 0,
           title: t("label.findNext"),
           "aria-label": t("label.findNext"),
           onClick: () => step(1)
         }, "\u2193"),
-        h("button", { type: "button", className: "st-btn st-btn-ghost", title: t("action.close"), onClick: closeFind }, "\u2715")
+        h("button", { type: "button", className: "fang-btn fang-btn-ghost", title: t("action.close"), onClick: closeFind }, "\u2715")
       ) : h(
         React.Fragment,
         null,
@@ -4961,7 +5598,7 @@ function ChapterEditor(props) {
         // thing the glyph cannot show — the chord.
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost",
+          className: "fang-btn fang-btn-ghost",
           title: t("label.findHint"),
           "aria-label": t("action.find"),
           "aria-pressed": "false",
@@ -4984,14 +5621,14 @@ function ChapterEditor(props) {
         // separated it from the button it belongs beside.
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost st-ai-trigger",
+          className: "fang-btn fang-btn-ghost st-ai-trigger",
           disabled: busy === true,
           title: t("label.aiTriggerHint", { keys: keys.askHint }),
           onClick: trigger
         }, busy === true ? "\u2026" : t("action.aiTrigger"), h("span", { className: "st-kbd" }, keys.askLabel)),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost st-ai-trigger",
+          className: "fang-btn fang-btn-ghost st-ai-trigger",
           "aria-pressed": chat !== void 0 && chat !== null && chat.open === true ? "true" : "false",
           title: t("label.chatButtonHint", { critique: keys.critiqueHint, review: keys.reviewHint }),
           onClick: () => {
@@ -5003,7 +5640,7 @@ function ChapterEditor(props) {
         }, t("action.ask"), h("span", { className: "st-kbd" }, keys.chatLabel)),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost st-ai-trigger",
+          className: "fang-btn fang-btn-ghost st-ai-trigger",
           "aria-pressed": typeof onAnswersOpen === "function" && onAnswersOpen() === true ? "true" : "false",
           onClick: () => {
             if (typeof onAnswersToggle === "function") onAnswersToggle();
@@ -5494,7 +6131,7 @@ function ProviderSection({ t, api: api2, providers, onChanged }) {
       h("span", { className: "st-model-role" }, t("model.custom")),
       h(
         "button",
-        { type: "button", className: "st-btn st-custom-add", onClick: () => open(void 0) },
+        { type: "button", className: "fang-btn st-custom-add", onClick: () => open(void 0) },
         t("model.customAdd")
       )
     ),
@@ -5513,15 +6150,15 @@ function ProviderSection({ t, api: api2, providers, onChanged }) {
         "div",
         { className: "st-custom-provider-actions" },
         h("span", { className: "st-model-follow-tag" }, provider.hasKey ? t("model.customKeyStored") : t("model.customKeyMissing")),
-        h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: () => open(provider) }, t("action.edit")),
-        h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: () => remove(provider) }, t("action.delete"))
+        h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: () => open(provider) }, t("action.edit")),
+        h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: () => remove(provider) }, t("action.delete"))
       )
     )),
     editing === null ? null : h(
       Dialog,
       {
-        t,
         title: editing.id === void 0 || editing.id === "" ? t("model.customAdd") : t("model.customEdit"),
+        closeLabel: t("action.close"),
         onClose: () => setEditing(null),
         size: "medium"
       },
@@ -5529,7 +6166,7 @@ function ProviderSection({ t, api: api2, providers, onChanged }) {
         "div",
         { className: "st-dialog-field" },
         h("span", { className: "st-dialog-label" }, t("model.kind")),
-        SegGroup({
+        Segmented({
           label: t("model.kind"),
           options: [
             { value: "chat", label: t("model.kindChat") },
@@ -5578,16 +6215,16 @@ function ProviderSection({ t, api: api2, providers, onChanged }) {
       testText === "" ? null : h("p", { className: "st-dialog-hint" }, testText),
       h(
         "div",
-        { className: "st-dialog-actions" },
+        { className: "fang-dialog-actions" },
         typeof api2?.providerTest === "function" ? h(
           "button",
-          { type: "button", className: "st-btn", disabled: testing, onClick: test },
+          { type: "button", className: "fang-btn", disabled: testing, onClick: test },
           testing ? t("model.testing") : t("model.test")
         ) : null,
-        h("button", { type: "button", className: "st-btn", onClick: () => setEditing(null) }, t("action.cancel")),
+        h("button", { type: "button", className: "fang-btn", onClick: () => setEditing(null) }, t("action.cancel")),
         h(
           "button",
-          { type: "button", className: "st-btn st-btn-primary", disabled: busy || modelsBusy, onClick: save },
+          { type: "button", className: "fang-btn fang-btn-primary", disabled: busy || modelsBusy, onClick: save },
           busy ? "\u2026" : t("action.save")
         )
       )
@@ -5640,7 +6277,7 @@ function ImageSettings({ t, api: api2, image, providers, flash, onPick }) {
       "div",
       { className: "st-model-row-head" },
       h("span", { className: "st-model-follow-tag" }, t("model.imageProvider")),
-      SegGroup({
+      Segmented({
         label: t("model.imageProvider"),
         options: [
           { value: "agnes", label: t("model.builtin") },
@@ -5666,7 +6303,7 @@ function ImageSettings({ t, api: api2, image, providers, flash, onPick }) {
       "div",
       { className: "st-model-row-head" },
       h("span", { className: "st-model-follow-tag" }, t("model.imageStyle")),
-      SegGroup({
+      Segmented({
         label: t("model.imageStyle"),
         options: IMAGE_STYLE_OPTIONS.map((option) => ({ value: option.id, label: t(option.label) })),
         value: image.style ?? "realistic",
@@ -5709,7 +6346,7 @@ function EffortAxis({ t, efforts, value, onPick }) {
 function ModelSelect({ t, groups, value, onChange }) {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
-  useDismiss(rootRef, open, () => setOpen(false));
+  useDismiss2(rootRef, open, () => setOpen(false));
   const name = modelLabel(t, value);
   const rows = [];
   for (const group of groups ?? []) {
@@ -5949,7 +6586,7 @@ function TypeChoice({ t, label, options, value, onPick }) {
     "div",
     { className: "st-type-row" },
     h("span", { className: "st-type-label" }, label),
-    SegGroup({ label, options: options.map((option) => ({ value: option.value, label: t(option.key) })), value: chosen, onChange: onPick })
+    Segmented({ label, options: options.map((option) => ({ value: option.value, label: t(option.key) })), value: chosen, onChange: onPick })
   );
 }
 function ChordRecorder({ t, chord, onPick }) {
@@ -6013,7 +6650,7 @@ function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, autoSav
           disabled: typeof onPickDirectory !== "function",
           title: library ?? ""
         }, library === void 0 || library === null || library === "" ? t("settings.libraryEmpty") : library),
-        typeof onPickDirectory === "function" ? h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: chooseLibrary }, t("action.choose")) : null
+        typeof onPickDirectory === "function" ? h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: chooseLibrary }, t("action.choose")) : null
       )
     ),
     h(
@@ -6057,7 +6694,7 @@ function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, autoSav
           { className: "st-type-foot" },
           h("button", {
             type: "button",
-            className: "st-btn st-btn-ghost",
+            className: "fang-btn fang-btn-ghost",
             onClick: () => onChange(TYPOGRAPHY_DEFAULT)
           }, t("action.resetTypography"))
         )
@@ -6074,7 +6711,7 @@ function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, autoSav
           "div",
           { className: "st-type-row" },
           h("span", { className: "st-type-label" }, t("label.autoSave")),
-          SegGroup({
+          Segmented({
             label: t("label.autoSave"),
             options: AUTO_SAVE_PRESETS.map((option) => ({ value: option.value, label: t(option.key) })),
             value: autoSaveMs,
@@ -6112,7 +6749,7 @@ function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, autoSav
             // for the other three.
             h("button", {
               type: "button",
-              className: "st-btn st-btn-ghost",
+              className: "fang-btn fang-btn-ghost",
               "data-testid": `chord-reset-${gesture}`,
               title: t("keys.resetHint"),
               onClick: () => onRebind(gesture, defaultChord(keyPlatform, gesture))
@@ -6121,12 +6758,199 @@ function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, autoSav
         ),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost",
+          className: "fang-btn fang-btn-ghost",
           "data-testid": "chords-reset",
           onClick: onResetChords
         }, t("keys.reset"))
       )
     )
+  );
+}
+
+// src/client/panel/context.js
+var SYSTEM = "@system";
+function toneOf(key) {
+  let sum = 0;
+  for (const ch of key) sum = (sum + ch.charCodeAt(0)) % 7;
+  return sum + 1;
+}
+function Segment({ label, tone, active, onPick }) {
+  return h("button", {
+    type: "button",
+    className: "st-ctx-seg",
+    "data-tone": tone,
+    "data-active": active === true ? "true" : void 0,
+    title: label,
+    onClick: onPick
+  }, h("span", { className: "st-ctx-seg-label" }, label));
+}
+function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onNotice }) {
+  const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState("");
+  const [sceneId, setSceneId] = React.useState("chat");
+  const [partKey, setPartKey] = React.useState(SYSTEM);
+  const [draft, setDraft] = React.useState(null);
+  const [busy, setBusy] = React.useState(false);
+  const load = React.useCallback(() => {
+    let live = true;
+    setError("");
+    api2.context(bookFolder, bookId, chapterId).then(
+      (value) => {
+        if (live) setData(value);
+      },
+      (failure) => {
+        if (live) setError(String(failure?.message ?? failure));
+      }
+    );
+    return () => {
+      live = false;
+    };
+  }, [api2, bookFolder, bookId, chapterId]);
+  React.useEffect(() => load(), [load]);
+  const scenes = data?.scenes ?? [];
+  const scene = scenes.find((row) => row.id === sceneId) ?? scenes[0];
+  const partOf = () => partKey === SYSTEM ? null : scene?.parts.find((row) => row.key === partKey);
+  const partLabel = (key) => key === SYSTEM ? t("context.systemPrompt") : t(`context.part.${key}`);
+  const save = async () => {
+    if (busy || scene === void 0) return;
+    setBusy(true);
+    try {
+      if (partKey === SYSTEM) await api2.savePrompt(scene.promptKey, draft ?? "");
+      else await api2.saveContext(bookId, scene.id, partKey, draft ?? "");
+      setDraft(null);
+      setData(await api2.context(bookFolder, bookId, chapterId));
+    } catch (failure) {
+      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const revert = async () => {
+    if (busy || scene === void 0) return;
+    setBusy(true);
+    try {
+      if (partKey === SYSTEM) await api2.resetPrompt(scene.promptKey);
+      else await api2.resetContext(bookId, scene.id, partKey);
+      setDraft(null);
+      setData(await api2.context(bookFolder, bookId, chapterId));
+    } catch (failure) {
+      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const pick = (key) => {
+    setPartKey(key);
+    setDraft(null);
+  };
+  const sceneRows = [];
+  for (const row of scenes) {
+    const replaced = (row.system !== null && row.system.override !== "" ? 1 : 0) + row.parts.filter((part) => part.override !== "").length;
+    sceneRows.push(h(
+      ListRow,
+      {
+        key: row.id,
+        active: row.id === scene?.id,
+        onActivate: () => {
+          setSceneId(row.id);
+          pick(row.system === null ? row.parts[0]?.key ?? "" : SYSTEM);
+        }
+      },
+      h("span", { className: "st-list-row-title" }, t(`context.scene.${row.id}`)),
+      replaced === 0 ? null : h("span", { className: "fang-list-row-meta" }, t("context.replaced"))
+    ));
+  }
+  const detail = () => {
+    if (error !== "") return [h("div", { key: "error", className: "fang-split-detail-body" }, h("p", { className: "fang-muted" }, error))];
+    if (data === null) return [h("div", { key: "loading", className: "fang-split-detail-body" }, h("p", { className: "fang-muted" }, t("label.loading")))];
+    if (scene === void 0) return [h("div", { key: "empty", className: "fang-split-detail-body" }, h("p", { className: "fang-muted" }, t("context.empty")))];
+    const part = partOf();
+    const official = partKey === SYSTEM ? scene.system?.text ?? "" : part?.official ?? "";
+    const override = partKey === SYSTEM ? scene.system?.override ?? "" : part?.override ?? "";
+    const replaceable = partKey === SYSTEM ? scene.promptKey !== "" : part?.replaceable === true;
+    const editing = draft !== null;
+    const segments = [];
+    if (scene.system !== null) segments.push({ key: SYSTEM, label: t("context.systemPrompt") });
+    for (const row of scene.parts) segments.push({ key: row.key, label: t(`context.part.${row.key}`) });
+    const bar = h("div", { key: "bar", className: "st-ctx-bar" }, ...segments.map((seg) => h(Segment, {
+      key: seg.key,
+      label: seg.label,
+      tone: seg.key === SYSTEM ? 0 : toneOf(seg.key),
+      active: seg.key === partKey,
+      onPick: () => pick(seg.key)
+    })));
+    const officialZone = h(
+      "div",
+      { key: "official", className: "st-ctx-official" },
+      h("div", { className: "st-dialog-label" }, t("context.officialVersion")),
+      official === "" ? h("p", { className: "fang-muted" }, t("context.empty")) : h("p", { className: "st-overview-text" }, official)
+    );
+    const headActions = [];
+    if (replaceable) {
+      if (editing) {
+        headActions.push(h("button", { key: "save", type: "button", className: "fang-btn fang-btn-primary", disabled: busy, onClick: save }, t("action.save")));
+        headActions.push(h("button", { key: "cancel", type: "button", className: "fang-btn", disabled: busy, onClick: () => setDraft(null) }, t("action.cancel")));
+      } else if (override !== "") {
+        headActions.push(h("button", { key: "edit", type: "button", className: "fang-btn", disabled: busy, onClick: () => setDraft(override) }, t("action.edit")));
+        headActions.push(h("button", { key: "revert", type: "button", className: "fang-btn", disabled: busy, onClick: revert }, t("context.revert")));
+      } else {
+        headActions.push(h("button", { key: "replace", type: "button", className: "fang-btn", disabled: busy, onClick: () => setDraft(official) }, t("context.replace")));
+      }
+    }
+    const copies = [];
+    if (scene.system !== null && scene.system.override !== "") {
+      copies.push({ key: SYSTEM, label: t("context.systemPrompt"), text: scene.system.override });
+    }
+    for (const row of scene.parts) {
+      if (row.override !== "") copies.push({ key: row.key, label: t(`context.part.${row.key}`), text: row.override });
+    }
+    const mineZone = h(
+      "div",
+      { key: "mine", className: "st-ctx-mine" },
+      h("div", { className: "st-dialog-label" }, t("context.myVersion")),
+      editing ? h("textarea", {
+        className: "st-overview-summary",
+        spellCheck: false,
+        value: draft,
+        onChange: (event) => setDraft(event.target.value)
+      }) : copies.length === 0 ? null : h(List, null, ...copies.map((row) => h(
+        ListRow,
+        {
+          key: `copy-${row.key}`,
+          active: partKey === row.key,
+          onActivate: () => pick(row.key)
+        },
+        h("span", { className: "st-list-row-title" }, row.label),
+        h("span", { className: "fang-list-row-meta" }, t("context.replaced")),
+        h("span", { className: "fang-list-row-meta" }, row.text)
+      )))
+    );
+    return [
+      h(
+        "div",
+        { key: "head", className: "fang-split-detail-head" },
+        h("h3", { className: "fang-split-detail-title" }, partLabel(partKey)),
+        h(
+          "span",
+          { className: "fang-split-detail-meta" },
+          override !== "" ? t("context.replaced") : replaceable ? t("context.official") : t("context.readonly")
+        ),
+        ...headActions
+      ),
+      bar,
+      officialZone,
+      mineZone
+    ];
+  };
+  return h(
+    Dialog,
+    { title: t("tab.context"), closeLabel: t("action.close"), onClose, size: "max", bodyClassName: "st-ctx-dialog-body" },
+    h(SplitPane, {
+      listProps: { role: "tablist", "aria-label": t("context.scenes") },
+      list: h(List, null, ...sceneRows),
+      detailProps: { role: "tabpanel" },
+      detail: detail()
+    })
   );
 }
 
@@ -6166,7 +6990,7 @@ function McpPanel({ t, info, error, loading, onClose, onLaunch }) {
         "div",
         { className: "st-mcp-head" },
         h("h2", { className: "st-mcp-title" }, t("mcp.title")),
-        h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: onClose }, t("action.close"))
+        h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: onClose }, t("action.close"))
       ),
       loading ? h("p", { className: "st-mcp-note" }, t("label.loading")) : null,
       error === "" ? null : h("p", { className: "st-mcp-error" }, error),
@@ -6179,20 +7003,20 @@ function McpPanel({ t, info, error, loading, onClose, onLaunch }) {
           h("span", { className: "st-mcp-dot" }),
           info.connected === true ? t("mcp.connected") : t("mcp.waiting")
         ),
-        typeof onLaunch === "function" ? h("button", { type: "button", className: "st-btn st-btn-primary", onClick: launch }, t("mcp.launch")) : null,
+        typeof onLaunch === "function" ? h("button", { type: "button", className: "fang-btn fang-btn-primary", onClick: launch }, t("mcp.launch")) : null,
         launchError === "" ? null : h("p", { className: "st-mcp-error" }, launchError),
         h(
           "div",
           { className: "st-mcp-row" },
           h("span", { className: "st-mcp-label" }, t("mcp.endpoint")),
           h("code", { className: "st-mcp-value" }, info.url),
-          h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: () => copy(info.url) }, t("action.copy"))
+          h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: () => copy(info.url) }, t("action.copy"))
         ),
         h(
           "div",
           { className: "st-mcp-row st-mcp-row-config" },
           h("span", { className: "st-mcp-label" }, t("mcp.config")),
-          h("button", { type: "button", className: "st-btn st-btn-ghost", onClick: () => copy(config) }, t("action.copy"))
+          h("button", { type: "button", className: "fang-btn fang-btn-ghost", onClick: () => copy(config) }, t("action.copy"))
         ),
         h("pre", { className: "st-mcp-config" }, config)
       )
@@ -6443,7 +7267,7 @@ function describeChange(change, nameOf) {
 }
 function renderManuscript(markdown, t) {
   const blocks = renderMarkdownBlocks(markdown);
-  if (blocks.length === 0) return [h("div", { className: "st-muted" }, t("label.emptyManuscript"))];
+  if (blocks.length === 0) return [h("div", { className: "fang-muted" }, t("label.emptyManuscript"))];
   return blocks.map((block, index) => {
     if (block.type === "hr") return h("hr", { key: index, className: "st-md-rule" });
     const spans = block.spans.map((span, i) => span.style === "bold" ? h("strong", { key: i }, span.text) : span.style === "italic" ? h("em", { key: i }, span.text) : span.text);
@@ -6526,7 +7350,7 @@ function DetailPortrait({ t, entity, picture, busy, onPortrait, editable }) {
 function MosaicPick({ label, testId, value, options, onPick }) {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef(null);
-  useDismiss(rootRef, open, () => setOpen(false));
+  useDismiss2(rootRef, open, () => setOpen(false));
   const current = options.find((option) => option.value === value) ?? options[0];
   const pick = (next) => {
     setOpen(false);
@@ -6575,6 +7399,8 @@ function MosaicPick({ label, testId, value, options, onPick }) {
 }
 function MosaicEdgeDetail({ t, picked, byId, onClose }) {
   const edge = picked.edge;
+  const from = byId.get(edge.from);
+  const to = byId.get(edge.to);
   const holderName = (id) => byId.get(id)?.name ?? t("mosaic.untitled");
   return h(
     "div",
@@ -6584,7 +7410,29 @@ function MosaicEdgeDetail({ t, picked, byId, onClose }) {
       { className: "st-mosaic-detail-head" },
       h("span", { className: "st-mosaic-detail-title" }, edge.truth.kind || t("mosaic.untitled")),
       edge.retired === true ? h("span", { className: "st-mosaic-badge" }, t("mosaic.retired")) : null,
-      h("button", { type: "button", className: "st-btn st-btn-ghost st-mosaic-detail-close", title: t("action.close"), onClick: onClose }, "\u2715")
+      h("button", { type: "button", className: "fang-btn fang-btn-ghost st-mosaic-detail-close", title: t("action.close"), onClick: onClose }, "\u2715")
+    ),
+    h(
+      "div",
+      { className: "st-mosaic-detail-section st-mosaic-detail-direction-section" },
+      h("div", { className: "st-mosaic-detail-label" }, t("mosaic.direction")),
+      h(
+        "div",
+        { className: "st-mosaic-detail-direction" },
+        h(
+          "span",
+          { className: "st-mosaic-detail-party" },
+          h("span", { className: "st-mosaic-detail-party-label" }, t("mosaic.subject")),
+          h("span", { className: "st-mosaic-detail-holder" }, from?.name ?? t("mosaic.untitled"))
+        ),
+        h("span", { className: "st-mosaic-detail-direction-arrow", "aria-hidden": true }, "\u2192"),
+        h(
+          "span",
+          { className: "st-mosaic-detail-party" },
+          h("span", { className: "st-mosaic-detail-party-label" }, t("mosaic.object")),
+          h("span", { className: "st-mosaic-detail-holder" }, to?.name ?? t("mosaic.untitled"))
+        )
+      )
     ),
     edge.truth.note !== "" ? h("p", { className: "st-mosaic-detail-note" }, edge.truth.note) : null,
     edge.beliefs.length > 0 ? h(
@@ -6672,7 +7520,7 @@ function MosaicEntityDetail({ t, picked, byId, onPatchEntity, onClose, onPortrai
       ),
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost st-mosaic-detail-close",
+        className: "fang-btn fang-btn-ghost st-mosaic-detail-close",
         title: t("action.close"),
         "aria-label": t("action.close"),
         onClick: onClose
@@ -6973,7 +7821,13 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
               x1: start.x,
               y1: start.y,
               x2: end.x,
-              y2: end.y
+              y2: end.y,
+              // The transparent hit stroke is the element the pointer actually lands on. The
+              // visible line keeps its handler too, for a browser that hit-tests the painted line.
+              onClick: (e) => {
+                e.stopPropagation?.();
+                onPick({ kind: "edge", edge });
+              }
             }),
             h("line", {
               className: "st-mosaic-edge" + (pickedEdge ? " st-mosaic-edge-picked" : ""),
@@ -6989,7 +7843,7 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
               }
             }),
             h("polygon", {
-              className: "st-mosaic-edge-arrow",
+              className: "st-mosaic-edge-arrow" + (pickedEdge ? " st-mosaic-edge-arrow-picked" : ""),
               points: arrowPoints,
               "aria-hidden": true
             }),
@@ -7110,7 +7964,7 @@ function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, onPortra
       }),
       focusId === null ? null : h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost",
+        className: "fang-btn fang-btn-ghost",
         "data-testid": "mosaic-focus-clear",
         onClick: () => setFocusId(null)
       }, t("mosaic.focusClear"))
@@ -7180,7 +8034,7 @@ function MosaicNewCard({ t, onCreate, onCreated, defaultKind }) {
     null,
     h("button", {
       type: "button",
-      className: "st-btn st-btn-primary",
+      className: "fang-btn fang-btn-primary",
       "data-testid": "mosaic-new",
       onClick: () => {
         reset();
@@ -7190,7 +8044,7 @@ function MosaicNewCard({ t, onCreate, onCreated, defaultKind }) {
     open ? h(
       "div",
       {
-        className: "st-backdrop",
+        className: "fang-backdrop",
         role: "presentation",
         onMouseDown: (e) => {
           if (e.target === e.currentTarget) close();
@@ -7198,11 +8052,11 @@ function MosaicNewCard({ t, onCreate, onCreated, defaultKind }) {
       },
       h(
         "div",
-        { className: "st-dialog", role: "dialog", "aria-modal": "true", "aria-label": t("mosaic.newTitle") },
-        h("div", { className: "st-dialog-title" }, t("mosaic.newTitle")),
+        { className: "fang-dialog", role: "dialog", "aria-modal": "true", "aria-label": t("mosaic.newTitle") },
+        h("div", { className: "fang-dialog-title" }, t("mosaic.newTitle")),
         h(
           "div",
-          { className: "st-dialog-body" },
+          { className: "fang-dialog-body" },
           h(
             "label",
             { className: "st-dialog-field" },
@@ -7228,11 +8082,11 @@ function MosaicNewCard({ t, onCreate, onCreated, defaultKind }) {
         ),
         h(
           "div",
-          { className: "st-dialog-actions" },
-          h("button", { type: "button", className: "st-btn", onClick: close }, t("action.cancel")),
+          { className: "fang-dialog-actions" },
+          h("button", { type: "button", className: "fang-btn", onClick: close }, t("action.cancel")),
           h("button", {
             type: "button",
-            className: "st-btn st-btn-primary",
+            className: "fang-btn fang-btn-primary",
             "data-testid": "mosaic-new-submit",
             onClick: submit
           }, t("mosaic.newSubmit"))
@@ -7367,14 +8221,14 @@ function MosaicCheckHeader({ t, api: api2, bookFolder, book, chapter, mosaicProp
         { className: "st-mosaic-check-row" },
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost",
+          className: "fang-btn fang-btn-ghost",
           "data-testid": "mosaic-check",
           disabled: busy,
           onClick: check
         }, t("mosaic.check")),
         h("button", {
           type: "button",
-          className: "st-btn st-btn-ghost",
+          className: "fang-btn fang-btn-ghost",
           "data-testid": "mosaic-relate",
           disabled: busy,
           onClick: relate
@@ -7426,14 +8280,14 @@ function MosaicCheckHeader({ t, api: api2, bookFolder, book, chapter, mosaicProp
               { className: "st-mosaic-proposal-actions" },
               h("button", {
                 type: "button",
-                className: "st-btn st-btn-ghost",
+                className: "fang-btn fang-btn-ghost",
                 "data-testid": "proposal-accept",
                 disabled: busy,
                 onClick: () => onDecide(i, verdict === "accepted" ? "undecided" : "accepted")
               }, t("mosaic.accept")),
               h("button", {
                 type: "button",
-                className: "st-btn st-btn-ghost",
+                className: "fang-btn fang-btn-ghost",
                 "data-testid": "proposal-reject",
                 disabled: busy,
                 onClick: () => onDecide(i, verdict === "rejected" ? "undecided" : "rejected")
@@ -7446,14 +8300,14 @@ function MosaicCheckHeader({ t, api: api2, bookFolder, book, chapter, mosaicProp
           { className: "st-mosaic-apply-row" },
           hasChangeLeft ? h("button", {
             type: "button",
-            className: "st-btn st-btn-ghost",
+            className: "fang-btn fang-btn-ghost",
             "data-testid": "proposal-accept-all",
             disabled: busy,
             onClick: acceptAll
           }, t("mosaic.acceptAll")) : null,
           (proposal.changes ?? []).some((_, i) => decisions[i] === "accepted") ? h("button", {
             type: "button",
-            className: "st-btn st-btn-primary",
+            className: "fang-btn fang-btn-primary",
             "data-testid": "proposal-apply",
             disabled: busy,
             onClick: apply
@@ -7646,22 +8500,22 @@ function ProposalsPage({ t, api: api2, book, bookFolder, onApply, onNotice }) {
             h("span", { className: "st-mosaic-proposal-count" }, `${changes.length} ${t("mosaic.proposalChanges")}`),
             h("span", { className: "st-mosaic-proposal-status", "data-status": row.status }, STATUS_LABEL[row.status] ?? row.status)
           ),
-          h("span", { className: "st-list-row-meta" }, [SOURCE_LABEL[row.source] ?? row.source, chapterTitleOf(row.sourceChapterId), timeOf2(row.at)].filter((part) => part !== "").join(" \xB7 ")),
-          (row.evidence ?? []).length === 0 ? null : h("span", { className: "st-list-row-meta" }, row.evidence[0])
+          h("span", { className: "fang-list-row-meta" }, [SOURCE_LABEL[row.source] ?? row.source, chapterTitleOf(row.sourceChapterId), timeOf2(row.at)].filter((part) => part !== "").join(" \xB7 ")),
+          (row.evidence ?? []).length === 0 ? null : h("span", { className: "fang-list-row-meta" }, row.evidence[0])
         );
       })
     ),
     detailProps: { role: "tabpanel" },
-    detail: picked === void 0 ? [h("div", { className: "st-split-detail-body" }, h("p", { className: "st-muted" }, t("mosaic.proposalsEmpty")))] : [
+    detail: picked === void 0 ? [h("div", { className: "fang-split-detail-body" }, h("p", { className: "fang-muted" }, t("mosaic.proposalsEmpty")))] : [
       h(
         "div",
-        { className: "st-split-detail-head" },
-        h("h3", { className: "st-split-detail-title" }, SOURCE_LABEL[picked.source] ?? picked.source),
-        h("span", { className: "st-split-detail-meta" }, STATUS_LABEL[picked.status] ?? picked.status)
+        { className: "fang-split-detail-head" },
+        h("h3", { className: "fang-split-detail-title" }, SOURCE_LABEL[picked.source] ?? picked.source),
+        h("span", { className: "fang-split-detail-meta" }, STATUS_LABEL[picked.status] ?? picked.status)
       ),
       h(
         "div",
-        { className: "st-split-detail-body" },
+        { className: "fang-split-detail-body" },
         h(
           "div",
           { className: "st-mosaic-proposal-meta" },
@@ -7682,14 +8536,14 @@ function ProposalsPage({ t, api: api2, book, bookFolder, onApply, onNotice }) {
           { className: "st-mosaic-proposal-actions" },
           h("button", {
             type: "button",
-            className: "st-btn st-btn-ghost",
+            className: "fang-btn fang-btn-ghost",
             "data-testid": `proposal-accept-${picked.id}`,
             disabled: busy,
             onClick: () => answer(picked, "accepted")
           }, t("mosaic.proposalAccept")),
           h("button", {
             type: "button",
-            className: "st-btn st-btn-ghost",
+            className: "fang-btn fang-btn-ghost",
             "data-testid": `proposal-reject-${picked.id}`,
             disabled: busy,
             onClick: () => answer(picked, "rejected")
@@ -7699,7 +8553,7 @@ function ProposalsPage({ t, api: api2, book, bookFolder, onApply, onNotice }) {
           { className: "st-mosaic-proposal-actions" },
           h("button", {
             type: "button",
-            className: "st-btn st-btn-ghost",
+            className: "fang-btn fang-btn-ghost",
             "data-testid": `proposal-delete-${picked.id}`,
             disabled: busy,
             onClick: () => discard(picked)
@@ -7723,7 +8577,7 @@ function VersionsPage({ t, book, bookFolder, api: api2, onAdoptWritten }) {
     title: t("tab.versions"),
     // Snapshot is the page's one action, so it takes the page's one control row like every other
     // board page; it used to sit at the top of the content, which read as a different layout.
-    actions: h("button", { type: "button", className: "st-btn", onClick: snap }, t("action.snapshot")),
+    actions: h("button", { type: "button", className: "fang-btn", onClick: snap }, t("action.snapshot")),
     content: h(
       List,
       { className: "st-mosaic-versions" },
@@ -7734,9 +8588,9 @@ function VersionsPage({ t, book, bookFolder, api: api2, onAdoptWritten }) {
           "div",
           { className: "st-mosaic-version-text" },
           h("div", { className: "st-list-row-title" }, s.label),
-          h("div", { className: "st-list-row-meta" }, new Date(s.at).toLocaleString())
+          h("div", { className: "fang-list-row-meta" }, new Date(s.at).toLocaleString())
         ),
-        h("button", { type: "button", className: "st-btn", onClick: () => restore(s.id) }, t("action.restore"))
+        h("button", { type: "button", className: "fang-btn", onClick: () => restore(s.id) }, t("action.restore"))
       ))
     )
   });
@@ -7781,7 +8635,7 @@ function WritingStylesPage({ t, api: api2, bookFolder, book, onNotice }) {
     t,
     title: t("tab.writingStyles"),
     actions: h(WritingStyleNewButton, { t, api: api2, bookFolder, onCreated: reload, setBoardBusy, setNote }),
-    content: state === null ? h("div", { className: "st-muted" }, t("label.loading")) : state.writingStyles.length === 0 ? h("div", { className: "st-muted" }, t("mosaic.writingStyle.empty")) : (() => {
+    content: state === null ? h("div", { className: "fang-muted" }, t("label.loading")) : state.writingStyles.length === 0 ? h("div", { className: "fang-muted" }, t("mosaic.writingStyle.empty")) : (() => {
       const picked = pickedId === "__closed" ? void 0 : state.writingStyles.find((row) => row.id === pickedId) ?? state.writingStyles[0];
       const active = picked === void 0 ? false : state.activeId === picked.id;
       return SplitPane({
@@ -7800,29 +8654,29 @@ function WritingStylesPage({ t, api: api2, bookFolder, book, onNotice }) {
             h("span", { className: "st-list-row-title" }, writingStyle.name),
             h(
               "span",
-              { className: "st-list-row-meta" },
+              { className: "fang-list-row-meta" },
               state.activeId === writingStyle.id ? t("mosaic.writingStyle.active") : t("mosaic.writingStyle.use")
             )
           ))
         ),
         detailProps: { role: "tabpanel" },
-        detail: picked === void 0 ? [h("div", { className: "st-split-detail-body" }, h("p", { className: "st-muted" }, t("mosaic.writingStyle.empty")))] : [
+        detail: picked === void 0 ? [h("div", { className: "fang-split-detail-body" }, h("p", { className: "fang-muted" }, t("mosaic.writingStyle.empty")))] : [
           h(
             "div",
-            { className: "st-split-detail-head" },
-            h("h3", { className: "st-split-detail-title" }, picked.name),
-            h("span", { className: "st-split-detail-meta" }, active ? t("mosaic.writingStyle.active") : "")
+            { className: "fang-split-detail-head" },
+            h("h3", { className: "fang-split-detail-title" }, picked.name),
+            h("span", { className: "fang-split-detail-meta" }, active ? t("mosaic.writingStyle.active") : "")
           ),
           h(
             "div",
-            { className: "st-split-detail-body" },
+            { className: "fang-split-detail-body" },
             h("p", { className: "st-writing-style-prompt" }, picked.prompt),
             active ? null : h(
               "div",
               { className: "st-mosaic-proposal-actions" },
               h("button", {
                 type: "button",
-                className: "st-btn st-btn-primary",
+                className: "fang-btn fang-btn-primary",
                 "data-testid": "writing-style-use",
                 onClick: () => use(picked.id)
               }, t("mosaic.writingStyle.use"))
@@ -7902,7 +8756,7 @@ function WritingStyleNewButton({ t, api: api2, bookFolder, onCreated, setBoardBu
     null,
     h("button", {
       type: "button",
-      className: "st-btn st-btn-primary",
+      className: "fang-btn fang-btn-primary",
       "data-testid": "writing-style-new",
       onClick: () => {
         setError("");
@@ -7912,7 +8766,7 @@ function WritingStyleNewButton({ t, api: api2, bookFolder, onCreated, setBoardBu
     open ? h(
       "div",
       {
-        className: "st-backdrop",
+        className: "fang-backdrop",
         role: "presentation",
         onMouseDown: (e) => {
           if (e.target === e.currentTarget) close();
@@ -7920,11 +8774,11 @@ function WritingStyleNewButton({ t, api: api2, bookFolder, onCreated, setBoardBu
       },
       h(
         "div",
-        { className: "st-dialog", role: "dialog", "aria-modal": "true", "aria-label": t("mosaic.writingStyle.new") },
-        h("div", { className: "st-dialog-title" }, t("mosaic.writingStyle.new")),
+        { className: "fang-dialog", role: "dialog", "aria-modal": "true", "aria-label": t("mosaic.writingStyle.new") },
+        h("div", { className: "fang-dialog-title" }, t("mosaic.writingStyle.new")),
         h(
           "div",
-          { className: "st-dialog-body" },
+          { className: "fang-dialog-body" },
           h(
             "label",
             { className: "st-dialog-field" },
@@ -7970,7 +8824,7 @@ function WritingStyleNewButton({ t, api: api2, bookFolder, onCreated, setBoardBu
               }),
               h("button", {
                 type: "button",
-                className: "st-btn st-writing-style-generate",
+                className: "fang-btn st-writing-style-generate",
                 disabled: busy,
                 "data-testid": "writing-style-generate",
                 onClick: generate
@@ -7981,11 +8835,11 @@ function WritingStyleNewButton({ t, api: api2, bookFolder, onCreated, setBoardBu
         ),
         h(
           "div",
-          { className: "st-dialog-actions" },
-          h("button", { type: "button", className: "st-btn", onClick: close }, t("action.cancel")),
+          { className: "fang-dialog-actions" },
+          h("button", { type: "button", className: "fang-btn", onClick: close }, t("action.cancel")),
           h("button", {
             type: "button",
-            className: "st-btn st-btn-primary",
+            className: "fang-btn fang-btn-primary",
             disabled: busy,
             "data-testid": "writing-style-save",
             onClick: submit
@@ -8040,7 +8894,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
     }
   };
   if (book === null || book === void 0) {
-    return h("div", { className: "st-scroll st-muted" }, t("label.loading"));
+    return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
   }
   const chapters = book.chapters ?? [];
   const selected = chapters.find((chapter) => chapter.id === pickedId) ?? chapters[0];
@@ -8059,7 +8913,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
       "div",
       { className: "st-overview-actions" },
       // The cast count comes from the board: there is no separate character list any more.
-      h("span", { className: "st-muted" }, t("label.overviewProgress", {
+      h("span", { className: "fang-muted" }, t("label.overviewProgress", {
         c: total,
         f: finals,
         t: total,
@@ -8067,7 +8921,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
       })),
       h(
         "button",
-        { type: "button", className: "st-btn", disabled: busy, onClick: refresh },
+        { type: "button", className: "fang-btn", disabled: busy, onClick: refresh },
         busy ? "\u2026" : t("action.refresh")
       )
     ),
@@ -8079,7 +8933,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
         list: h(
           List,
           null,
-          chapters.length === 0 ? h("p", { className: "st-muted" }, t("mosaic.chapterEmpty")) : chapters.map((chapter) => h(
+          chapters.length === 0 ? h("p", { className: "fang-muted" }, t("mosaic.chapterEmpty")) : chapters.map((chapter) => h(
             ListRow,
             {
               key: chapter.id,
@@ -8091,7 +8945,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
             h("span", { className: "st-list-row-title" }, chapter.title || t("mosaic.untitled")),
             h(
               "span",
-              { className: "st-list-row-meta" },
+              { className: "fang-list-row-meta" },
               t("label.charCount", { n: textOf(chapter).length })
             )
           ))
@@ -8100,18 +8954,18 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
         detail: [
           selected === void 0 ? null : h(
             "div",
-            { className: "st-split-detail-head" },
-            h("h3", { className: "st-split-detail-title" }, selected.title || t("mosaic.untitled")),
+            { className: "fang-split-detail-head" },
+            h("h3", { className: "fang-split-detail-title" }, selected.title || t("mosaic.untitled")),
             h(
               "span",
-              { className: "st-split-detail-meta" },
+              { className: "fang-split-detail-meta" },
               t("label.charCount", { n: textOf(selected).length })
             )
           ),
           h(
             "div",
-            { className: "st-split-detail-body" },
-            selected === void 0 ? h("p", { className: "st-muted" }, t("mosaic.chapterEmpty")) : h(
+            { className: "fang-split-detail-body" },
+            selected === void 0 ? h("p", { className: "fang-muted" }, t("mosaic.chapterEmpty")) : h(
               React.Fragment,
               null,
               h(
@@ -8131,13 +8985,13 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
                 "div",
                 { className: "st-overview-field" },
                 h("span", { className: "st-overview-label" }, t("mosaic.overviewLabel")),
-                chapterOverview !== void 0 ? h("p", { className: "st-overview-text" }, chapterOverview.text) : h("p", { className: "st-overview-text st-muted" }, t("mosaic.overviewEmpty"))
+                chapterOverview !== void 0 ? h("p", { className: "st-overview-text" }, chapterOverview.text) : h("p", { className: "st-overview-text fang-muted" }, t("mosaic.overviewEmpty"))
               ),
               h(
                 "div",
                 { className: "st-overview-field" },
                 h("span", { className: "st-overview-label" }, t("mosaic.bodyLabel")),
-                textOf(selected) === "" ? h("p", { className: "st-overview-text st-muted" }, t("mosaic.bodyEmpty")) : h("div", { className: "st-overview-body" }, textOf(selected))
+                textOf(selected) === "" ? h("p", { className: "st-overview-text fang-muted" }, t("mosaic.bodyEmpty")) : h("div", { className: "st-overview-body" }, textOf(selected))
               )
             )
           )
@@ -8147,29 +9001,29 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
         "div",
         { className: "st-overview-global" },
         h("div", { className: "st-overview-label" }, t("label.overviewGlobal")),
-        book.overview.global ? h("p", { className: "st-overview-text" }, book.overview.global.text) : h("p", { className: "st-overview-text st-muted" }, t("mosaic.overviewEmpty"))
+        book.overview.global ? h("p", { className: "st-overview-text" }, book.overview.global.text) : h("p", { className: "st-overview-text fang-muted" }, t("mosaic.overviewEmpty"))
       ),
       h(
         "div",
-        { className: "st-row st-gap-over-section" },
-        h("button", { type: "button", className: "st-btn st-btn-primary", onClick: runManuscript }, t("action.manuscript")),
-        h("button", { type: "button", className: "st-btn", onClick: runConsistency }, t("action.consistency"))
+        { className: "fang-row st-gap-over-section" },
+        h("button", { type: "button", className: "fang-btn fang-btn-primary", onClick: runManuscript }, t("action.manuscript")),
+        h("button", { type: "button", className: "fang-btn", onClick: runConsistency }, t("action.consistency"))
       ),
       dialog === "manuscript" ? h(
         Dialog,
         {
-          t,
           title: t("action.manuscript"),
+          closeLabel: t("action.close"),
           onClose: () => setDialog(null),
           size: "wide"
         },
-        manuscript === "" || manuscript === null ? h("div", { className: "st-muted" }, t("label.emptyManuscript")) : h("div", { className: "st-manuscript" }, ...renderManuscript(manuscript, t))
+        manuscript === "" || manuscript === null ? h("div", { className: "fang-muted" }, t("label.emptyManuscript")) : h("div", { className: "st-manuscript" }, ...renderManuscript(manuscript, t))
       ) : null,
       dialog === "consistency" && issues !== null ? h(
         Dialog,
         {
-          t,
           title: t("label.consistencyReport"),
+          closeLabel: t("action.close"),
           onClose: () => setDialog(null),
           size: "medium"
         },
@@ -8181,7 +9035,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
             { key: index, className: "st-issue" },
             h("span", { className: "st-badge" }, issueKind(issue.kind)),
             h("span", null, `${issue.where ? `${issue.where}\uFF1A` : ""}${issue.problem}`),
-            issue.evidence ? h("div", { className: "st-muted" }, issue.evidence) : null
+            issue.evidence ? h("div", { className: "fang-muted" }, issue.evidence) : null
           ))
         )
       ) : null
@@ -8400,7 +9254,6 @@ function MosaicSheet({
       // asks the same question in the same shape, and one dialog is why the two ask it
       // identically.
       dooming === null ? null : h(ConfirmDialog, {
-        t,
         title: t("mosaic.deleteCardTitle", { name: dooming.name }),
         confirmLabel: t("action.delete"),
         cancelLabel: t("action.cancel"),
@@ -8601,10 +9454,10 @@ function MosaicEntityPage({ t, entity, mosaic, onClose, closing, onPatchEntity, 
         "aria-label": t("mosaic.name"),
         onChange: (e) => patch({ name: e.target.value })
       }) : h("h3", { className: "st-mosaic-page-title" }, entity.name),
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost",
+        className: "fang-btn fang-btn-ghost",
         "data-testid": "mosaic-entity-edit",
         "data-editing": editing ? "true" : "false",
         title: editing ? t("action.done") : t("mosaic.editEntry"),
@@ -8612,7 +9465,7 @@ function MosaicEntityPage({ t, entity, mosaic, onClose, closing, onPatchEntity, 
       }, editing ? t("action.done") : t("mosaic.editEntry")),
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost",
+        className: "fang-btn fang-btn-ghost",
         title: t("action.close"),
         "aria-label": t("action.close"),
         onClick: onClose
@@ -8825,6 +9678,14 @@ function createStoryApi(transport) {
     generateWritingStyle: (bookFolder, source) => call("/api/story.writingStyle.generate", { bookFolder, source }),
     consistency: (bookFolder) => call("/api/story.consistency", { bookFolder }),
     manuscript: (bookFolder) => call("/api/story.manuscript", { bookFolder }),
+    // The context page: the parts of the current context, and the writer's system-prompt copies.
+    // The book is named by ID, so a stale folder name cannot point the page at another book.
+    context: (bookFolder, bookId, chapterId) => call("/api/story.context", { bookFolder, bookId, chapterId }),
+    savePrompt: (key, text) => call("/api/story.context.prompt.save", { key, text }),
+    resetPrompt: (key) => call("/api/story.context.prompt.reset", { key }),
+    // One scene part's copy, kept in the book's own context.json.
+    saveContext: (bookId, scene, part, text) => call("/api/story.context.save", { bookId, scene, part, text }),
+    resetContext: (bookId, scene, part) => call("/api/story.context.reset", { bookId, scene, part }),
     // Which model the panel's own actions run on, for the status bar.
     meta: () => call("/api/story.meta", {}),
     // Where the books live. One setting decides it; changing it does not move any files.
@@ -8946,8 +9807,8 @@ function SystemEventLog({ t }) {
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
   };
-  if (error !== "") return h("div", { className: "st-muted" }, error);
-  if (events === null) return h("div", { className: "st-muted" }, t("label.loading"));
+  if (error !== "") return h("div", { className: "fang-muted" }, error);
+  if (events === null) return h("div", { className: "fang-muted" }, t("label.loading"));
   const types = [...new Set((events ?? []).map(eventType))].sort();
   const rows = (events ?? []).filter((event) => filter === "all" || eventType(event) === filter).reverse();
   const headCells = EVENT_COLUMNS.map((column, index) => h(
@@ -8999,10 +9860,10 @@ function SystemEventLog({ t }) {
           ...types.map((type) => ({ value: type, label: t(`log.op.${type}`) }))
         ]
       }),
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost",
+        className: "fang-btn fang-btn-ghost",
         title: t("log.refresh"),
         onClick: () => setRefreshTick((tick) => tick + 1)
       }, "\u27F3")
@@ -9015,7 +9876,7 @@ function SystemEventLog({ t }) {
     h(
       "div",
       { className: "st-event-body" },
-      rows.length === 0 ? h("div", { className: "st-muted" }, t("log.empty")) : bodyRows
+      rows.length === 0 ? h("div", { className: "fang-muted" }, t("log.empty")) : bodyRows
     )
   );
 }
@@ -9023,8 +9884,8 @@ function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClose }) {
   const [page, setPage] = React.useState("answers");
   if (!open) return null;
   return h(Drawer, {
-    t,
     title: t("action.answers"),
+    closeLabel: t("action.close"),
     onClose,
     // Answers are prose, set at the manuscript's size: narrow would wrap them into a column
     // of fragments.
@@ -9032,7 +9893,7 @@ function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClose }) {
     children: h(
       "div",
       { className: "st-answers-pages" },
-      SegGroup({
+      Segmented({
         label: t("action.answers"),
         options: [
           { value: "answers", label: t("log.page.answers") },
@@ -9064,9 +9925,9 @@ function RemoveNodeOverlay({ t, doomed, countUnder, onConfirm, onCancel }) {
   if (counts.chars > 0) lines.push(h("div", { key: "chars" }, t("label.removeNodeChars", { n: counts.chars })));
   lines.push(h("div", { key: "warn", className: "st-dialog-hint" }, t("label.removeNodeWarn")));
   return h(ConfirmDialog, {
-    t,
     title: t("label.removeNodeConfirm", { title: doomed.title || t(`level.${doomed.level}`) }),
     confirmLabel: t("action.delete"),
+    cancelLabel: t("action.cancel"),
     onConfirm,
     onCancel,
     children: lines
@@ -9079,8 +9940,8 @@ var DRAWER_SIZES = {
 function SheetOverlay({ t, motion, onClose, body }) {
   if (!motion.mounted) return null;
   return h(Drawer, {
-    t,
     title: t(`tab.${motion.shown}`),
+    closeLabel: t("action.close"),
     onClose,
     // The width each panel actually needs. A relationship graph and a style profile have
     // nothing in common but their title bar.
@@ -9134,8 +9995,8 @@ function NotesPanel({ t, book, updateBook, onClose }) {
   return h(
     Dialog,
     {
-      t,
       title: t("notes.title"),
+      closeLabel: t("action.close"),
       onClose: close,
       size: "medium",
       bodyClassName: "st-notes-body",
@@ -9173,16 +10034,16 @@ function NotesPanel({ t, book, updateBook, onClose }) {
               onActivate: () => setSelectedId(selectedId === note.id ? null : note.id)
             },
             h("span", { className: "st-list-row-title" }, firstName(note.text) || t("notes.untitled")),
-            h("span", { className: "st-list-row-meta" }, timeOf(note.at))
+            h("span", { className: "fang-list-row-meta" }, timeOf(note.at))
           ))
         ),
         detailProps: { role: "tabpanel" },
-        detail: selected === void 0 ? [h("div", { className: "st-split-detail-body" }, h("p", { className: "st-muted" }, t("notes.pick")))] : [
+        detail: selected === void 0 ? [h("div", { className: "fang-split-detail-body" }, h("p", { className: "fang-muted" }, t("notes.pick")))] : [
           // The note's text IS the detail. A title row and a timestamp above it only repeated
           // what the list already says and took height from the writing surface.
           h(
             "div",
-            { className: "st-split-detail-body" },
+            { className: "fang-split-detail-body" },
             // Reading pane, not a form: the note's text is the whole content. Editing a new
             // thought happens in the capture field above; an archived note is read here.
             h("div", { className: "st-notes-detail", "data-testid": "notes-detail" }, selected.text)
@@ -9609,7 +10470,7 @@ function useAiActions({ api: api2, bookFolder, chapter, book, adoptWritten, flus
 
 // src/client/panel/prefs-state.js
 function usePreferences({ platform, saveInterval }) {
-  const [chordOverrides, updateChordOverrides] = usePersisted(
+  const [chordOverrides, updateChordOverrides] = usePersisted2(
     STORAGE_KEYS.chords,
     (raw) => {
       try {
@@ -9622,7 +10483,7 @@ function usePreferences({ platform, saveInterval }) {
   );
   const keyPlatform = platform ?? currentPlatform();
   const keys = resolveGestures(keyPlatform, chordOverrides);
-  const [typography, updateTypography] = usePersisted(
+  const [typography, updateTypography] = usePersisted2(
     STORAGE_KEYS.typography,
     (raw) => {
       try {
@@ -9633,7 +10494,7 @@ function usePreferences({ platform, saveInterval }) {
     },
     (value) => JSON.stringify(value)
   );
-  const [autoSaveMs, persistAutoSave] = usePersisted(
+  const [autoSaveMs, persistAutoSave] = usePersisted2(
     STORAGE_KEYS.autoSaveMs,
     (raw) => normalizeAutoSave(raw),
     (value) => String(value),
@@ -9691,6 +10552,7 @@ var CSS_SHARED = `
       .st-shell{font-family:var(--st-font-family);
         font-size:var(--st-text-md);
         --st-accent:#c3272b;
+        --st-on-accent:#ffffff;
         /* The panel's ground: pure black by decision, not the host's bg token \u2014 the host's base
            in the running dark theme is a grey. Layered surfaces (rail, cards, inputs) keep their
            theme layers and read as raised off this ground. The status bar shares it, so the
@@ -10059,8 +10921,10 @@ var CSS_SHARED = `
            top edge. The thread is a physical object, so its weight and colour are separate from
            the accent used by buttons and focus rings. */
         --st-board-wall:color-mix(in srgb, var(--st-bg,#000) 82%, #5b3a2e);
+        --st-thread-idle:#f2f2f3;
+        --st-thread-selected:#d24b4b;
         --st-thread:#d24b4b;
-        --st-thread-ink:#f1d6ce;
+        --st-thread-ink:#f2f2f3;
         --st-thread-w:2;
         --st-thread-picked-w:3;
         --st-thread-label-size:var(--st-text-sm);
@@ -10105,6 +10969,18 @@ var CSS_SHARED = `
         --st-w-reading:720px;
         --st-w-wide:820px;
         --st-w-max:980px;
+        /* The context composition bar. Each segment takes a tone from this eight-colour set,
+           stable per part name so the same part keeps its colour when the scene changes. */
+        --st-seg-h:26px;
+        --st-seg-gap:2px;
+        --st-seg-0:#6f7f95;
+        --st-seg-1:#8f7552;
+        --st-seg-2:#5f7f68;
+        --st-seg-3:#7f6278;
+        --st-seg-4:#54727f;
+        --st-seg-5:#7f7956;
+        --st-seg-6:#726394;
+        --st-seg-7:#8f6565;
         --st-rail-w:264px;
         --st-dialog-w:var(--st-w-compact);
         --st-dialog-textarea-min-h:64px;
@@ -10322,21 +11198,21 @@ var CSS_SHARED = `
       .st-rail .st-scroll{flex:1 1 auto;min-height:0}
       .st-scroll{overflow:auto;padding:var(--st-space-12,12px);min-height:0;min-width:0}
       /* ---- the shared master-detail split: \u6982\u89C8 / \u63D0\u6848 / \u6D41\u6D3E ---- */
-      .st-split{display:flex;gap:var(--st-board-gap);flex:1 1 auto;min-height:var(--st-split-min-h,320px);min-width:0}
-      .st-split-list{flex:0 0 var(--st-split-list-w,220px);min-width:0;min-height:0;
+      .fang-split{display:flex;gap:var(--st-board-gap);flex:1 1 auto;min-height:var(--st-split-min-h,320px);min-width:0}
+      .fang-split-list{flex:0 0 var(--st-split-list-w,220px);min-width:0;min-height:0;
         display:flex;flex-direction:column;overflow:hidden;padding:0}
-      .st-split-detail{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0;
+      .fang-split-detail{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0;
         overflow:hidden;border:var(--st-hairline,.5px) solid var(--st-ink-edge);
         border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface)}
-      .st-split-detail-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);flex:none;
+      .fang-split-detail-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);flex:none;
         padding:var(--st-board-inset-compact) var(--st-board-inset);
         border-bottom:var(--st-hairline,.5px) solid var(--st-ink-hair)}
-      .st-split-detail-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      .fang-split-detail-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
         font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong);
         color:var(--st-text-primary)}
-      .st-split-detail-meta{flex:none;margin-left:auto;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+      .fang-split-detail-meta{flex:none;margin-left:auto;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary)}
-      .st-split-detail-body{flex:1 1 auto;min-height:0;overflow:auto;
+      .fang-split-detail-body{flex:1 1 auto;min-height:0;overflow:auto;
         display:flex;flex-direction:column;gap:var(--st-board-gap);padding:var(--st-board-inset)}
       .st-card{border:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));border-radius:var(--st-radius-md,12px);
         padding:var(--st-space-12,12px) var(--st-space-12,12px);margin-bottom:var(--st-space-8,8px);background:var(--st-surface);min-width:0}
@@ -10346,25 +11222,25 @@ var CSS_SHARED = `
       /* THE ONE LIST. Chapters, proposals and snapshots are all "a column of comparable rows":
          every row keeps its own hairline border, there is no gap between them, and the row under
          the pointer lifts off the column. Selected is the same lift with a stronger fill. */
-      .st-list{display:flex;flex-direction:column;gap:var(--st-space-2);min-width:0;min-height:0;flex:1 1 auto;overflow:auto;
+      .fang-list{display:flex;flex-direction:column;gap:var(--st-space-2);min-width:0;min-height:0;flex:1 1 auto;overflow:auto;
         padding:var(--st-space-4);
         border:var(--st-hairline) solid var(--st-ink-edge);border-radius:var(--st-radius-md,12px);corner-shape:round;
         background:var(--st-surface)}
-      .st-list-row{position:relative;display:flex;flex-direction:column;gap:var(--st-space-2,2px);
+      .fang-list-row{position:relative;display:flex;flex-direction:column;gap:var(--st-space-2,2px);
         width:100%;min-width:0;box-sizing:border-box;
         padding:var(--st-space-10,10px) var(--st-space-12,12px);
         border:none;background:transparent;text-align:left;font-family:inherit;
         color:var(--st-text-primary);
         border-radius:var(--st-radius-sm,8px);corner-shape:round;
         transition:background var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out)}
-      .st-list-row:hover{background:var(--st-list-hover)}
-      .st-list-row[data-active="true"]{background:var(--st-selected-fill);
+      .fang-list-row:hover{background:var(--st-list-hover)}
+      .fang-list-row[data-active="true"]{background:var(--st-selected-fill);
         color:var(--st-text-primary)}
-      button.st-list-row{cursor:pointer}
+      button.fang-list-row{cursor:pointer}
       .st-list-row-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-strong)}
-      .st-list-row[data-active="true"] .st-list-row-title{font-weight:var(--st-font-weight-strong)}
-      .st-list-row-meta{min-width:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+      .fang-list-row[data-active="true"] .st-list-row-title{font-weight:var(--st-font-weight-strong)}
+      .fang-list-row-meta{min-width:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-secondary)}
       /* A character card: a name row, one row of short fields, then the notes.
          One field per line made a 178px card out of a name, a role, a goal and a few traits \u2014 two
@@ -10393,32 +11269,32 @@ var CSS_SHARED = `
          controls paint outside the panel's stacking order: the log filter's option list was
          covered by the control itself, and a bare file input is an OS widget in the middle of
          a styled form. The popup here is a child of the panel, so it always sits above it. */
-      .st-dropdown{position:relative;display:inline-flex;min-width:0;max-width:100%}
-      .st-dropdown-button{box-sizing:border-box;display:inline-flex;align-items:center;gap:var(--st-space-8,8px);
+      .fang-dropdown{position:relative;display:inline-flex;min-width:0;max-width:100%}
+      .fang-dropdown-button{box-sizing:border-box;display:inline-flex;align-items:center;gap:var(--st-space-8,8px);
         width:100%;height:var(--st-row-height,34px);padding:0 var(--st-space-12,12px);
         border:none;border-radius:var(--st-radius-sm,8px);background:var(--st-surface);
         color:var(--st-text-primary);font-family:inherit;
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);text-align:left;
         cursor:pointer;outline:none;white-space:nowrap}
-      .st-dropdown-button:hover{background:var(--st-hover-fill)}
-      .st-dropdown-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-dropdown-value{min-width:0;overflow:hidden;text-overflow:ellipsis}
-      .st-dropdown-list{position:absolute;z-index:var(--st-layer-menu);top:calc(100% + 4px);left:0;
+      .fang-dropdown-button:hover{background:var(--st-hover-fill)}
+      .fang-dropdown-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+      .fang-dropdown-value{min-width:0;overflow:hidden;text-overflow:ellipsis}
+      .fang-dropdown-list{position:absolute;z-index:var(--st-layer-menu);top:calc(100% + 4px);left:0;
         display:flex;flex-direction:column;min-width:100%;max-width:min(320px,calc(100vw - 48px));
         max-height:min(46vh,320px);overflow:auto;padding:var(--st-space-4,4px);
         border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface-high);
         box-shadow:var(--dsw-elevation-prominent,0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.12));
         scrollbar-width:thin}
-      .st-dropdown-option{display:block;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);
+      .fang-dropdown-option{display:block;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);
         border:none;border-radius:var(--st-radius-sm,8px);corner-shape:round;background:transparent;
         color:var(--st-text-primary);font-family:inherit;
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);text-align:left;
         cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-dropdown-option:hover{background:var(--st-hover-fill)}
-      .st-dropdown-option[aria-selected="true"]{background:var(--st-selected-fill);
+      .fang-dropdown-option:hover{background:var(--st-hover-fill)}
+      .fang-dropdown-option[aria-selected="true"]{background:var(--st-selected-fill);
         color:var(--st-text-primary);font-weight:var(--st-font-weight-strong)}
-      .st-file-button{display:inline-flex;align-items:center;min-width:0}
-      .st-file-input{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
+      .fang-file-button{display:inline-flex;align-items:center;min-width:0}
+      .fang-file-input{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
       /* A field that is only a line of text in a row (renaming a node in the outline) keeps the
          fill but drops the padding: it sits inside the row, not on a page of its own. */
       /* Buttons are text with a hover wash, not bordered chips. A writing surface ringed with
@@ -10427,16 +11303,16 @@ var CSS_SHARED = `
          and the circle case (a button holding only an icon) falls out of equal width and
          height for free. Inline controls that live inside a text row (the outline's rename and
          remove marks) override --st-btn-h down to the compact row instead of inheriting it. */
-      .st-btn{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+      .fang-btn{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
         height:var(--st-btn-h,var(--st-btn-h-lg,36px));min-width:var(--st-btn-h,var(--st-btn-h-lg,36px));
         padding:0 var(--st-space-12,12px);
         display:inline-flex;align-items:center;justify-content:center;
         border-radius:var(--st-radius-pill,999px);border:none;corner-shape:round;
         background:transparent;color:var(--st-text-secondary);cursor:pointer;white-space:nowrap;flex:none}
-      .st-btn:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-btn:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
-      .st-btn:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);outline:none}
-      .st-btn:disabled{opacity:.45;cursor:not-allowed}
+      .fang-btn:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
+      .fang-btn:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
+      .fang-btn:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);outline:none}
+      .fang-btn:disabled{opacity:.45;cursor:not-allowed}
       /* The affirmative button fills with the accent, like everything else that means "this one".
          It used to take the host's primary fill, which is the brand token: on the dark theme that
          is near-white, so the confirm button in every dialog was the same white slab as the page's
@@ -10445,7 +11321,7 @@ var CSS_SHARED = `
          Its horizontal padding sits a step above the other buttons: a capsule whose two end arcs
          are the widest thing in the shape reads as an oval \u2014 the straight run between the ends
          is what makes a pill read as a pill, and a short label needs the extra padding to show it. */
-      .st-btn-primary{background:var(--st-accent,#c3272b);color:var(--st-on-accent,#fff);
+      .fang-btn-primary{background:var(--st-accent,#c3272b);color:var(--st-on-accent,#fff);
         padding:0 var(--st-space-16,16px)}
       /* The session button is the title row's one OUTLINE pill: no fill, so no control dominates
          the row. Its edge is a slow multi-hue light \u2014 the flowing ring \u2014 drawn by a pseudo-element
@@ -10463,7 +11339,7 @@ var CSS_SHARED = `
         background:transparent;color:var(--st-text-primary)}
       .st-session-btn:hover{background:var(--st-hover-fill)}
       /* The flowing outline is a button VARIANT, not a page-local decoration: it keeps the
-         standard pill geometry and shares the same focus/hover rules as every other st-btn. */
+         standard pill geometry and shares the same focus/hover rules as every other fang-btn. */
       .st-btn-flow{position:relative;isolation:isolate;color:var(--st-text-primary)}
       .st-btn-flow::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--st-flow-border-w);
         pointer-events:none;
@@ -10489,36 +11365,36 @@ var CSS_SHARED = `
         box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
       @keyframes st-session-text-flow{from{background-position:0% 0}to{background-position:200% 0}}
       @media (prefers-reduced-motion: reduce){.st-session-label{animation:none}}
-      .st-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--st-accent) 86%, #000000);color:var(--st-on-accent,#fff)}
+      .fang-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--st-accent) 86%, #000000);color:var(--st-on-accent,#fff)}
       /* The hero size for a page whose only action is this one button. It is a step on the same
          size ladder, not a local override: height, type and padding move together. */
-      .st-btn.st-btn-xl{--st-btn-h:var(--st-btn-h-xl,48px);font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
+      .fang-btn.fang-btn-xl{--st-btn-h:var(--st-btn-h-xl,48px);font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
         padding:0 var(--st-space-24,24px)}
-      .st-btn-ghost{background:transparent;padding:0 var(--st-space-8,8px);color:var(--st-text-tertiary)}
-      .st-btn-ghost:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-btn-ghost:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
-      /* An icon-only button is the same 36px control as every other st-btn: one height token,
+      .fang-btn-ghost{background:transparent;padding:0 var(--st-space-8,8px);color:var(--st-text-tertiary)}
+      .fang-btn-ghost:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
+      .fang-btn-ghost:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
+      /* An icon-only button is the same 36px control as every other fang-btn: one height token,
          one pill radius, and no text padding. It is a variant, not a bespoke square. */
-      .st-btn-ghost.st-btn-icon{padding:0;background:var(--st-bg);
+      .fang-btn-ghost.fang-btn-icon{padding:0;background:var(--st-bg);
         box-shadow:inset 0 0 0 var(--st-hairline) var(--st-ink-edge)}
       /* Inputs keep a hairline: a field with no edge at all disappears into the page. */
-      .st-btn[aria-pressed="true"]:not(:disabled),.st-btn[aria-pressed="true"]:hover:not(:disabled){background:var(--st-selected-fill);color:var(--st-text-primary)}
+      .fang-btn[aria-pressed="true"]:not(:disabled),.fang-btn[aria-pressed="true"]:hover:not(:disabled){background:var(--st-selected-fill);color:var(--st-text-primary)}
       /* The panel's own tooltip: a dark bubble opening DOWNWARD from the control, with a small
          caret pointing back up at it. It sits on the same grey layer every popover uses \u2014 a
          raised card like the rest, not a darker-than-page mix, which on the pure-black ground
          had nothing left to darken into. */
-      .st-tip{position:absolute;z-index:var(--st-layer-menu);transform:translateX(-50%);
+      .fang-tip{position:absolute;z-index:var(--st-layer-menu);transform:translateX(-50%);
         pointer-events:none;padding:var(--st-space-4,4px) var(--st-space-12,12px);
         border:var(--st-hairline) solid color-mix(in srgb, #fff 14%, transparent);border-radius:var(--st-radius-sm,8px);corner-shape:round;
         background:var(--st-surface);
         color:#fff;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, #000 30%, transparent)}
-      .st-tip::after{content:'';position:absolute;top:calc(-1 * var(--st-space-4,4px));left:calc(50% - var(--st-space-4,4px));
+      .fang-tip::after{content:'';position:absolute;top:calc(-1 * var(--st-space-4,4px));left:calc(50% - var(--st-space-4,4px));
         width:var(--st-space-8,8px);height:var(--st-space-8,8px);background:inherit;
         transform:rotate(45deg);border-radius:var(--st-hairline)}
-      .st-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
-      .st-spacer{flex:1 1 auto;min-width:0}
-      .st-muted{color:var(--st-text-tertiary);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
+      .fang-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
+      .fang-spacer{flex:1 1 auto;min-width:0}
+      .fang-muted{color:var(--st-text-tertiary);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
       .st-scan-where{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
         font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
 /* The two halves of a diff sit next to each other with nothing between them, so a deleted
@@ -10610,62 +11486,6 @@ var CSS_CORE = `
 
       /* ---- the sheet: a drawer that drops from the title row, and the desk under it ---- */
       .st-shell{position:relative}
-      /* A centred dialog over the panel. It is absolute, not fixed: the host's centre column has
-         overflow: hidden, and a fixed overlay is clipped by it, which is why the sheet was a narrow
-         strip in the wrong place. */
-      /* The backdrop is only a dimming layer now: the panel itself is flush against the right edge,
-         so there is nothing to centre. */
-      /* Below the title bar, never over it. A full-inset overlay covered the whole shell including
-         the title row, so the book name and the panel buttons were dimmed and unclickable while a
-         drawer was open \u2014 and the controls you need to close it live in that row. The offset is the
-         title row's own height, declared once on the shell. */
-      .st-sheet-backdrop{position:absolute;inset:var(--st-titlebar-height,68px) 0 0 0;z-index:var(--st-layer-drawer);
-        display:flex;align-items:stretch;justify-content:flex-end;
-        /* No wash over the page.
-           A panel that slides in from the edge is not a modal: the manuscript beside it stays
-           readable and stays the surface the writer is working on. Dimming it said "you cannot use
-           this until you close the drawer", which was never true \u2014 the drawer is reference material
-           consulted WHILE writing. Its separation is the flyout shadow on the panel itself, which
-           is exactly what a shadow is for; a second dim on top of it was doing the same job twice
-           and painting the page grey to do it.
-           The layer stays because it is the click-away target and the panel's positioning context. */
-        background:transparent}
-      /* A panel that comes in from the right: full height, rounded on its inner edge only, like the
-         outline rounded on its right edge. The two corners against the frame stay square.
-         Its depth is two things, not one: the flyout shadow (dark, thrown LEFT, the direction it
-         arrived from) and an inner rim along the top edge. The single lv3 shadow it used to carry
-         is a card recipe \u2014 right for a 184px card, invisible under a 700px panel that reaches the
-         top and bottom edges. */
-      .st-sheet{display:flex;flex-direction:column;
-        height:100%;max-height:none;overflow:hidden;
-        border:none;border-radius:var(--st-radius-panel,28px) 0 0 var(--st-radius-panel,28px);
-        background:var(--st-surface-high);
-        box-shadow:var(--st-panel-rim),var(--st-panel-shadow-left);
-        font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        color:var(--st-text-primary);animation:st-sheet-in var(--st-motion-open,180ms) var(--ds-ease-in-out,ease-in-out) both;
-        /* Width follows the CONTENT, not a tier. Three fixed sizes were still a guess: a cast with
-           two people got a 560px panel mostly full of nothing, and a graph with twelve needed more
-           than 820. Sizing to fit takes what the content asks for, with a floor so a one-line
-           panel is not a strip and a ceiling a page may raise, capped by the window. */
-        width:fit-content;min-width:min(320px,100%);
-        max-width:min(var(--st-sheet-max),100%)}
-      /* A panel that names a width tier keeps that width; only the tierless ones size to their
-         content. The history panel is prose and its width used to jump with the longest answer. */
-      .st-sheet[data-size]{width:var(--st-sheet-max)}
-      @keyframes st-sheet-in{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
-      .st-closing .st-sheet{animation:st-sheet-out var(--st-motion-close,140ms) var(--ds-ease-in-out,ease-in-out) both}
-      @keyframes st-sheet-out{from{transform:none;opacity:1}to{transform:translateX(24px);opacity:0}}
-      .st-closing .st-sheet-backdrop{animation:st-scrim-out var(--st-motion-close,140ms) ease both}
-      @keyframes st-scrim-out{from{opacity:1}to{opacity:0}}
-      @media (max-width: 640px){
-        /* Below this the content cannot lay itself out in a column narrower than the window, so the
-           panel takes the whole width and drops its rounded inner edge. */
-        .st-sheet{width:100%;min-width:0;border-radius:0}
-      }
-      .st-sheet-head{display:flex;align-items:center;gap:var(--st-space-8,8px);padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-12,12px);flex:none;
-        border-bottom:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
-      .st-sheet-title{margin:0;font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
-      .st-sheet-body{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-16,16px)}
       /* An icon and a label in one control: flex with centred alignment, or the svg sits on the
          text baseline and rides above it. The gap is the space between them. */
       /* Title-row buttons share the rail toggle's height, so the row is a line of EQUAL pills \u2014
@@ -10674,7 +11494,7 @@ var CSS_CORE = `
          white on the dark theme \u2014 not the quieter secondary the inner-panel ghosts use, which
          all but disappears against the frame edge. The session button's flowing label paints its
          own gradient and is untouched by this. */
-      .st-titlebar .st-btn{color:var(--st-text-primary)}
+      .st-titlebar .fang-btn{color:var(--st-text-primary)}
       .st-titlebar .st-rail-toggle{color:var(--st-text-primary)}
       .st-drawer-btn{display:inline-flex;align-items:center;gap:var(--st-space-4,4px);
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);padding:0 var(--st-space-8,8px)}
@@ -10761,17 +11581,17 @@ var CSS_CORE = `
         color:var(--st-text-secondary)}
       /* The segmented control: one track, the chosen step raised inside it. Cheaper than three
          sliders and it says how many choices there are before you touch it. */
-      .st-seg{display:inline-flex;align-items:center;gap:var(--st-space-2,2px);min-width:0;padding:var(--st-space-2,2px);
+      .fang-segmented{display:inline-flex;align-items:center;gap:var(--st-space-2,2px);min-width:0;padding:var(--st-space-2,2px);
         border-radius:var(--st-radius-pill,999px);corner-shape:round;background:var(--st-surface);
         box-shadow:inset 0 0 0 var(--st-hairline) var(--dsw-alias-border-l2,var(--st-fallback-border-l2))}
-      .st-seg-item{font-family:inherit;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:var(--st-space-2,2px) var(--st-space-12,12px);
+      .fang-segmented-item{font-family:inherit;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:var(--st-space-2,2px) var(--st-space-12,12px);
         border:none;border-radius:var(--st-radius-pill,999px);background:transparent;corner-shape:round;
         color:var(--st-text-secondary);cursor:pointer;white-space:nowrap}
-      .st-seg-item:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-seg-item:active{background:var(--st-active-fill)}
-      .st-seg-item:focus-visible{outline:none;
+      .fang-segmented-item:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
+      .fang-segmented-item:active{background:var(--st-active-fill)}
+      .fang-segmented-item:focus-visible{outline:none;
         box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-seg-item[aria-pressed="true"]{background:var(--st-selected-fill);
+      .fang-segmented-item[aria-pressed="true"]{background:var(--st-selected-fill);
         color:var(--st-text-primary);
         box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
       /* A FIXED frame, and a smaller one than before: the sample is one line, so the frame is one
@@ -10871,31 +11691,31 @@ var CSS_LIBRARY = `
          learned it.
          Absolute, against the nearest positioned ancestor \u2014 the shell \u2014 centres on exactly the
          box the writer is looking at, and is not clipped by anything above it. */
-      .st-backdrop{position:absolute;inset:0;z-index:var(--st-layer-modal);display:flex;align-items:center;justify-content:center;
+      .fang-backdrop{position:absolute;inset:0;z-index:var(--st-layer-modal);display:flex;align-items:center;justify-content:center;
         padding:var(--st-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,var(--st-fallback-page)) 62%, transparent);
         backdrop-filter:blur(2px)}
-      .st-dialog{width:min(var(--st-dialog-w),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
+      .fang-dialog{width:min(var(--fang-dialog-width,var(--st-dialog-w)),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
         border-radius:var(--st-radius-panel,28px);corner-shape:round;border:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));
         background:var(--st-surface-high);box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04));
         font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);color:var(--st-text-primary)}
-      .st-dialog-title{font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
+      .fang-dialog-title{font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
       /* A reading dialog: a fixed head with the close control, and a body that scrolls. The panel
          caps its height so a long manuscript stays one dialog rather than one very tall page. */
-      .st-dialog-panel{max-height:min(84vh,var(--st-dialog-max-h))}
-      .st-dialog-head{display:flex;align-items:center;gap:var(--st-space-8,8px);flex:none}
-      .st-dialog-scroll{flex:1 1 auto;min-height:0;overflow:auto}
-      .st-dialog-body{display:flex;flex-direction:column;gap:var(--st-space-8,8px);color:var(--st-text-secondary)}
+      .fang-dialog-panel{max-height:min(84vh,var(--st-dialog-max-h))}
+      .fang-dialog-head{display:flex;align-items:center;gap:var(--st-space-8,8px);flex:none}
+      .fang-dialog-scroll{flex:1 1 auto;min-height:0;overflow:auto}
+      .fang-dialog-body{display:flex;flex-direction:column;gap:var(--st-space-8,8px);color:var(--st-text-secondary)}
       /* A labelled field inside a dialog: the label sits above its control, one line of small text. */
       .st-dialog-field{display:flex;flex-direction:column;gap:var(--st-space-4,4px);min-width:0}
       /* A segmented control is a compact choice, not a full-width field. As a flex child of the
          column it would otherwise stretch to the dialog's width and look like a text input. */
-      .st-dialog-field>.st-seg{align-self:flex-start}
+      .st-dialog-field>.fang-segmented{align-self:flex-start}
       .st-dialog-label{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary)}
       .st-dialog-textarea{min-height:var(--st-dialog-textarea-min-h);resize:none;font-family:inherit}
       .st-dialog-error{margin:0;color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
       .st-dialog-hint{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-      .st-dialog-actions{display:flex;justify-content:flex-end;gap:var(--st-space-8,8px);margin-top:var(--st-space-4,4px)}
+      .fang-dialog-actions{display:flex;justify-content:flex-end;gap:var(--st-space-8,8px);margin-top:var(--st-space-4,4px)}
       .st-check{display:flex;align-items:center;gap:var(--st-space-8,8px);font-size:var(--st-text-md);cursor:pointer;
         color:var(--st-text-primary)}
       /* A bottom sheet: slides up over the manuscript, rounded on its top corners only, which is
@@ -11037,7 +11857,7 @@ var CSS_NOTES = `
       .st-notes-dialog{height:min(72vh,var(--st-notes-h));padding-top:var(--st-inset-md)}
       /* The notebook is an aside, not a modal takeover: the page behind stays sharp. */
       .st-notes-backdrop{backdrop-filter:none;-webkit-backdrop-filter:none}
-      .st-dialog-body.st-notes-body{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+      .fang-dialog-body.st-notes-body{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden}
       .st-notes{display:flex;flex-direction:column;gap:var(--st-board-gap);flex:1 1 auto;min-height:0}
       /* The capture area is its own region; the list and the detail below are two independent
          boxes with a gap between them, not one outer frame split by a line. */
@@ -11049,13 +11869,13 @@ var CSS_NOTES = `
       .st-notes-capture .st-input{min-height:var(--st-notes-capture-h);resize:none;
         background:var(--st-surface-high);padding:var(--st-inset-sm) var(--st-inset-md)}
       .st-notes-capture .st-input:focus{box-shadow:none}
-      .st-notes .st-split{flex:1 1 auto;min-height:0}
+      .st-notes .fang-split{flex:1 1 auto;min-height:0}
       /* A pane title is part of its content; no rule between them. */
-      .st-notes .st-split-detail-head{border-bottom:none}
+      .st-notes .fang-split-detail-head{border-bottom:none}
       .st-notes-detail{min-height:0;white-space:pre-wrap;word-break:break-word;
         font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
         color:var(--st-text-primary)}
-      .st-notes .st-split-detail-body{display:flex;flex-direction:column}
+      .st-notes .fang-split-detail-body{display:flex;flex-direction:column}
 `;
 
 // src/client/panel/composer.css.js
@@ -11269,9 +12089,6 @@ var CSS_COMPOSER = `
       /* The effort gives up its room first, so the model name keeps its last pixel. */
       .st-seat-effort{flex-shrink:1000;min-width:0;overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;color:var(--st-text-tertiary)}
-      .st-seat-chevron{flex:0 0 auto;width:var(--st-icon-xs);height:var(--st-icon-xs);color:var(--st-text-tertiary);
-        transition:transform 120ms ease}
-      .st-seat-chevron[data-open="true"]{transform:rotate(180deg)}
 /* Opens upward BY DEFAULT: the composer sits at the bottom of the page, and the host's card
          is placed from the trigger rect for the same reason. The side is decided at the click from
          the room the chip actually has (data-side, set in ComposerModelSeat) \u2014 in the settings
@@ -11295,7 +12112,6 @@ var CSS_COMPOSER = `
       .st-seat-cell-label{flex:0 0 auto;white-space:nowrap}
       .st-seat-cell-value{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;text-align:right;color:var(--st-text-tertiary)}
-      .st-seat-cell-chevron{flex:0 0 auto;width:var(--st-icon-xs);height:var(--st-icon-xs);color:var(--st-text-tertiary)}
 .st-seat-option{display:flex;align-items:center;gap:var(--st-space-8,8px);width:auto;min-width:100%;
         min-height:var(--st-row-height,34px);padding:var(--st-space-4,4px) var(--st-space-8,8px);border:none;border-radius:var(--st-radius-md,12px);
         background:transparent;color:inherit;font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
@@ -11314,7 +12130,7 @@ var CSS_COMPOSER = `
         cursor:pointer;text-align:left;outline:none}
       .st-seat-back:hover,.st-seat-back:focus-visible{background:var(--st-hover-fill);
         color:var(--st-text-primary)}
-      .st-seat-back .st-seat-cell-chevron{width:var(--st-space-12,12px);height:var(--st-space-12,12px);transform:rotate(180deg)}
+      .st-seat-back .fang-chevron-right{width:var(--st-space-12,12px);height:var(--st-space-12,12px);transform:rotate(180deg)}
       .st-model-item-id{margin-left:auto;font-family:var(--st-font-mono);font-size:var(--st-text-sm);
         color:var(--st-text-tertiary);overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;max-width:55%}
@@ -11512,7 +12328,7 @@ var CSS_COMPOSER = `
       /* ---- the history drawer's pages: the answers, and the system event log ---- */
       .st-answers-pages{display:flex;flex-direction:column;gap:var(--st-space-12,12px);min-height:0}
       /* The page switcher is a control, not a full-width band. */
-      .st-answers-pages>.st-seg{align-self:flex-start}
+      .st-answers-pages>.fang-segmented{align-self:flex-start}
       /* One row per event: a fixed-width clock column, then the line. Failed calls carry the
          failure code the host reported \u2014 the UNKNOWN the writer could previously never see twice
          in context \u2014 and are marked in the error colour so a scan finds them. */
@@ -11525,7 +12341,7 @@ var CSS_COMPOSER = `
       .st-event-filter{flex:none;width:auto;max-width:100%}
       /* Hug the current value instead of reserving a fixed block: "\u5168\u90E8\u7C7B\u578B" needs four glyphs,
          not a field as wide as the event table. */
-      .st-event-filter .st-dropdown-button{width:auto}
+      .st-event-filter .fang-dropdown-button{width:auto}
       .st-event-filter:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
       .st-event-table{border-bottom:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
       .st-event-head{display:flex;align-items:center;min-width:0;user-select:none}
@@ -11828,7 +12644,7 @@ var CSS_MODELS = `
       .st-custom-provider-meta{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .st-custom-provider-actions{display:flex;align-items:center;gap:var(--st-space-4,4px)}
-      .st-custom-provider-actions .st-btn{font-size:var(--st-text-sm);padding:0 var(--st-space-8,8px)}
+      .st-custom-provider-actions .fang-btn{font-size:var(--st-text-sm);padding:0 var(--st-space-8,8px)}
       .st-custom-model-list{display:flex;flex-wrap:wrap;gap:var(--st-space-4,4px);max-height:var(--st-model-list-max-h,160px);overflow:auto}
       .st-custom-model-chip{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         padding:var(--st-space-2,2px) var(--st-space-8,8px);border-radius:var(--st-radius-pill,999px);
@@ -11867,6 +12683,32 @@ var CSS_SETTINGS = `
         background:var(--st-surface);color:var(--st-text-primary);font-family:inherit;font-size:var(--st-text-md);
         text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
       .st-library-path:disabled{cursor:default;color:var(--st-text-tertiary)}
+`;
+
+// src/client/panel/context.css.js
+var CSS_CONTEXT = `
+      .st-ctx-dialog-body{height:68vh;overflow:hidden}
+      .st-ctx-dialog-body .fang-split{flex:1 1 auto;min-height:0;height:100%}
+      .st-ctx-bar{flex:none;display:flex;gap:var(--st-seg-gap);height:var(--st-seg-h);
+        margin:var(--st-board-inset-compact) var(--st-board-inset) 0}
+      .st-ctx-seg{flex:1 1 auto;min-width:0;padding:0 var(--st-space-4);border:0;cursor:pointer;
+        border-radius:var(--st-radius-xs);color:var(--st-on-accent);overflow:hidden}
+      .st-ctx-seg[data-tone="0"]{background:var(--st-seg-0)}
+      .st-ctx-seg[data-tone="1"]{background:var(--st-seg-1)}
+      .st-ctx-seg[data-tone="2"]{background:var(--st-seg-2)}
+      .st-ctx-seg[data-tone="3"]{background:var(--st-seg-3)}
+      .st-ctx-seg[data-tone="4"]{background:var(--st-seg-4)}
+      .st-ctx-seg[data-tone="5"]{background:var(--st-seg-5)}
+      .st-ctx-seg[data-tone="6"]{background:var(--st-seg-6)}
+      .st-ctx-seg[data-tone="7"]{background:var(--st-seg-7)}
+      .st-ctx-seg[data-active="true"]{box-shadow:0 0 0 var(--st-space-2) var(--st-accent)}
+      .st-ctx-seg-label{display:block;font-size:var(--st-text-sm);line-height:var(--st-seg-h);
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .st-ctx-official{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;
+        gap:var(--st-space-8);padding:var(--st-board-inset)}
+      .st-ctx-mine{flex:0 0 40%;min-height:0;overflow:auto;display:flex;flex-direction:column;
+        gap:var(--st-space-8);padding:var(--st-board-inset);
+        border-top:var(--st-hairline) solid var(--st-ink-hair)}
 `;
 
 // src/client/panel/outline.css.js
@@ -12063,13 +12905,11 @@ var CSS_BOARD = `
       .st-mosaic-band-content:has(> .st-mosaic-board){overflow:hidden;padding-bottom:0}
       /* A split page (\u6982\u89C8 / \u63D0\u6848 / \u6D41\u6D3E) owns its own scrolling columns; letting the outer band
          scroll as well produced two scrollbars and a detail pane that could be scrolled away. */
-      .st-mosaic-band-content:has(> .st-split){overflow:hidden}
+      .st-mosaic-band-content:has(> .fang-split){overflow:hidden}
       /* The canvas: a positioning context with a floor, and a WELL one layer below the sheet \u2014
          a recessed fill and an inner hairline, so the cards visibly sit ON something. */
       .st-mosaic-canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;padding:0;
-        border-radius:var(--st-radius-md,12px);
-        background:transparent;
-        box-shadow:none}
+        border-radius:0;background:transparent;box-shadow:none}
       /* The two selectors are the board's FOOT, above a hairline. No frame of their own \u2014 the
          panel's fields are borderless with a fill, and a box around a filled select is a box in
          a box. */
@@ -12109,15 +12949,16 @@ var CSS_BOARD = `
       /* The visible line reads the card border's own token \u2014 the same colour as the boxes it
          joins, in whichever theme is loaded. The border token is invisible on a dark theme, so
          a theme-specific hairline here drew nothing. */
-      .st-mosaic-edge{stroke:var(--st-thread);stroke-width:var(--st-thread-w);stroke-linecap:round;
+      .st-mosaic-edge{stroke:var(--st-thread-idle);stroke-width:var(--st-thread-w);stroke-linecap:round;
         stroke-opacity:1;pointer-events:none}
       /* The hit line: wide, transparent, takes the pointer. It carries hover for both lines via
          the adjacent-sibling combinator \u2014 the two lines are SIBLINGS, hit first, and a <line>
          cannot have children for a descendant combinator to find. */
       .st-mosaic-edge-hit{stroke:transparent;stroke-width:var(--st-edge-hit-w);pointer-events:stroke;cursor:pointer}
-      .st-mosaic-edge-hit:hover + .st-mosaic-edge{stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
-      .st-mosaic-edge-picked{stroke:var(--st-thread);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
-      .st-mosaic-edge-arrow{fill:var(--st-thread);pointer-events:none}
+      .st-mosaic-edge-hit:hover + .st-mosaic-edge:not(.st-mosaic-edge-picked){stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
+      .st-mosaic-edge-picked{stroke:var(--st-thread-selected);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
+      .st-mosaic-edge-arrow{fill:var(--st-thread-idle);pointer-events:none}
+      .st-mosaic-edge-arrow-picked{fill:var(--st-thread-selected)}
       .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--st-font-family);font-size:var(--st-thread-label-size);
         font-weight:var(--st-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
         stroke-width:var(--st-thread-halo-w);stroke-linejoin:round;pointer-events:none;user-select:none}
@@ -12233,8 +13074,8 @@ var CSS_CARDS = `
         font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
         color:var(--st-text-primary);cursor:pointer}
       .st-card-menu-item:hover{background:var(--st-hover-fill)}
-      .st-card-menu-item.st-danger{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
-      .st-card-menu-item.st-danger:hover{background:var(--dsw-alias-state-error-primary,var(--st-fallback-error));color:#fff}
+      .st-card-menu-item.fang-danger{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
+      .st-card-menu-item.fang-danger:hover{background:var(--dsw-alias-state-error-primary,var(--st-fallback-error));color:#fff}
       .st-mosaic-card:hover{box-shadow:var(--dsw-shadow-lv3,0 2px 4px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.1))}
       .st-mosaic-card:active{cursor:grabbing}
       /* Both lines sit on the scrim, so both are chosen for a dark backing rather than for the
@@ -12620,6 +13461,13 @@ var CSS_ENTITY = `
       .st-mosaic-page-edge-kind{color:var(--st-text-secondary);
         margin-right:var(--st-inset-sm)}
       .st-mosaic-page-edge-note{color:var(--st-text-tertiary)}
+
+      .st-mosaic-detail-direction-section{gap:var(--st-inset-xs)}
+      .st-mosaic-detail-direction{display:flex;align-items:center;gap:var(--st-space-8,8px);flex-wrap:wrap;
+        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);color:var(--st-text-primary)}
+      .st-mosaic-detail-party{display:inline-flex;align-items:baseline;gap:var(--st-space-4,4px);min-width:0}
+      .st-mosaic-detail-party-label{font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
+      .st-mosaic-detail-direction-arrow{color:var(--st-thread);font-weight:var(--st-font-weight-strong)}
 `;
 
 // src/client/mosaic/review.css.js
@@ -12628,7 +13476,7 @@ var CSS_REVIEW = `
       .st-mosaic-head{display:flex;flex-direction:column;gap:var(--st-space-8,8px);margin:0 0 var(--st-space-12,12px)}
       /* The two AI entries read as CHIPS, not as bare text buttons: a hairline edge groups them
          as actions on the page, the way suggestion chips sit under an input in design tools. */
-      .st-mosaic-check-row .st-btn{box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
+      .st-mosaic-check-row .fang-btn{box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
       .st-mosaic-check-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
       /* The result of a \u68B3\u7406/\u68C0\u67E5 that produced no review cards: a quiet panel rather than a
          status-bar flash the writer can miss after a long wait. */
@@ -12727,7 +13575,8 @@ var CSS_OVERVIEW = `
 `;
 
 // src/client/styles.js
-var CSS = `${CSS_SHARED}
+var CSS = `${FANG_CSS}
+${CSS_SHARED}
 ${CSS_CORE}
 ${CSS_LIBRARY}
 ${CSS_WELCOME}
@@ -12740,6 +13589,7 @@ ${CSS_SCAN}
 ${CSS_STATUS}
 ${CSS_MODELS}
 ${CSS_SETTINGS}
+${CSS_CONTEXT}
 ${CSS_OUTLINE}
 ${CSS_RAIL}
 ${CSS_BOARD}
@@ -12804,18 +13654,18 @@ function StoryPanelBody(props) {
   const items = workspaceSnapshot?.items ?? [];
   const shellRef = React.useRef(null);
   const [drawer, setDrawer] = React.useState(null);
-  const [mosaicOpen, setMosaicOpen] = usePersisted(
+  const [mosaicOpen, setMosaicOpen] = usePersisted2(
     STORAGE_KEYS.mosaicOpen,
     (raw) => raw === "true",
     (value) => value === true ? "true" : "false"
   );
-  const [mosaicTab, setMosaicTab] = usePersisted(
+  const [mosaicTab, setMosaicTab] = usePersisted2(
     STORAGE_KEYS.mosaicTab,
     (raw) => typeof raw === "string" && raw !== "" ? raw : "relations",
     (value) => String(value)
   );
-  const drawerMotion = useClosingAnimation(drawer);
-  const mosaicMotion = useClosingAnimation(mosaicOpen === true ? mosaicOpen : null);
+  const drawerMotion = useClosingAnimation2(drawer);
+  const mosaicMotion = useClosingAnimation2(mosaicOpen === true ? mosaicOpen : null);
   React.useEffect(() => {
     if (mosaicOpen) {
       setRailHidden(true);
@@ -12839,13 +13689,14 @@ function StoryPanelBody(props) {
   const mcpInfo = typeof props.mcpInfo === "function" ? props.mcpInfo : void 0;
   const openHarness = typeof props.openHarness === "function" ? props.openHarness : void 0;
   const [railHidden, setRailHidden] = React.useState(true);
-  const railMotion = useClosingAnimation(railHidden ? null : "rail");
+  const railMotion = useClosingAnimation2(railHidden ? null : "rail");
   const [bookFolder, setBookFolder] = React.useState(void 0);
   const [startOpen, setStartOpen] = React.useState(false);
   const [startSeen, setStartSeen] = React.useState(() => readStored(STORAGE_KEYS.welcomeSeen) === "1" || readStored(STORAGE_KEYS.lastBook) !== null || !storageAvailable());
   const [bookPath, setBookPath] = React.useState(void 0);
   const [shelfNotice, setShelfNotice] = React.useState("");
   const [aboutOpen, setAboutOpen] = React.useState(false);
+  const [contextOpen, setContextOpen] = React.useState(false);
   const [mcpOpen, setMcpOpen] = React.useState(false);
   const [mcpState, setMcpState] = React.useState({ loading: false, error: "", info: null });
   const [notesOpen, setNotesOpen] = React.useState(false);
@@ -13011,6 +13862,7 @@ function StoryPanelBody(props) {
     if (keep !== "about") setAboutOpen(false);
     if (keep !== "mcp") setMcpOpen(false);
     if (keep !== "notes") setNotesOpen(false);
+    if (keep !== "context") setContextOpen(false);
     if (keep !== "rail") setRailHidden(true);
   };
   const closeAllPanels = () => closePanelsExcept("");
@@ -13055,7 +13907,7 @@ function StoryPanelBody(props) {
     drawers.map((key) => h("button", {
       key,
       type: "button",
-      className: "st-btn st-btn-ghost st-drawer-btn",
+      className: "fang-btn fang-btn-ghost st-drawer-btn",
       "aria-haspopup": "dialog",
       "aria-expanded": drawer === key ? "true" : "false",
       // The open drawer is the button's selected state. Without it the button went back to its
@@ -13107,8 +13959,8 @@ function StoryPanelBody(props) {
       { className: "st-scroll" },
       h(
         "div",
-        { className: "st-row st-gap-under-row" },
-        h("button", { type: "button", className: "st-btn st-btn-primary", onClick: addUnderSelection }, t("action.addUnder"))
+        { className: "fang-row st-gap-under-row" },
+        h("button", { type: "button", className: "fang-btn fang-btn-primary", onClick: addUnderSelection }, t("action.addUnder"))
       ),
       h(TreeNav, {
         // The outline highlights what the WRITER selected, not merely the chapter being edited:
@@ -13157,6 +14009,13 @@ function StoryPanelBody(props) {
         closePanelsExcept("about");
         setAboutOpen(true);
       },
+      // The context page reads the book that is open; the route names it by ID, so a renamed
+      // folder cannot make it read another one.
+      onContext: () => {
+        flushSave();
+        closePanelsExcept("context");
+        setContextOpen(true);
+      },
       onOpen: pickDirectory === void 0 ? void 0 : openDirectory,
       saving: saveStatus?.status === "saving"
     })
@@ -13189,15 +14048,15 @@ function StoryPanelBody(props) {
     return h(ModelsPage, { t, api: api2, onChange: refreshModels, onNotice: noticeRow });
   };
   const middle = () => {
-    if (library === void 0) return h("div", { className: "st-scroll st-muted" }, t("label.loading"));
-    if (state.status === "loading") return h("div", { className: "st-scroll st-muted" }, t("label.loading"));
+    if (library === void 0) return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
+    if (state.status === "loading") return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
     if (state.status === "error") return h("div", { className: "st-warn" }, state.error);
-    if (!book) return h("div", { className: "st-scroll st-muted" }, t("label.loading"));
+    if (!book) return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
     if (!chapter) {
       return h(
         "div",
         { className: "st-mid-body" },
-        h("div", { className: "st-scroll st-muted" }, t("label.emptyChapters"))
+        h("div", { className: "st-scroll fang-muted" }, t("label.emptyChapters"))
       );
     }
     return h(
@@ -13292,7 +14151,7 @@ function StoryPanelBody(props) {
     );
   };
   if (library === void 0) {
-    return h("div", { className: "st-shell" }, h("div", { className: "st-scroll st-muted" }, t("label.loading")));
+    return h("div", { className: "st-shell" }, h("div", { className: "st-scroll fang-muted" }, t("label.loading")));
   }
   if (startOpen || bookFolder === void 0 && (!startSeen || books.length === 0)) {
     return h(
@@ -13392,7 +14251,7 @@ function StoryPanelBody(props) {
       },
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost st-rail-toggle",
+        className: "fang-btn fang-btn-ghost st-rail-toggle",
         title: railHidden ? t("action.showRail") : t("action.hideRail"),
         "aria-label": railHidden ? t("action.showRail") : t("action.hideRail"),
         "aria-expanded": railHidden ? "false" : "true",
@@ -13412,7 +14271,7 @@ function StoryPanelBody(props) {
       // "three things about this panel" instead of "this book, then the panel".
       h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost st-drawer-btn",
+        className: "fang-btn fang-btn-ghost st-drawer-btn",
         "data-testid": "mosaic-open",
         "aria-haspopup": "dialog",
         "aria-expanded": mosaicOpen ? "true" : "false",
@@ -13433,7 +14292,7 @@ function StoryPanelBody(props) {
       // settings. It is a separate surface: notes are whole-book, the board is the cast graph.
       book === null || book === void 0 ? null : h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost st-drawer-btn",
+        className: "fang-btn fang-btn-ghost st-drawer-btn",
         "data-testid": "notes-open",
         "aria-haspopup": "dialog",
         "aria-expanded": notesOpen ? "true" : "false",
@@ -13450,10 +14309,10 @@ function StoryPanelBody(props) {
       // No progress caption beside the title. "1 章 · 已定稿 1 段" read as a label the title needed,
       // when the title is the page's name and needs nothing after it. The same counts are already
       // in the status bar, at the bottom, where a read-out belongs.
-      h("span", { className: "st-spacer" }),
+      h("span", { className: "fang-spacer" }),
       mcpInfo === void 0 ? null : h("button", {
         type: "button",
-        className: "st-btn st-btn-ghost st-drawer-btn",
+        className: "fang-btn fang-btn-ghost st-drawer-btn",
         "data-testid": "mcp-open",
         "aria-haspopup": "dialog",
         "aria-expanded": mcpOpen ? "true" : "false",
@@ -13540,6 +14399,15 @@ function StoryPanelBody(props) {
     ),
     // 关于, mounted at the PANEL's level. See the note where `aboutOpen` is declared.
     aboutOpen ? h(AboutBox, { t, onClose: () => setAboutOpen(false) }) : null,
+    contextOpen ? h(ContextPage, {
+      t,
+      api: api2,
+      bookFolder,
+      bookId: book?.id,
+      chapterId: chapter?.id,
+      onClose: () => setContextOpen(false),
+      onNotice: noticeRow
+    }) : null,
     mcpOpen ? h(McpPanel, {
       t,
       loading: mcpState.loading,
@@ -13684,7 +14552,7 @@ var index_default = {
   // Hooks that own a whole job rather than a widget. Exposed so they can be driven on their
   // own: `useBookData` is the book lifecycle, and testing it through a mounted panel would
   // test the panel's layout at the same time.
-  __hooks: { useBookData, useClosingAnimation, useBoardActions },
+  __hooks: { useBookData, useClosingAnimation: useClosingAnimation2, useBoardActions },
   __components: {
     StoryPanel: StoryPanelBody,
     StoryPanelBoundary,

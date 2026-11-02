@@ -85,7 +85,7 @@ export const CSS_LIBRARY = `
       .fang-backdrop{position:absolute;inset:0;z-index:var(--st-layer-modal);display:flex;align-items:center;justify-content:center;
         padding:var(--st-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,var(--st-fallback-page)) 62%, transparent);
         backdrop-filter:blur(2px)}
-      .fang-dialog{width:min(var(--st-dialog-w),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
+      .fang-dialog{width:min(var(--fang-dialog-width,var(--st-dialog-w)),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
         border-radius:var(--st-radius-panel,28px);corner-shape:round;border:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));
         background:var(--st-surface-high);box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04));
         font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);color:var(--st-text-primary)}
