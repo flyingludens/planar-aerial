@@ -74,9 +74,9 @@ done | sort | uniq -c
 
 现在的做法：
 
-- **间距**用 `--st-space-*`（2/4/6/8/10/12/14/16/20/24），4px 基准
-- **圆角**用 `--st-radius-*`，其中 xs/sm/md/lg/panel 直接指向 dsh 的 token；`--st-radius-pill` 是形状不是尺寸
-- **控件行高**用 `--st-row-height` / `--st-row-height-compact` / `--st-hit-target`
+- **间距**用 `--fang-space-*`（2/4/8/12/16/24），4px 基准
+- **圆角**用 `--fang-radius-*`（xs/sm/md/lg/panel 五档）；`--fang-radius-pill` 是形状不是尺寸
+- **控件行高**用 `--fang-row-height` / `--fang-row-height-compact` / `--fang-hit-target`
 - **尺寸类**（卡片宽高、网格步长）在 JS 里定义一次，通过行内 style 变量交给 CSS
 
 判定标准：**CSS 里不写裸数字**。
@@ -85,7 +85,7 @@ done | sort | uniq -c
 
 任何长度、尺寸、间距、圆角，一律走变量：
 
-- 刻度里有的，用 `--st-space-*` / `--st-radius-*` / `--st-row-height*`
+- 刻度里有的，用 `--fang-space-*` / `--fang-radius-*` / `--fang-row-height*`
 - 刻度里没有的，就地新增一个有名字的 token，写清它是什么、为什么是这个值
 
 `min()` / `max()` / `calc()` / 视口单位（`vw`/`vh`/`cqw`）里的数字是表达式的一部分，不是视觉量，可以就地写。
@@ -194,7 +194,7 @@ src/client  →  domain  ←  lib
 
 - `index.js` —— 纯入口：import 各模块、组装插件对象、导出 `apply`。
 - `api.js` —— 传输。别的地方不直接拼 URL。
-- `shared/` —— **不认识书**，也不 import `api`、`mosaic/` 或 `index.js`。纯逻辑、通用 hook、UI 原子件、存储键、手势。
+- `shared/` —— **不认识书**，也不 import `api`、`mosaic/` 或 `index.js`。纯逻辑、通用 hook、存储键、手势。通用 UI 原子件不在仓库里，在仓库外的 fang-style 库，经本地依赖（`fang-style: file:../Projects/fang-style`）引用。
 - `panel/` —— 认识书，不认识 `mosaic/` 的内部。`panel/*-state.js` 是书的用例层。
 - `mosaic/` —— 认识书，不认识 panel。`mosaic/board-state.js` 是板的用例层。
 - 样式跟着组件走：`xxx.js` 旁边就是 `xxx.css.js`，最后由 `styles.js` 按顺序拼起来。**不按类型分目录**（不存在「所有样式」目录）。
@@ -213,7 +213,7 @@ src/client  →  domain  ←  lib
 - **主机已经写盘** → `adoptWritten({ book, merge, token, savedAt })`：领回路由写的那本书和它的 token，**不再入队**。只改板/梗概时传 `merge(prevBook)`，别整本替换掉正在输入的文字。
 - 除此之外不许写 `state.book`：`useBookData` 不再把裸 `setState` 交出去。
 - 每个写盘的路由都返回 `book` 和 `token`。保存响应只在“请求期间没有新编辑”时替换书；有编辑就只领 token。版本守卫在 `useBookData` 里。
-- 状态四分类：书（React state + 磁盘，`updateBook`/`adoptWritten`）、会话（`DOCK_STORE`，按书 id，不落盘）、偏好（localStorage，经 `usePersisted`/`storage.js`）、页面（组件 `useState`，随页面销毁）。新状态先说清属于哪类。
+- 状态四分类：书（React state + 磁盘，`updateBook`/`adoptWritten`）、会话（`SESSION_STORE`，按书 id，不落盘）、偏好（localStorage，经 `usePersisted`/`storage.js`）、页面（组件 `useState`，随页面销毁）。新状态先说清属于哪类。
 
 ### 客户端用例层
 
@@ -229,3 +229,22 @@ src/client  →  domain  ←  lib
 - `domain/` 的纯净性由 `tests/domain.test.js` 守着：它不能 import `node:`、`react` 或任何一半。
 - 看真实渲染：这台机器上**看不到**运行中的 DSH 面板，宿主 URL 和令牌由每次运行环境给出。所以任何“屏幕上现在长什么样”的结论都必须由用户确认，不能自己断言。
 
+
+## 界面构造规则（2026-11-02 新增，上下文窗口一役的教训）
+
+每一次 UI 改动都适用；违反任何一条都算改错，即使测试全绿。
+
+1. **框的尺寸不随内容变化。** 任何面板、区域、弹窗体的高宽是常量；内容在框内滚动，内容变长只改变滚动量，不许推挤兄弟区域或改变分区边界。先例：`.st-overview-summary` 的固定高、`.st-mosaic-band-content` 的内滚。
+2. **动手前先报参照物。** 改任何 UI 前，先说清：以哪个现有页面为视觉基准、复用哪些组件和类（如 `Dialog` / `SplitPane` / `List` / `st-card` / `st-overview-summary` / `st-dialog-actions`），等作者点头再写代码。不许边写边发明。
+3. **弹窗只用 `fang-style` 的 `Dialog` / `Drawer`**，不许手写 backdrop 或对话框骨架。现存例外（改动到它们时收编）：`panel/rail-tools.js`（关于卡）、`mosaic/review.js`、`mosaic/tabs.js`。
+4. **文案与控件的排版复用既有类**：正文 `st-overview-text` / `st-writing-style-prompt`；编辑框 `st-overview-summary` / `st-dialog-textarea`（一律 `resize:none`，不许出现可拖拽的输入组件）。
+5. **动作按钮**放标题行行尾（名称在左、工具在右，见 `.st-mosaic-band-head`）或内容流末尾的既有动作行（`st-dialog-actions` / `st-mosaic-proposal-actions`）；不许为按钮单独造一个区，也不许浮在正文中间。
+6. **作者未指定形态时，新页面默认独立弹窗。**
+7. **自造类登记制。** 页面级 CSS 确实没有现成等价物时才允许新类，且必须登记在下表：类名、它是什么、为什么没有现成等价物。不在此表的新页面类 = 违规。
+
+   | 类名 | 是什么 | 为什么没有现成等价物 |
+   |---|---|---|
+   | `st-ctx-dialog-body` | 上下文弹窗体的固定高 | 弹窗体需要确定高，`Dialog` 本身只有 max-height |
+   | `st-ctx-bar` / `st-ctx-seg` / `st-ctx-seg-label` | 上下文构成横条 | 面板没有「分段构成条」组件 |
+   | `st-ctx-official` | 官方版本区（弹性高，内滚） | 官方文本与副本必须分属两个固定区，不共滚动区 |
+   | `st-ctx-mine` | 我的版本区（固定 40%，内滚：编辑框或副本列表） | 同上；分区边界是窗格的常量 |
