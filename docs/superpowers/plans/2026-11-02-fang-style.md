@@ -140,23 +140,10 @@ export const CSS_BRIDGE = `
 ```js
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import * as fang from 'fang-style'
 
-test('fang-style 导出完整的组件与 hook 面', () => {
-  const widgets = ['Drawer', 'Dialog', 'ConfirmDialog', 'Dropdown', 'FileButton',
-    'Segmented', 'List', 'ListRow', 'SplitPane', 'TooltipLayer', 'Chevron']
-  const hooks = ['useDismiss', 'usePersisted', 'useClosingAnimation', 'useSessionState', 'SESSION_STORE']
-  for (const name of [...widgets, ...hooks]) {
-    assert.equal(typeof fang[name], 'function', `${name} 应该是函数`)
-  }
-})
-
-test('FANG_CSS 是只含 fang- 命名的样式表', () => {
-  assert.equal(typeof fang.FANG_CSS, 'string')
-  assert.match(fang.FANG_CSS, /\.fang-btn\{/)
-  assert.doesNotMatch(fang.FANG_CSS, /--st-/)
-  assert.doesNotMatch(fang.FANG_CSS, /\.st-/)
-  assert.doesNotMatch(fang.FANG_CSS, /--dsw-/)
+test('fang-style 可以被解析并导入', async () => {
+  const fang = await import('fang-style')
+  assert.equal(typeof fang, 'object')
 })
 ```
 
@@ -426,6 +413,31 @@ export { FANG_CSS } from './styles.js'
 ```
 
 - [ ] **Step 8: 冒烟测试转绿**
+
+把 `tests/fang-style.test.js` 的内容替换为完整断言：
+
+```js
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import * as fang from 'fang-style'
+
+test('fang-style 导出完整的组件与 hook 面', () => {
+  const widgets = ['Drawer', 'Dialog', 'ConfirmDialog', 'Dropdown', 'FileButton',
+    'Segmented', 'List', 'ListRow', 'SplitPane', 'TooltipLayer', 'Chevron']
+  const hooks = ['useDismiss', 'usePersisted', 'useClosingAnimation', 'useSessionState', 'SESSION_STORE']
+  for (const name of [...widgets, ...hooks]) {
+    assert.equal(typeof fang[name], 'function', `${name} 应该是函数`)
+  }
+})
+
+test('FANG_CSS 是只含 fang- 命名的样式表', () => {
+  assert.equal(typeof fang.FANG_CSS, 'string')
+  assert.match(fang.FANG_CSS, /\.fang-btn\{/)
+  assert.doesNotMatch(fang.FANG_CSS, /--st-/)
+  assert.doesNotMatch(fang.FANG_CSS, /\.st-/)
+  assert.doesNotMatch(fang.FANG_CSS, /--dsw-/)
+})
+```
 
 Run: `node --test --test-force-exit tests/fang-style.test.js`
 Expected: 2 条全 PASS。
