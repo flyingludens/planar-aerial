@@ -16,7 +16,7 @@
  * because only the panel knows what "the shelf" means for the current screen.
  */
 import { React, h } from '../shared/react.js'
-import { ShelfIcon, SaveIcon, ExportIcon, InfoIcon, StartIcon, FolderIcon } from '../shared/ui.js'
+import { ShelfIcon, SaveIcon, ExportIcon, InfoIcon, StartIcon, FolderIcon, ContextIcon } from '../shared/icons.js'
 
 /**
  * The plugin's identity.
@@ -100,7 +100,7 @@ export function downloadText(text, name) {
  * @param options.onExport  - resolves the merged markdown; absent when there is no route
  * @param options.onNotice  - reports an outcome in the status bar, where every other message goes
  */
-export function RailTools({ t, book, onStart, onShelf, onOpen, onSave, onExport, onNotice, onAbout, saving }) {
+export function RailTools({ t, book, onStart, onShelf, onOpen, onContext, onSave, onExport, onNotice, onAbout, saving }) {
   const [busy, setBusy] = React.useState(false)
   const hasBook = book !== null && book !== undefined
 
@@ -152,6 +152,14 @@ export function RailTools({ t, book, onStart, onShelf, onOpen, onSave, onExport,
         testId: 'rail-open',
         disabled: typeof onOpen !== 'function',
         onClick: () => { if (typeof onOpen === 'function') onOpen() },
+      }),
+      // Right under 打开目录: both answer "what is this book made of", one on disk and one in
+      // the model's context.
+      h(RailTool, {
+        t, icon: h(ContextIcon), label: t('rail.context'),
+        testId: 'rail-context',
+        disabled: !hasBook || typeof onContext !== 'function',
+        onClick: () => { if (typeof onContext === 'function') onContext() },
       }),
       h(RailTool, {
         t, icon: h(SaveIcon), label: t('rail.save'), hint: t('rail.saveHint'),
@@ -223,16 +231,16 @@ export function AboutBox({ t, onClose }) {
     { key: 'copyright', name: t('about.copyright'), value: `© ${new Date().getFullYear()} ${PLUGIN.author}` },
   ]
   return h('div', {
-    className: 'st-backdrop', role: 'presentation',
+    className: 'fang-backdrop', role: 'presentation',
     onMouseDown: (event) => { if (event.target === event.currentTarget) onClose() },
   },
-    h('div', { className: 'st-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('rail.about') },
-      h('div', { className: 'st-dialog-title' }, t('rail.about')),
-      h('div', { className: 'st-dialog-body' },
-        rows.map((row) => h('div', { key: row.key, className: 'st-row st-gap-under-hint' },
-          h('span', { className: 'st-muted' }, row.name),
-          h('span', { className: 'st-spacer' }),
+    h('div', { className: 'fang-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('rail.about') },
+      h('div', { className: 'fang-dialog-title' }, t('rail.about')),
+      h('div', { className: 'fang-dialog-body' },
+        rows.map((row) => h('div', { key: row.key, className: 'fang-row st-gap-under-hint' },
+          h('span', { className: 'fang-muted' }, row.name),
+          h('span', { className: 'fang-spacer' }),
           h('span', null, row.value)))),
-      h('div', { className: 'st-dialog-actions' },
-        h('button', { type: 'button', className: 'st-btn', onClick: onClose }, t('action.close')))))
+      h('div', { className: 'fang-dialog-actions' },
+        h('button', { type: 'button', className: 'fang-btn', onClick: onClose }, t('action.close')))))
 }

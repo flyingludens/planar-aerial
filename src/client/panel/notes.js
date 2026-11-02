@@ -10,7 +10,7 @@
  * the archive; nothing is selected until the writer picks a row.
  */
 import { React, h } from '../shared/react.js'
-import { Dialog, List, ListRow, SplitPane } from '../shared/ui.js'
+import { Dialog, List, ListRow, SplitPane } from 'fang-style'
 import { rowId } from '../shared/logic.js'
 
 const timeOf = (at) => (Number.isFinite(at) ? new Date(at).toLocaleString() : '')
@@ -56,7 +56,7 @@ export function NotesPanel({ t, book, updateBook, onClose }) {
   }
 
   return h(Dialog, {
-    t, title: t('notes.title'), onClose: close, size: 'medium',
+    title: t('notes.title'), closeLabel: t('action.close'), onClose: close, size: 'medium',
     bodyClassName: 'st-notes-body', panelClassName: 'st-notes-dialog',
     backdropClassName: 'st-notes-backdrop',
   },
@@ -78,14 +78,14 @@ export function NotesPanel({ t, book, updateBook, onClose }) {
             onActivate: () => setSelectedId(selectedId === note.id ? null : note.id),
           },
             h('span', { className: 'st-list-row-title' }, firstName(note.text) || t('notes.untitled')),
-            h('span', { className: 'st-list-row-meta' }, timeOf(note.at))))),
+            h('span', { className: 'fang-list-row-meta' }, timeOf(note.at))))),
         detailProps: { role: 'tabpanel' },
         detail: selected === undefined
-          ? [h('div', { className: 'st-split-detail-body' }, h('p', { className: 'st-muted' }, t('notes.pick')))]
+          ? [h('div', { className: 'fang-split-detail-body' }, h('p', { className: 'fang-muted' }, t('notes.pick')))]
           : [
               // The note's text IS the detail. A title row and a timestamp above it only repeated
               // what the list already says and took height from the writing surface.
-              h('div', { className: 'st-split-detail-body' },
+              h('div', { className: 'fang-split-detail-body' },
                 // Reading pane, not a form: the note's text is the whole content. Editing a new
                 // thought happens in the capture field above; an archived note is read here.
                 h('div', { className: 'st-notes-detail', 'data-testid': 'notes-detail' }, selected.text)),

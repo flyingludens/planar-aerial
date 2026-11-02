@@ -294,7 +294,7 @@ test('a search with no match says so instead of showing 0/0', async () => {
   assert.ok(bar.includes('label.noMatches'), 'the bar reports that nothing matched')
   assert.ok(!bar.includes('0 / 0'), 'and never shows a meaningless count')
   // The step buttons are disabled rather than moving the caret nowhere.
-  const disabled = findAllByClass(tree, 'st-btn-ghost').filter((button) => button.props.disabled === true)
+  const disabled = findAllByClass(tree, 'fang-btn-ghost').filter((button) => button.props.disabled === true)
   assert.ok(disabled.length >= 2, 'the previous/next controls are disabled with nothing to step through')
 })
 
@@ -1290,7 +1290,7 @@ async function mountType(typography, onChange = () => {}, extra = {}) {
 }
 
 /** The three type groups, in page order. The auto-save group comes after them. */
-const typeGroups = (tree) => findAllByClass(tree, 'st-seg').slice(0, 3)
+const typeGroups = (tree) => findAllByClass(tree, 'fang-segmented').slice(0, 3)
 
 test('the settings page offers named steps instead of sliders', async () => {
   // A range input invites a value between two stops, and for type there is no such value: 16.4px
@@ -1300,11 +1300,11 @@ test('the settings page offers named steps instead of sliders', async () => {
   assert.equal(findByClass(tree, 'st-slider'), undefined, 'no sliders are left on the page')
   const groups = typeGroups(tree)
   assert.equal(groups.length, 3, 'size, leading and measure, one group each')
-  assert.equal(findAllByClass(groups[0], 'st-seg-item').length, 4, 'four sizes')
-  assert.equal(findAllByClass(groups[1], 'st-seg-item').length, 3, 'three leadings')
-  assert.equal(findAllByClass(groups[2], 'st-seg-item').length, 3, 'three measures')
+  assert.equal(findAllByClass(groups[0], 'fang-segmented-item').length, 4, 'four sizes')
+  assert.equal(findAllByClass(groups[1], 'fang-segmented-item').length, 3, 'three leadings')
+  assert.equal(findAllByClass(groups[2], 'fang-segmented-item').length, 3, 'three measures')
   // The stored value is the pressed step: a segmented control with nothing chosen reads as broken.
-  const pressed = findAllByClass(groups[0], 'st-seg-item').filter((b) => b.props['aria-pressed'] === 'true')
+  const pressed = findAllByClass(groups[0], 'fang-segmented-item').filter((b) => b.props['aria-pressed'] === 'true')
   assert.equal(pressed.length, 1, 'exactly one size is chosen')
   assert.equal(visibleText(pressed[0]).join(''), 'type.size.normal', 'and it is the stored one')
 })
@@ -1316,7 +1316,7 @@ test('choosing a step changes that field and carries the others through', async 
   const picked = []
   const current = { fontSize: 16, lineHeight: 1.9, width: 760 }
   const tree = await mountType(current, (patch) => picked.push(patch))
-  const sizes = findAllByClass(typeGroups(tree)[0], 'st-seg-item')
+  const sizes = findAllByClass(typeGroups(tree)[0], 'fang-segmented-item')
   assert.equal(visibleText(sizes[2]).join(''), 'type.size.large')
   sizes[2].props.onClick()
   assert.deepEqual(picked, [{ fontSize: 18, lineHeight: 1.9, width: 760 }],
@@ -1335,12 +1335,12 @@ test('each type row keeps its own choice when another one moves', async () => {
     autoSaveMs: 5 * 60 * 1000, onAutoSave: () => {},
   })
   const mounted = await render(plugin.__components.SettingsPage, props())
-  findAllByClass(typeGroups(mounted.tree)[0], 'st-seg-item')[2].props.onClick()
+  findAllByClass(typeGroups(mounted.tree)[0], 'fang-segmented-item')[2].props.onClick()
   const after = await rerender(plugin.__components.SettingsPage, props())
 
   const groups = typeGroups(after.tree)
   const pressedOf = (group) => visibleText(
-    findAllByClass(group, 'st-seg-item').filter((b) => b.props['aria-pressed'] === 'true')[0]).join('')
+    findAllByClass(group, 'fang-segmented-item').filter((b) => b.props['aria-pressed'] === 'true')[0]).join('')
   assert.equal(pressedOf(groups[0]), 'type.size.large', 'the size moved to 大')
   assert.equal(pressedOf(groups[1]), 'type.leading.normal', 'the leading stayed on 标准')
   assert.equal(pressedOf(groups[2]), 'type.measure.normal', 'the measure stayed on 标准')
@@ -1352,7 +1352,7 @@ test('a stored value between steps shows the nearest one, not nothing', async ()
   const tree = await mountType({ fontSize: 21, lineHeight: 2.05, width: 800 })
   const groups = typeGroups(tree)
   for (const [index, expected] of [[0, 'type.size.huge'], [1, 'type.leading.loose'], [2, 'type.measure.normal']]) {
-    const pressed = findAllByClass(groups[index], 'st-seg-item').filter((b) => b.props['aria-pressed'] === 'true')
+    const pressed = findAllByClass(groups[index], 'fang-segmented-item').filter((b) => b.props['aria-pressed'] === 'true')
     assert.equal(pressed.length, 1, `group ${index} has a chosen step`)
     assert.equal(visibleText(pressed[0]).join(''), expected)
   }
@@ -1459,9 +1459,9 @@ test('the settings page carries the auto-save interval, and pressing a step chan
     autoSaveMs: 5 * 60 * 1000, onAutoSave: (value) => picked.push(value),
   })
   // Four groups now: three of type, then the interval.
-  const groups = findAllByClass(tree, 'st-seg')
+  const groups = findAllByClass(tree, 'fang-segmented')
   assert.equal(groups.length, 4, 'the interval is a fourth group on the same page')
-  const steps = findAllByClass(groups[3], 'st-seg-item')
+  const steps = findAllByClass(groups[3], 'fang-segmented-item')
   assert.equal(steps.length, 4, 'four waits offered')
 
   const pressed = steps.filter((step) => step.props['aria-pressed'] === 'true')
@@ -1481,7 +1481,7 @@ test('a profile-set interval is shown but cannot be changed from the page', asyn
   const tree = await mountType({ fontSize: 16, lineHeight: 1.9, width: 760 }, () => {}, {
     autoSaveMs: 60000, onAutoSave: () => {}, autoSaveLocked: true,
   })
-  const steps = findAllByClass(findAllByClass(tree, 'st-seg')[3], 'st-seg-item')
+  const steps = findAllByClass(findAllByClass(tree, 'fang-segmented')[3], 'fang-segmented-item')
   assert.ok(steps.length > 0, 'the row is still there')
   assert.ok(steps.every((step) => step.props.disabled === true), 'every step is disabled')
   const pressed = steps.filter((step) => step.props['aria-pressed'] === 'true')

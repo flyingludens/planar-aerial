@@ -7,7 +7,8 @@
  */
 import { React, h } from '../shared/react.js'
 import { clockTime, diffWords } from '../shared/logic.js'
-import { Chevron, ModelIcon } from '../shared/ui.js'
+import { Chevron } from 'fang-style'
+import { ModelIcon } from '../shared/icons.js'
 
 /**
  * The composer's model seat, built to match the host's own.
@@ -210,7 +211,7 @@ export function ChatComposer({ t, busy, catalog, modelCurrent, efforts, onModelC
     // The control row under the input, the shape the host's composer uses: hint on the left,
     // the model chip and the send button on the right.
     h('div', { className: 'st-chat-row' },
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
       h('div', { className: 'st-chat-trailing' },
         // The model chip opens the host's directory: the same catalogue its own composer uses,
         // with effort levels when the model offers them.
@@ -544,12 +545,12 @@ export function AiThinking({ t, question, beats: given }) {
  * answer worth keeping should not have to be retyped.
  */
 export function AnswerLog({ t, answers, onInsert }) {
-  if (answers.length === 0) return h('div', { className: 'st-muted' }, t('label.noAnswers'))
+  if (answers.length === 0) return h('div', { className: 'fang-muted' }, t('label.noAnswers'))
   return h('div', { className: 'st-answers' },
     answers.map((entry, index) => h('div', { key: `${entry.at}-${index}`, className: 'st-answer' },
       h('div', { className: 'st-answer-head' },
         h('span', { className: 'st-answer-question' }, entry.question),
-        h('span', { className: 'st-spacer' }),
+        h('span', { className: 'fang-spacer' }),
         h('span', { className: 'st-caption' },
           clockTime(entry.at)),
         typeof onInsert === 'function' ? h('button', {

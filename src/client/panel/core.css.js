@@ -48,62 +48,6 @@ export const CSS_CORE = `
 
       /* ---- the sheet: a drawer that drops from the title row, and the desk under it ---- */
       .st-shell{position:relative}
-      /* A centred dialog over the panel. It is absolute, not fixed: the host's centre column has
-         overflow: hidden, and a fixed overlay is clipped by it, which is why the sheet was a narrow
-         strip in the wrong place. */
-      /* The backdrop is only a dimming layer now: the panel itself is flush against the right edge,
-         so there is nothing to centre. */
-      /* Below the title bar, never over it. A full-inset overlay covered the whole shell including
-         the title row, so the book name and the panel buttons were dimmed and unclickable while a
-         drawer was open — and the controls you need to close it live in that row. The offset is the
-         title row's own height, declared once on the shell. */
-      .st-sheet-backdrop{position:absolute;inset:var(--st-titlebar-height,68px) 0 0 0;z-index:var(--st-layer-drawer);
-        display:flex;align-items:stretch;justify-content:flex-end;
-        /* No wash over the page.
-           A panel that slides in from the edge is not a modal: the manuscript beside it stays
-           readable and stays the surface the writer is working on. Dimming it said "you cannot use
-           this until you close the drawer", which was never true — the drawer is reference material
-           consulted WHILE writing. Its separation is the flyout shadow on the panel itself, which
-           is exactly what a shadow is for; a second dim on top of it was doing the same job twice
-           and painting the page grey to do it.
-           The layer stays because it is the click-away target and the panel's positioning context. */
-        background:transparent}
-      /* A panel that comes in from the right: full height, rounded on its inner edge only, like the
-         outline rounded on its right edge. The two corners against the frame stay square.
-         Its depth is two things, not one: the flyout shadow (dark, thrown LEFT, the direction it
-         arrived from) and an inner rim along the top edge. The single lv3 shadow it used to carry
-         is a card recipe — right for a 184px card, invisible under a 700px panel that reaches the
-         top and bottom edges. */
-      .st-sheet{display:flex;flex-direction:column;
-        height:100%;max-height:none;overflow:hidden;
-        border:none;border-radius:var(--st-radius-panel,28px) 0 0 var(--st-radius-panel,28px);
-        background:var(--st-surface-high);
-        box-shadow:var(--st-panel-rim),var(--st-panel-shadow-left);
-        font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        color:var(--st-text-primary);animation:st-sheet-in var(--st-motion-open,180ms) var(--ds-ease-in-out,ease-in-out) both;
-        /* Width follows the CONTENT, not a tier. Three fixed sizes were still a guess: a cast with
-           two people got a 560px panel mostly full of nothing, and a graph with twelve needed more
-           than 820. Sizing to fit takes what the content asks for, with a floor so a one-line
-           panel is not a strip and a ceiling a page may raise, capped by the window. */
-        width:fit-content;min-width:min(320px,100%);
-        max-width:min(var(--st-sheet-max),100%)}
-      /* A panel that names a width tier keeps that width; only the tierless ones size to their
-         content. The history panel is prose and its width used to jump with the longest answer. */
-      .st-sheet[data-size]{width:var(--st-sheet-max)}
-      @keyframes st-sheet-in{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
-      .st-closing .st-sheet{animation:st-sheet-out var(--st-motion-close,140ms) var(--ds-ease-in-out,ease-in-out) both}
-      @keyframes st-sheet-out{from{transform:none;opacity:1}to{transform:translateX(24px);opacity:0}}
-      .st-closing .st-sheet-backdrop{animation:st-scrim-out var(--st-motion-close,140ms) ease both}
-      @keyframes st-scrim-out{from{opacity:1}to{opacity:0}}
-      @media (max-width: 640px){
-        /* Below this the content cannot lay itself out in a column narrower than the window, so the
-           panel takes the whole width and drops its rounded inner edge. */
-        .st-sheet{width:100%;min-width:0;border-radius:0}
-      }
-      .st-sheet-head{display:flex;align-items:center;gap:var(--st-space-8,8px);padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-12,12px);flex:none;
-        border-bottom:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
-      .st-sheet-title{margin:0;font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
-      .st-sheet-body{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-16,16px)}
       /* An icon and a label in one control: flex with centred alignment, or the svg sits on the
          text baseline and rides above it. The gap is the space between them. */
       /* Title-row buttons share the rail toggle's height, so the row is a line of EQUAL pills —
@@ -112,7 +56,7 @@ export const CSS_CORE = `
          white on the dark theme — not the quieter secondary the inner-panel ghosts use, which
          all but disappears against the frame edge. The session button's flowing label paints its
          own gradient and is untouched by this. */
-      .st-titlebar .st-btn{color:var(--st-text-primary)}
+      .st-titlebar .fang-btn{color:var(--st-text-primary)}
       .st-titlebar .st-rail-toggle{color:var(--st-text-primary)}
       .st-drawer-btn{display:inline-flex;align-items:center;gap:var(--st-space-4,4px);
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);padding:0 var(--st-space-8,8px)}
@@ -199,17 +143,17 @@ export const CSS_CORE = `
         color:var(--st-text-secondary)}
       /* The segmented control: one track, the chosen step raised inside it. Cheaper than three
          sliders and it says how many choices there are before you touch it. */
-      .st-seg{display:inline-flex;align-items:center;gap:var(--st-space-2,2px);min-width:0;padding:var(--st-space-2,2px);
+      .fang-segmented{display:inline-flex;align-items:center;gap:var(--st-space-2,2px);min-width:0;padding:var(--st-space-2,2px);
         border-radius:var(--st-radius-pill,999px);corner-shape:round;background:var(--st-surface);
         box-shadow:inset 0 0 0 var(--st-hairline) var(--dsw-alias-border-l2,var(--st-fallback-border-l2))}
-      .st-seg-item{font-family:inherit;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:var(--st-space-2,2px) var(--st-space-12,12px);
+      .fang-segmented-item{font-family:inherit;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:var(--st-space-2,2px) var(--st-space-12,12px);
         border:none;border-radius:var(--st-radius-pill,999px);background:transparent;corner-shape:round;
         color:var(--st-text-secondary);cursor:pointer;white-space:nowrap}
-      .st-seg-item:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-seg-item:active{background:var(--st-active-fill)}
-      .st-seg-item:focus-visible{outline:none;
+      .fang-segmented-item:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
+      .fang-segmented-item:active{background:var(--st-active-fill)}
+      .fang-segmented-item:focus-visible{outline:none;
         box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-seg-item[aria-pressed="true"]{background:var(--st-selected-fill);
+      .fang-segmented-item[aria-pressed="true"]{background:var(--st-selected-fill);
         color:var(--st-text-primary);
         box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
       /* A FIXED frame, and a smaller one than before: the sample is one line, so the frame is one

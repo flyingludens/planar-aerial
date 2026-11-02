@@ -7,7 +7,8 @@
  */
 import { NS, ZH, EN } from './shared/locale.js'
 import { STORAGE_KEYS, writeStored } from './shared/storage.js'
-import { PanelIcon, ConfirmDialog, Drawer } from './shared/ui.js'
+import { PanelIcon } from './shared/icons.js'
+import { ConfirmDialog, Drawer } from 'fang-style'
 import { useBookData, useClosingAnimation } from './shared/hooks.js'
 import { useBoardActions } from './mosaic/board-state.js'
 import {

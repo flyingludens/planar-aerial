@@ -105,8 +105,8 @@ export const CSS_CARDS = `
         font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
         color:var(--st-text-primary);cursor:pointer}
       .st-card-menu-item:hover{background:var(--st-hover-fill)}
-      .st-card-menu-item.st-danger{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
-      .st-card-menu-item.st-danger:hover{background:var(--dsw-alias-state-error-primary,var(--st-fallback-error));color:#fff}
+      .st-card-menu-item.fang-danger{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
+      .st-card-menu-item.fang-danger:hover{background:var(--dsw-alias-state-error-primary,var(--st-fallback-error));color:#fff}
       .st-mosaic-card:hover{box-shadow:var(--dsw-shadow-lv3,0 2px 4px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.1))}
       .st-mosaic-card:active{cursor:grabbing}
       /* Both lines sit on the scrim, so both are chosen for a dark backing rather than for the

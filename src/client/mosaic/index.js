@@ -16,7 +16,7 @@ import {
 import { emptyBoard } from '../../../domain/board.js'
 import { useBoardActions } from './board-state.js'
 import { rowId } from '../shared/logic.js'
-import { ConfirmDialog } from '../shared/ui.js'
+import { ConfirmDialog } from 'fang-style'
 import { kindLabel, kindFields, fieldLabel, fieldValue, isReferenceField } from './labels.js'
 
 /** How long the detail page's exit animation runs. It must match the duration the stylesheet
@@ -175,7 +175,6 @@ export function MosaicSheet({ t, book, updateBook, onSummary, onClose, mosaicPro
       // asks the same question in the same shape, and one dialog is why the two ask it
       // identically.
       dooming === null ? null : h(ConfirmDialog, {
-        t,
         title: t('mosaic.deleteCardTitle', { name: dooming.name }),
         confirmLabel: t('action.delete'),
         cancelLabel: t('action.cancel'),
@@ -362,15 +361,15 @@ function MosaicEntityPage({ t, entity, mosaic, onClose, closing, onPatchEntity, 
             onChange: (e) => patch({ name: e.target.value }),
           })
         : h('h3', { className: 'st-mosaic-page-title' }, entity.name),
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'mosaic-entity-edit',
+        type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'mosaic-entity-edit',
         'data-editing': editing ? 'true' : 'false',
         title: editing ? t('action.done') : t('mosaic.editEntry'),
         onClick: () => setEditing((was) => !was),
       }, editing ? t('action.done') : t('mosaic.editEntry')),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', title: t('action.close'),
+        type: 'button', className: 'fang-btn fang-btn-ghost', title: t('action.close'),
         'aria-label': t('action.close'), onClick: onClose,
       }, '✕')),
     h('div', { className: 'st-mosaic-page-scroll' },

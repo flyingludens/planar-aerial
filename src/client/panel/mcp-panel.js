@@ -28,7 +28,7 @@ export function McpPanel({ t, info, error, loading, onClose, onLaunch }) {
     h('div', { className: 'st-mcp-panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('mcp.title') },
       h('div', { className: 'st-mcp-head' },
         h('h2', { className: 'st-mcp-title' }, t('mcp.title')),
-        h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: onClose }, t('action.close'))),
+        h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: onClose }, t('action.close'))),
       loading ? h('p', { className: 'st-mcp-note' }, t('label.loading')) : null,
       error === '' ? null : h('p', { className: 'st-mcp-error' }, error),
       info === null || info === undefined ? null : h(React.Fragment, null,
@@ -36,15 +36,15 @@ export function McpPanel({ t, info, error, loading, onClose, onLaunch }) {
           h('span', { className: 'st-mcp-dot' }),
           info.connected === true ? t('mcp.connected') : t('mcp.waiting')),
         typeof onLaunch === 'function'
-          ? h('button', { type: 'button', className: 'st-btn st-btn-primary', onClick: launch }, t('mcp.launch'))
+          ? h('button', { type: 'button', className: 'fang-btn fang-btn-primary', onClick: launch }, t('mcp.launch'))
           : null,
         launchError === '' ? null : h('p', { className: 'st-mcp-error' }, launchError),
         h('div', { className: 'st-mcp-row' },
           h('span', { className: 'st-mcp-label' }, t('mcp.endpoint')),
           h('code', { className: 'st-mcp-value' }, info.url),
-          h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: () => copy(info.url) }, t('action.copy'))),
+          h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: () => copy(info.url) }, t('action.copy'))),
         h('div', { className: 'st-mcp-row st-mcp-row-config' },
           h('span', { className: 'st-mcp-label' }, t('mcp.config')),
-          h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: () => copy(config) }, t('action.copy'))),
+          h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: () => copy(config) }, t('action.copy'))),
         h('pre', { className: 'st-mcp-config' }, config))))
 }

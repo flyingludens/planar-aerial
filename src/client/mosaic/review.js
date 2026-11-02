@@ -6,7 +6,7 @@
  * not rendered as a component — a hook inside it would land on the page's hook table.
  */
 import { React, h } from '../shared/react.js'
-import { Dropdown } from '../shared/ui.js'
+import { Dropdown } from 'fang-style'
 import { kindLabel } from './labels.js'
 import { MosaicRelations } from './relations.js'
 import { useDockState, useNotice } from '../shared/hooks.js'
@@ -68,16 +68,16 @@ export function MosaicNewCard({ t, onCreate, onCreated, defaultKind }) {
 
   return h(React.Fragment, null,
     h('button', {
-      type: 'button', className: 'st-btn st-btn-primary', 'data-testid': 'mosaic-new',
+      type: 'button', className: 'fang-btn fang-btn-primary', 'data-testid': 'mosaic-new',
       onClick: () => { reset(); setOpen(true) },
     }, t('mosaic.new')),
     open ? h('div', {
-      className: 'st-backdrop', role: 'presentation',
+      className: 'fang-backdrop', role: 'presentation',
       onMouseDown: (e) => { if (e.target === e.currentTarget) close() },
     },
-      h('div', { className: 'st-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('mosaic.newTitle') },
-        h('div', { className: 'st-dialog-title' }, t('mosaic.newTitle')),
-        h('div', { className: 'st-dialog-body' },
+      h('div', { className: 'fang-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('mosaic.newTitle') },
+        h('div', { className: 'fang-dialog-title' }, t('mosaic.newTitle')),
+        h('div', { className: 'fang-dialog-body' },
           h('label', { className: 'st-dialog-field' },
             h('span', { className: 'st-dialog-label' }, t('mosaic.newKind')),
             h(Dropdown, {
@@ -96,10 +96,10 @@ export function MosaicNewCard({ t, onCreate, onCreated, defaultKind }) {
           field(t('mosaic.newSummary'), undefined, summary, setSummary),
           field(t('mosaic.newDescription'), undefined, description, setDescription, true),
           error === '' ? null : h('p', { className: 'st-dialog-hint st-dialog-error' }, error)),
-        h('div', { className: 'st-dialog-actions' },
-          h('button', { type: 'button', className: 'st-btn', onClick: close }, t('action.cancel')),
+        h('div', { className: 'fang-dialog-actions' },
+          h('button', { type: 'button', className: 'fang-btn', onClick: close }, t('action.cancel')),
           h('button', {
-            type: 'button', className: 'st-btn st-btn-primary', 'data-testid': 'mosaic-new-submit',
+            type: 'button', className: 'fang-btn fang-btn-primary', 'data-testid': 'mosaic-new-submit',
             onClick: submit,
           }, t('mosaic.newSubmit'))))) : null)
 }
@@ -264,12 +264,12 @@ function MosaicCheckHeader({ t, api, bookFolder, book, chapter, mosaicProposal, 
       // page, so they share the band with every other page's buttons.
       h('div', { className: 'st-mosaic-check-row' },
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'mosaic-check',
+          type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'mosaic-check',
           disabled: busy,
           onClick: check,
         }, t('mosaic.check')),
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'mosaic-relate',
+          type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'mosaic-relate',
           disabled: busy,
           onClick: relate,
         }, t('mosaic.relate')))),
@@ -302,23 +302,23 @@ function MosaicCheckHeader({ t, api, bookFolder, book, chapter, mosaicProposal, 
                 typeof quote === 'string' && quote !== '' ? h('p', { className: 'st-mosaic-quote' }, quote) : null,
                 h('div', { className: 'st-mosaic-proposal-actions' },
                   h('button', {
-                    type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'proposal-accept',
+                    type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'proposal-accept',
                     disabled: busy, onClick: () => onDecide(i, verdict === 'accepted' ? 'undecided' : 'accepted'),
                   }, t('mosaic.accept')),
                   h('button', {
-                    type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'proposal-reject',
+                    type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'proposal-reject',
                     disabled: busy, onClick: () => onDecide(i, verdict === 'rejected' ? 'undecided' : 'rejected'),
                   }, t('mosaic.reject'))))
             }),
             hasChangeLeft || (proposal.changes ?? []).some((_, i) => decisions[i] === 'accepted')
               ? h('div', { className: 'st-mosaic-apply-row' },
                   hasChangeLeft ? h('button', {
-                    type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'proposal-accept-all',
+                    type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'proposal-accept-all',
                     disabled: busy, onClick: acceptAll,
                   }, t('mosaic.acceptAll')) : null,
                   (proposal.changes ?? []).some((_, i) => decisions[i] === 'accepted')
                     ? h('button', {
-                      type: 'button', className: 'st-btn st-btn-primary', 'data-testid': 'proposal-apply',
+                      type: 'button', className: 'fang-btn fang-btn-primary', 'data-testid': 'proposal-apply',
                       disabled: busy, onClick: apply,
                     }, t('mosaic.apply')) : null)
               : null)

@@ -7,7 +7,7 @@
  * asking them to choose from a grid.
  */
 import { React, h } from '../shared/react.js'
-import { BackIcon } from '../shared/ui.js'
+import { BackIcon } from '../shared/icons.js'
 import { NewBookDialog } from './new-book-dialog.js'
 import { GlyphField } from './glyph-field.js'
 
@@ -62,7 +62,7 @@ export function WelcomePage({ t, api, books, hasBook, onCreated, onLibrary, onBa
     h(GlyphField),
     hasBook && typeof onBack === 'function'
       ? h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost st-btn-icon st-welcome-back',
+        type: 'button', className: 'fang-btn fang-btn-ghost fang-btn-icon st-welcome-back',
         title: t('welcome.back'), 'aria-label': t('welcome.back'), onClick: onBack,
       }, h(BackIcon))
       : null,
@@ -77,10 +77,10 @@ export function WelcomePage({ t, api, books, hasBook, onCreated, onLibrary, onBa
           h('div', { className: 'st-welcome-actions' },
             primary !== undefined && primary !== null
             ? primary
-            : h('button', { type: 'button', className: 'st-btn st-btn-primary st-btn-xl', onClick: begin },
+            : h('button', { type: 'button', className: 'fang-btn fang-btn-primary fang-btn-xl', onClick: begin },
                 t('welcome.begin')),
             books.length > 0 && typeof onLibrary === 'function'
-              ? h('button', { type: 'button', className: 'st-btn st-btn-ghost st-btn-flow', onClick: enterShelf },
+              ? h('button', { type: 'button', className: 'fang-btn fang-btn-ghost st-btn-flow', onClick: enterShelf },
                   h('span', { className: 'st-btn-flow-label' }, t('welcome.library')))
               : null),
           error === '' ? null : h('p', { className: 'st-welcome-error' }, error)))),

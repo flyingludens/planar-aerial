@@ -96,7 +96,7 @@ export function MosaicCardMenu({ t, onEdit, onDelete }) {
         onClick: (e) => { e.stopPropagation?.(); setOpen(false); onEdit() },
       }, t('action.editCard')) : null,
       typeof onDelete === 'function' ? h('button', {
-        type: 'button', className: 'st-card-menu-item st-danger', role: 'menuitem',
+        type: 'button', className: 'st-card-menu-item fang-danger', role: 'menuitem',
         onClick: (e) => { e.stopPropagation?.(); setOpen(false); onDelete() },
       }, t('action.deleteCard')) : null) : null)
 }

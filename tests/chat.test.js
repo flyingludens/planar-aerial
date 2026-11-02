@@ -124,7 +124,7 @@ test('the composer renders in the dock, not as a modal', async () => {
   assert.ok(composer, 'the composer is inside it')
   assert.ok(findByClass(editor.tree, 'st-chat-input'), 'with a text field')
   // No modal, and the manuscript is still mounted underneath: the chat never blocks the page.
-  assert.equal(findByClass(editor.tree, 'st-sheet-backdrop'), undefined, 'no dialog')
+  assert.equal(findByClass(editor.tree, 'fang-backdrop'), undefined, 'no dialog')
   assert.ok(findByClass(editor.tree, 'st-editor-over'), 'the textarea stays mounted')
 })
 
@@ -985,7 +985,7 @@ test('the confirmation names what will be lost', async () => {
   }
   collect(mounted.tree)
   assert.equal(buttons.length, 2, 'cancel and delete')
-  assert.ok(String(buttons[1].props.className).includes('st-danger'), 'the destructive one is marked')
+  assert.ok(String(buttons[1].props.className).includes('fang-danger'), 'the destructive one is marked')
 })
 
 test('a half-typed question survives the composer being hidden and shown again', async () => {

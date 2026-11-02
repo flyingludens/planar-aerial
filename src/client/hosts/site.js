@@ -9,7 +9,7 @@ import { createRoot } from 'react-dom/client'
 import { React, h } from '../shared/react.js'
 import { EN, ZH } from '../shared/locale.js'
 import { WelcomePage } from '../panel/welcome.js'
-import { Dropdown } from '../shared/ui.js'
+import { Dropdown } from 'fang-style'
 import { DARK_THEME } from '../shared/theme.js'
 import { CSS_SHARED } from '../shared/styles.js'
 import { CSS_LIBRARY } from '../panel/library.css.js'
@@ -70,7 +70,7 @@ function SiteDownload({ t }) {
   return h('div', { className: 'st-site-download' },
     h('div', { className: 'st-site-download-controls' },
       h('button', {
-        type: 'button', className: 'st-btn st-btn-primary st-btn-xl', onClick: download,
+        type: 'button', className: 'fang-btn fang-btn-primary fang-btn-xl', onClick: download,
         disabled: platform === 'other',
         'data-download-url': url, 'data-platform': platform, 'data-arch': arch,
       }, t('download')),

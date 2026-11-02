@@ -6,7 +6,7 @@
  * and a body — and because none of them depends on another.
  */
 import { React, h } from '../shared/react.js'
-import { Dialog, FileButton, List, ListRow, SplitPane } from '../shared/ui.js'
+import { Dialog, FileButton, List, ListRow, SplitPane } from 'fang-style'
 import { describeChange, renderManuscript } from './labels.js'
 import { useDockState, useNotice } from '../shared/hooks.js'
 
@@ -126,15 +126,15 @@ export function ProposalsPage({ t, api, book, bookFolder, onApply, onNotice }) {
           h('div', { className: 'st-mosaic-proposal-head' },
             h('span', { className: 'st-mosaic-proposal-count' }, `${changes.length} ${t('mosaic.proposalChanges')}`),
             h('span', { className: 'st-mosaic-proposal-status', 'data-status': row.status }, STATUS_LABEL[row.status] ?? row.status)),
-          h('span', { className: 'st-list-row-meta' }, [SOURCE_LABEL[row.source] ?? row.source, chapterTitleOf(row.sourceChapterId), timeOf(row.at)].filter((part) => part !== '').join(' · ')),
-          (row.evidence ?? []).length === 0 ? null : h('span', { className: 'st-list-row-meta' }, row.evidence[0]))
+          h('span', { className: 'fang-list-row-meta' }, [SOURCE_LABEL[row.source] ?? row.source, chapterTitleOf(row.sourceChapterId), timeOf(row.at)].filter((part) => part !== '').join(' · ')),
+          (row.evidence ?? []).length === 0 ? null : h('span', { className: 'fang-list-row-meta' }, row.evidence[0]))
       })),
     detailProps: { role: 'tabpanel' },
-    detail: picked === undefined ? [h('div', { className: 'st-split-detail-body' }, h('p', { className: 'st-muted' }, t('mosaic.proposalsEmpty')))] : [
-      h('div', { className: 'st-split-detail-head' },
-        h('h3', { className: 'st-split-detail-title' }, SOURCE_LABEL[picked.source] ?? picked.source),
-        h('span', { className: 'st-split-detail-meta' }, STATUS_LABEL[picked.status] ?? picked.status)),
-      h('div', { className: 'st-split-detail-body' },
+    detail: picked === undefined ? [h('div', { className: 'fang-split-detail-body' }, h('p', { className: 'fang-muted' }, t('mosaic.proposalsEmpty')))] : [
+      h('div', { className: 'fang-split-detail-head' },
+        h('h3', { className: 'fang-split-detail-title' }, SOURCE_LABEL[picked.source] ?? picked.source),
+        h('span', { className: 'fang-split-detail-meta' }, STATUS_LABEL[picked.status] ?? picked.status)),
+      h('div', { className: 'fang-split-detail-body' },
         h('div', { className: 'st-mosaic-proposal-meta' },
           [chapterTitleOf(picked.sourceChapterId), timeOf(picked.at)].filter((part) => part !== '').join(' · ')),
         (picked.evidence ?? []).length === 0 ? null : h('ul', { className: 'st-mosaic-proposal-evidence' },
@@ -143,17 +143,17 @@ export function ProposalsPage({ t, api, book, bookFolder, onApply, onNotice }) {
           (picked.changes ?? []).map((change, i) => h('li', { key: `c-${i}` }, describeChange(change, entityNameOf)))),
         picked.status === 'pending' ? h('div', { className: 'st-mosaic-proposal-actions' },
           h('button', {
-            type: 'button', className: 'st-btn st-btn-ghost',
+            type: 'button', className: 'fang-btn fang-btn-ghost',
             'data-testid': `proposal-accept-${picked.id}`, disabled: busy,
             onClick: () => answer(picked, 'accepted'),
           }, t('mosaic.proposalAccept')),
           h('button', {
-            type: 'button', className: 'st-btn st-btn-ghost',
+            type: 'button', className: 'fang-btn fang-btn-ghost',
             'data-testid': `proposal-reject-${picked.id}`, disabled: busy,
             onClick: () => answer(picked, 'rejected'),
           }, t('mosaic.proposalReject'))) : h('div', { className: 'st-mosaic-proposal-actions' },
           h('button', {
-            type: 'button', className: 'st-btn st-btn-ghost',
+            type: 'button', className: 'fang-btn fang-btn-ghost',
             'data-testid': `proposal-delete-${picked.id}`, disabled: busy,
             onClick: () => discard(picked),
           }, t('mosaic.proposalDelete')))),
@@ -182,13 +182,13 @@ export function VersionsPage({ t, book, bookFolder, api, onAdoptWritten }) {
     title: t('tab.versions'),
     // Snapshot is the page's one action, so it takes the page's one control row like every other
     // board page; it used to sit at the top of the content, which read as a different layout.
-    actions: h('button', { type: 'button', className: 'st-btn', onClick: snap }, t('action.snapshot')),
+    actions: h('button', { type: 'button', className: 'fang-btn', onClick: snap }, t('action.snapshot')),
     content: h(List, { className: 'st-mosaic-versions' },
       [...book.snapshots].reverse().map((s) => h(ListRow, { key: s.id, className: 'st-mosaic-version-row' },
         h('div', { className: 'st-mosaic-version-text' },
           h('div', { className: 'st-list-row-title' }, s.label),
-          h('div', { className: 'st-list-row-meta' }, new Date(s.at).toLocaleString())),
-        h('button', { type: 'button', className: 'st-btn', onClick: () => restore(s.id) }, t('action.restore'))))),
+          h('div', { className: 'fang-list-row-meta' }, new Date(s.at).toLocaleString())),
+        h('button', { type: 'button', className: 'fang-btn', onClick: () => restore(s.id) }, t('action.restore'))))),
   })
 }
 
@@ -227,9 +227,9 @@ export function WritingStylesPage({ t, api, bookFolder, book, onNotice }) {
     t, title: t('tab.writingStyles'),
     actions: h(WritingStyleNewButton, { t, api, bookFolder, onCreated: reload, setBoardBusy, setNote }),
     content: state === null
-      ? h('div', { className: 'st-muted' }, t('label.loading'))
+      ? h('div', { className: 'fang-muted' }, t('label.loading'))
       : state.writingStyles.length === 0
-        ? h('div', { className: 'st-muted' }, t('mosaic.writingStyle.empty'))
+        ? h('div', { className: 'fang-muted' }, t('mosaic.writingStyle.empty'))
         : (() => {
             const picked = pickedId === '__closed' ? undefined : (state.writingStyles.find((row) => row.id === pickedId) ?? state.writingStyles[0])
             const active = picked === undefined ? false : state.activeId === picked.id
@@ -241,18 +241,18 @@ export function WritingStylesPage({ t, api, bookFolder, book, onNotice }) {
                   onActivate: () => setPickedId(pickedId === writingStyle.id ? '__closed' : writingStyle.id),
                 },
                   h('span', { className: 'st-list-row-title' }, writingStyle.name),
-                  h('span', { className: 'st-list-row-meta' },
+                  h('span', { className: 'fang-list-row-meta' },
                     state.activeId === writingStyle.id ? t('mosaic.writingStyle.active') : t('mosaic.writingStyle.use'))))),
               detailProps: { role: 'tabpanel' },
-              detail: picked === undefined ? [h('div', { className: 'st-split-detail-body' }, h('p', { className: 'st-muted' }, t('mosaic.writingStyle.empty')))] : [
-                h('div', { className: 'st-split-detail-head' },
-                  h('h3', { className: 'st-split-detail-title' }, picked.name),
-                  h('span', { className: 'st-split-detail-meta' }, active ? t('mosaic.writingStyle.active') : '')),
-                h('div', { className: 'st-split-detail-body' },
+              detail: picked === undefined ? [h('div', { className: 'fang-split-detail-body' }, h('p', { className: 'fang-muted' }, t('mosaic.writingStyle.empty')))] : [
+                h('div', { className: 'fang-split-detail-head' },
+                  h('h3', { className: 'fang-split-detail-title' }, picked.name),
+                  h('span', { className: 'fang-split-detail-meta' }, active ? t('mosaic.writingStyle.active') : '')),
+                h('div', { className: 'fang-split-detail-body' },
                   h('p', { className: 'st-writing-style-prompt' }, picked.prompt),
                   active ? null : h('div', { className: 'st-mosaic-proposal-actions' },
                     h('button', {
-                      type: 'button', className: 'st-btn st-btn-primary',
+                      type: 'button', className: 'fang-btn fang-btn-primary',
                       'data-testid': 'writing-style-use', onClick: () => use(picked.id),
                     }, t('mosaic.writingStyle.use')))),
               ],
@@ -303,16 +303,16 @@ function WritingStyleNewButton({ t, api, bookFolder, onCreated, setBoardBusy, se
   }
   return h(React.Fragment, null,
     h('button', {
-      type: 'button', className: 'st-btn st-btn-primary', 'data-testid': 'writing-style-new',
+      type: 'button', className: 'fang-btn fang-btn-primary', 'data-testid': 'writing-style-new',
       onClick: () => { setError(''); setOpen(true) },
     }, t('mosaic.new')),
     open ? h('div', {
-      className: 'st-backdrop', role: 'presentation',
+      className: 'fang-backdrop', role: 'presentation',
       onMouseDown: (e) => { if (e.target === e.currentTarget) close() },
     },
-      h('div', { className: 'st-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('mosaic.writingStyle.new') },
-        h('div', { className: 'st-dialog-title' }, t('mosaic.writingStyle.new')),
-        h('div', { className: 'st-dialog-body' },
+      h('div', { className: 'fang-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('mosaic.writingStyle.new') },
+        h('div', { className: 'fang-dialog-title' }, t('mosaic.writingStyle.new')),
+        h('div', { className: 'fang-dialog-body' },
           h('label', { className: 'st-dialog-field' },
             h('span', { className: 'st-dialog-label' }, t('mosaic.writingStyle.name')),
             h('input', {
@@ -337,14 +337,14 @@ function WritingStyleNewButton({ t, api, bookFolder, onCreated, setBoardBusy, se
                 testId: 'writing-style-source-file', onFile: readFile,
               }),
               h('button', {
-                type: 'button', className: 'st-btn st-writing-style-generate', disabled: busy,
+                type: 'button', className: 'fang-btn st-writing-style-generate', disabled: busy,
                 'data-testid': 'writing-style-generate', onClick: generate,
               }, busy ? '…' : t('mosaic.writingStyle.generate')))),
           error === '' ? null : h('p', { className: 'st-dialog-hint st-dialog-error' }, error)),
-        h('div', { className: 'st-dialog-actions' },
-          h('button', { type: 'button', className: 'st-btn', onClick: close }, t('action.cancel')),
+        h('div', { className: 'fang-dialog-actions' },
+          h('button', { type: 'button', className: 'fang-btn', onClick: close }, t('action.cancel')),
           h('button', {
-            type: 'button', className: 'st-btn st-btn-primary', disabled: busy, 'data-testid': 'writing-style-save',
+            type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy, 'data-testid': 'writing-style-save',
             onClick: submit,
           }, t('mosaic.writingStyle.save'))))) : null)
 }
@@ -403,7 +403,7 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
   // across a restart, and `book` is null for that whole window. Reading through it took the
   // entire panel down with a TypeError.
   if (book === null || book === undefined) {
-    return h('div', { className: 'st-scroll st-muted' }, t('label.loading'))
+    return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
   }
   const chapters = book.chapters ?? []
   const selected = chapters.find((chapter) => chapter.id === pickedId) ?? chapters[0]
@@ -421,18 +421,18 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
     // page whose toolbar was inside its body.
     actions: h('div', { className: 'st-overview-actions' },
       // The cast count comes from the board: there is no separate character list any more.
-      h('span', { className: 'st-muted' }, t('label.overviewProgress', {
+      h('span', { className: 'fang-muted' }, t('label.overviewProgress', {
         c: total, f: finals, t: total,
         p: (book.mosaic?.entities ?? []).filter((e) => e.kind === 'character').length,
       })),
-      h('button', { type: 'button', className: 'st-btn', disabled: busy, onClick: refresh },
+      h('button', { type: 'button', className: 'fang-btn', disabled: busy, onClick: refresh },
         busy ? '…' : t('action.refresh'))),
     content: h('div', { className: 'st-overview' },
     SplitPane({
       listProps: { role: 'tablist', 'aria-label': t('tab.overview') },
       list: h(List, null,
         chapters.length === 0
-          ? h('p', { className: 'st-muted' }, t('mosaic.chapterEmpty'))
+          ? h('p', { className: 'fang-muted' }, t('mosaic.chapterEmpty'))
           : chapters.map((chapter) => h(ListRow, {
             key: chapter.id,
             role: 'tab',
@@ -441,17 +441,17 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
             onActivate: () => setPickedId(chapter.id),
           },
             h('span', { className: 'st-list-row-title' }, chapter.title || t('mosaic.untitled')),
-            h('span', { className: 'st-list-row-meta' },
+            h('span', { className: 'fang-list-row-meta' },
               t('label.charCount', { n: textOf(chapter).length }))))),
       detailProps: { role: 'tabpanel' },
       detail: [
-        selected === undefined ? null : h('div', { className: 'st-split-detail-head' },
-          h('h3', { className: 'st-split-detail-title' }, selected.title || t('mosaic.untitled')),
-          h('span', { className: 'st-split-detail-meta' },
+        selected === undefined ? null : h('div', { className: 'fang-split-detail-head' },
+          h('h3', { className: 'fang-split-detail-title' }, selected.title || t('mosaic.untitled')),
+          h('span', { className: 'fang-split-detail-meta' },
             t('label.charCount', { n: textOf(selected).length }))),
-        h('div', { className: 'st-split-detail-body' },
+        h('div', { className: 'fang-split-detail-body' },
           selected === undefined
-            ? h('p', { className: 'st-muted' }, t('mosaic.chapterEmpty'))
+            ? h('p', { className: 'fang-muted' }, t('mosaic.chapterEmpty'))
             : h(React.Fragment, null,
                 h('label', { className: 'st-overview-field' },
                   h('span', { className: 'st-overview-label' }, t('mosaic.summaryLabel')),
@@ -465,11 +465,11 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
                   h('span', { className: 'st-overview-label' }, t('mosaic.overviewLabel')),
                   chapterOverview !== undefined
                     ? h('p', { className: 'st-overview-text' }, chapterOverview.text)
-                    : h('p', { className: 'st-overview-text st-muted' }, t('mosaic.overviewEmpty'))),
+                    : h('p', { className: 'st-overview-text fang-muted' }, t('mosaic.overviewEmpty'))),
                 h('div', { className: 'st-overview-field' },
                   h('span', { className: 'st-overview-label' }, t('mosaic.bodyLabel')),
                   textOf(selected) === ''
-                    ? h('p', { className: 'st-overview-text st-muted' }, t('mosaic.bodyEmpty'))
+                    ? h('p', { className: 'st-overview-text fang-muted' }, t('mosaic.bodyEmpty'))
                     : h('div', { className: 'st-overview-body' }, textOf(selected))))),
       ],
     }),
@@ -477,18 +477,18 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
       h('div', { className: 'st-overview-label' }, t('label.overviewGlobal')),
       book.overview.global
         ? h('p', { className: 'st-overview-text' }, book.overview.global.text)
-        : h('p', { className: 'st-overview-text st-muted' }, t('mosaic.overviewEmpty'))),
-    h('div', { className: 'st-row st-gap-over-section' },
-      h('button', { type: 'button', className: 'st-btn st-btn-primary', onClick: runManuscript }, t('action.manuscript')),
-      h('button', { type: 'button', className: 'st-btn', onClick: runConsistency }, t('action.consistency'))),
+        : h('p', { className: 'st-overview-text fang-muted' }, t('mosaic.overviewEmpty'))),
+    h('div', { className: 'fang-row st-gap-over-section' },
+      h('button', { type: 'button', className: 'fang-btn fang-btn-primary', onClick: runManuscript }, t('action.manuscript')),
+      h('button', { type: 'button', className: 'fang-btn', onClick: runConsistency }, t('action.consistency'))),
     dialog === 'manuscript' ? h(Dialog, {
-      t, title: t('action.manuscript'), onClose: () => setDialog(null), size: 'wide',
+      title: t('action.manuscript'), closeLabel: t('action.close'), onClose: () => setDialog(null), size: 'wide',
     },
       manuscript === '' || manuscript === null
-        ? h('div', { className: 'st-muted' }, t('label.emptyManuscript'))
+        ? h('div', { className: 'fang-muted' }, t('label.emptyManuscript'))
         : h('div', { className: 'st-manuscript' }, ...renderManuscript(manuscript, t))) : null,
     dialog === 'consistency' && issues !== null ? h(Dialog, {
-      t, title: t('label.consistencyReport'), onClose: () => setDialog(null), size: 'medium',
+      title: t('label.consistencyReport'), closeLabel: t('action.close'), onClose: () => setDialog(null), size: 'medium',
     },
       issues.length === 0
         ? h('div', null, t('label.noIssues'))
@@ -496,6 +496,6 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
             issues.map((issue, index) => h('div', { key: index, className: 'st-issue' },
               h('span', { className: 'st-badge' }, issueKind(issue.kind)),
               h('span', null, `${issue.where ? `${issue.where}：` : ''}${issue.problem}`),
-              issue.evidence ? h('div', { className: 'st-muted' }, issue.evidence) : null)))) : null)
+              issue.evidence ? h('div', { className: 'fang-muted' }, issue.evidence) : null)))) : null)
   })
 }

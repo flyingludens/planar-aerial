@@ -10,7 +10,7 @@
  * branch it explains is how the same bug comes back.
  */
 import { React, h } from '../shared/react.js'
-import { Drawer, ConfirmDialog, SegGroup, Dropdown } from '../shared/ui.js'
+import { Drawer, ConfirmDialog, Segmented, Dropdown } from 'fang-style'
 import { AnswerLog } from './composer.js'
 import { MosaicSheet } from '../mosaic/index.js'
 import { api } from '../api.js'
@@ -100,8 +100,8 @@ function SystemEventLog({ t }) {
     window.addEventListener('pointerup', onUp)
   }
 
-  if (error !== '') return h('div', { className: 'st-muted' }, error)
-  if (events === null) return h('div', { className: 'st-muted' }, t('label.loading'))
+  if (error !== '') return h('div', { className: 'fang-muted' }, error)
+  if (events === null) return h('div', { className: 'fang-muted' }, t('label.loading'))
 
   // The filter is by EVENT TYPE, not by how old a row is. The list of types is built from the
   // events actually present, so the picker never offers a type this log has no row for.
@@ -141,15 +141,15 @@ function SystemEventLog({ t }) {
           ...types.map((type) => ({ value: type, label: t(`log.op.${type}`) })),
         ],
       }),
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', title: t('log.refresh'),
+        type: 'button', className: 'fang-btn fang-btn-ghost', title: t('log.refresh'),
         onClick: () => setRefreshTick((tick) => tick + 1),
       }, '⟳')),
     h('div', { className: 'st-event-table', role: 'table' },
       h('div', { className: 'st-event-head', role: 'row' }, headCells)),
     h('div', { className: 'st-event-body' },
-      rows.length === 0 ? h('div', { className: 'st-muted' }, t('log.empty')) : bodyRows))
+      rows.length === 0 ? h('div', { className: 'fang-muted' }, t('log.empty')) : bodyRows))
 }
 
 /** An answer-history marker: the real component docstring continues below. */
@@ -166,12 +166,12 @@ export function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClos
   const [page, setPage] = React.useState('answers')
   if (!open) return null
   return h(Drawer, {
-    t, title: t('action.answers'), onClose,
+    title: t('action.answers'), closeLabel: t('action.close'), onClose,
     // Answers are prose, set at the manuscript's size: narrow would wrap them into a column
     // of fragments.
     size: 'reading',
     children: h('div', { className: 'st-answers-pages' },
-      SegGroup({
+      Segmented({
         label: t('action.answers'),
         options: [
           { value: 'answers', label: t('log.page.answers') },
@@ -206,9 +206,9 @@ export function RemoveNodeOverlay({ t, doomed, countUnder, onConfirm, onCancel }
   if (counts.chars > 0) lines.push(h('div', { key: 'chars' }, t('label.removeNodeChars', { n: counts.chars })))
   lines.push(h('div', { key: 'warn', className: 'st-dialog-hint' }, t('label.removeNodeWarn')))
   return h(ConfirmDialog, {
-    t,
     title: t('label.removeNodeConfirm', { title: doomed.title || t(`level.${doomed.level}`) }),
     confirmLabel: t('action.delete'),
+    cancelLabel: t('action.cancel'),
     onConfirm, onCancel,
     children: lines,
   })
@@ -240,7 +240,7 @@ const DRAWER_SIZES = {
 export function SheetOverlay({ t, motion, onClose, body }) {
   if (!motion.mounted) return null
   return h(Drawer, {
-    t, title: t(`tab.${motion.shown}`), onClose,
+    title: t(`tab.${motion.shown}`), closeLabel: t('action.close'), onClose,
     // The width each panel actually needs. A relationship graph and a style profile have
     // nothing in common but their title bar.
     size: DRAWER_SIZES[motion.shown],

@@ -14,6 +14,7 @@
  *  - **The indentation inside is content, not formatting.** Reindenting the code around this
  *    file must not touch these lines.
  */
+import { FANG_CSS } from 'fang-style'
 import { CSS_SHARED } from './shared/styles.js'
 import { CSS_CORE } from './panel/core.css.js'
 import { CSS_LIBRARY } from './panel/library.css.js'
@@ -27,6 +28,7 @@ import { CSS_SCAN } from './panel/scan.css.js'
 import { CSS_STATUS } from './panel/status.css.js'
 import { CSS_MODELS } from './panel/models.css.js'
 import { CSS_SETTINGS } from './panel/settings.css.js'
+import { CSS_CONTEXT } from './panel/context.css.js'
 import { CSS_OUTLINE } from './panel/outline.css.js'
 import { CSS_RAIL } from './panel/rail.css.js'
 import { CSS_BOARD } from './mosaic/board.css.js'
@@ -46,7 +48,8 @@ import { CSS_OVERVIEW } from './mosaic/overview.css.js'
  * Each part lives beside the component it dresses. Changing one page's look means opening one
  * file, which is the whole reason the sheet is no longer one block.
  */
-export const CSS = `${CSS_SHARED}
+export const CSS = `${FANG_CSS}
+${CSS_SHARED}
 ${CSS_CORE}
 ${CSS_LIBRARY}
 ${CSS_WELCOME}
@@ -59,6 +62,7 @@ ${CSS_SCAN}
 ${CSS_STATUS}
 ${CSS_MODELS}
 ${CSS_SETTINGS}
+${CSS_CONTEXT}
 ${CSS_OUTLINE}
 ${CSS_RAIL}
 ${CSS_BOARD}

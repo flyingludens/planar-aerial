@@ -21,7 +21,9 @@ test('every state setter that is called is also declared', () => {
   // to `React3`) wherever a module brings its own binding of that name into scope, so a pattern
   // anchored on the literal word made every declaration vanish and the test reported the entire
   // panel as undeclared state. Match the hook CALL instead of the namespace it hangs off.
-  const declaration = /const\s*\[[^\]]*?,\s*(set[A-Za-z0-9_$]+)[^\]]*\]\s*=\s*(?:React\d*\.useState|useDockState|usePersisted)/g
+  // The fang-style library imports React as a plain ESM default import, which esbuild mangles to
+  // `import_reactN.default` — a third shape the declaration side has to recognise.
+  const declaration = /const\s*\[[^\]]*?,\s*(set[A-Za-z0-9_$]+)[^\]]*\]\s*=\s*(?:React\d*\.useState|import_react\d+\.default\.useState|useDockState|usePersisted)/g
   for (const match of source.matchAll(declaration)) {
     declared.add(match[1])
   }

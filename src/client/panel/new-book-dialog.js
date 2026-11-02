@@ -33,11 +33,11 @@ export function NewBookDialog({ t, draft, busy, error, onDraft, onCancel, onCrea
       error === '' ? null : h('p', { className: 'st-newbook-error' }, error),
       h('div', { className: 'st-newbook-actions' },
         typeof onOpen === 'function'
-          ? h('button', { type: 'button', className: 'st-btn st-btn-ghost st-newbook-open', onClick: onOpen }, t('action.open'))
+          ? h('button', { type: 'button', className: 'fang-btn fang-btn-ghost st-newbook-open', onClick: onOpen }, t('action.open'))
           : null,
-        h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: onCancel }, t('action.cancel')),
+        h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: onCancel }, t('action.cancel')),
         h('button', {
-          type: 'button', className: 'st-btn st-btn-primary', disabled: busy || draft.trim() === '',
+          type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy || draft.trim() === '',
           onClick: onCreate,
         }, busy ? '…' : t('action.create'))),
     ),

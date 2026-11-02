@@ -8,7 +8,7 @@
 import { React, h } from '../shared/react.js'
 import { useNotice, useDismiss } from '../shared/hooks.js'
 import { modelLabel } from '../shared/model-display.js'
-import { Dialog, SegGroup } from '../shared/ui.js'
+import { Dialog, Segmented } from 'fang-style'
 
 
 /**
@@ -99,7 +99,7 @@ function ProviderSection({ t, api, providers, onChanged }) {
   return h('div', { className: 'st-custom-models' },
     h('div', { className: 'st-custom-models-head' },
       h('span', { className: 'st-model-role' }, t('model.custom')),
-      h('button', { type: 'button', className: 'st-btn st-custom-add', onClick: () => open(undefined) },
+      h('button', { type: 'button', className: 'fang-btn st-custom-add', onClick: () => open(undefined) },
         t('model.customAdd'))),
     providers.length === 0
       ? h('div', { className: 'st-model-follow-tag' }, t('model.customEmpty'))
@@ -111,15 +111,16 @@ function ProviderSection({ t, api, providers, onChanged }) {
           h('div', { className: 'st-custom-provider-meta' }, provider.models.map((model) => model.id).join(' · ')),
           h('div', { className: 'st-custom-provider-actions' },
             h('span', { className: 'st-model-follow-tag' }, provider.hasKey ? t('model.customKeyStored') : t('model.customKeyMissing')),
-            h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: () => open(provider) }, t('action.edit')),
-            h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: () => remove(provider) }, t('action.delete'))))),
+            h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: () => open(provider) }, t('action.edit')),
+            h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: () => remove(provider) }, t('action.delete'))))),
     editing === null ? null : h(Dialog, {
-      t, title: editing.id === undefined || editing.id === '' ? t('model.customAdd') : t('model.customEdit'),
+      title: editing.id === undefined || editing.id === '' ? t('model.customAdd') : t('model.customEdit'),
+      closeLabel: t('action.close'),
       onClose: () => setEditing(null), size: 'medium',
     },
       h('div', { className: 'st-dialog-field' },
         h('span', { className: 'st-dialog-label' }, t('model.kind')),
-        SegGroup({
+        Segmented({
           label: t('model.kind'),
           options: [
             { value: 'chat', label: t('model.kindChat') },
@@ -154,13 +155,13 @@ function ProviderSection({ t, api, providers, onChanged }) {
                   draft.models.map((model) => h('span', { key: model.id, className: 'st-custom-model-chip' }, model.name ?? model.id)))),
       error === '' ? null : h('p', { className: 'st-dialog-error' }, error),
       testText === '' ? null : h('p', { className: 'st-dialog-hint' }, testText),
-      h('div', { className: 'st-dialog-actions' },
+      h('div', { className: 'fang-dialog-actions' },
         typeof api?.providerTest === 'function'
-          ? h('button', { type: 'button', className: 'st-btn', disabled: testing, onClick: test },
+          ? h('button', { type: 'button', className: 'fang-btn', disabled: testing, onClick: test },
               testing ? t('model.testing') : t('model.test'))
           : null,
-        h('button', { type: 'button', className: 'st-btn', onClick: () => setEditing(null) }, t('action.cancel')),
-        h('button', { type: 'button', className: 'st-btn st-btn-primary', disabled: busy || modelsBusy, onClick: save },
+        h('button', { type: 'button', className: 'fang-btn', onClick: () => setEditing(null) }, t('action.cancel')),
+        h('button', { type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy || modelsBusy, onClick: save },
           busy ? '…' : t('action.save')))),
   )
 }
@@ -209,7 +210,7 @@ function ImageSettings({ t, api, image, providers, flash, onPick }) {
       flash ? h('span', { className: 'st-model-flash' }, t('model.saved')) : null),
     h('div', { className: 'st-model-row-head' },
       h('span', { className: 'st-model-follow-tag' }, t('model.imageProvider')),
-      SegGroup({
+      Segmented({
         label: t('model.imageProvider'),
         options: [
           { value: 'agnes', label: t('model.builtin') },
@@ -227,7 +228,7 @@ function ImageSettings({ t, api, image, providers, flash, onPick }) {
     }),
     h('div', { className: 'st-model-row-head' },
       h('span', { className: 'st-model-follow-tag' }, t('model.imageStyle')),
-      SegGroup({
+      Segmented({
         label: t('model.imageStyle'),
         options: IMAGE_STYLE_OPTIONS.map((option) => ({ value: option.id, label: t(option.label) })),
         value: image.style ?? 'realistic',

@@ -36,6 +36,7 @@ export const CSS_SHARED = `
       .st-shell{font-family:var(--st-font-family);
         font-size:var(--st-text-md);
         --st-accent:#c3272b;
+        --st-on-accent:#ffffff;
         /* The panel's ground: pure black by decision, not the host's bg token — the host's base
            in the running dark theme is a grey. Layered surfaces (rail, cards, inputs) keep their
            theme layers and read as raised off this ground. The status bar shares it, so the
@@ -404,8 +405,10 @@ export const CSS_SHARED = `
            top edge. The thread is a physical object, so its weight and colour are separate from
            the accent used by buttons and focus rings. */
         --st-board-wall:color-mix(in srgb, var(--st-bg,#000) 82%, #5b3a2e);
+        --st-thread-idle:#f2f2f3;
+        --st-thread-selected:#d24b4b;
         --st-thread:#d24b4b;
-        --st-thread-ink:#f1d6ce;
+        --st-thread-ink:#f2f2f3;
         --st-thread-w:2;
         --st-thread-picked-w:3;
         --st-thread-label-size:var(--st-text-sm);
@@ -450,6 +453,18 @@ export const CSS_SHARED = `
         --st-w-reading:720px;
         --st-w-wide:820px;
         --st-w-max:980px;
+        /* The context composition bar. Each segment takes a tone from this eight-colour set,
+           stable per part name so the same part keeps its colour when the scene changes. */
+        --st-seg-h:26px;
+        --st-seg-gap:2px;
+        --st-seg-0:#6f7f95;
+        --st-seg-1:#8f7552;
+        --st-seg-2:#5f7f68;
+        --st-seg-3:#7f6278;
+        --st-seg-4:#54727f;
+        --st-seg-5:#7f7956;
+        --st-seg-6:#726394;
+        --st-seg-7:#8f6565;
         --st-rail-w:264px;
         --st-dialog-w:var(--st-w-compact);
         --st-dialog-textarea-min-h:64px;
@@ -667,21 +682,21 @@ export const CSS_SHARED = `
       .st-rail .st-scroll{flex:1 1 auto;min-height:0}
       .st-scroll{overflow:auto;padding:var(--st-space-12,12px);min-height:0;min-width:0}
       /* ---- the shared master-detail split: 概览 / 提案 / 流派 ---- */
-      .st-split{display:flex;gap:var(--st-board-gap);flex:1 1 auto;min-height:var(--st-split-min-h,320px);min-width:0}
-      .st-split-list{flex:0 0 var(--st-split-list-w,220px);min-width:0;min-height:0;
+      .fang-split{display:flex;gap:var(--st-board-gap);flex:1 1 auto;min-height:var(--st-split-min-h,320px);min-width:0}
+      .fang-split-list{flex:0 0 var(--st-split-list-w,220px);min-width:0;min-height:0;
         display:flex;flex-direction:column;overflow:hidden;padding:0}
-      .st-split-detail{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0;
+      .fang-split-detail{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0;
         overflow:hidden;border:var(--st-hairline,.5px) solid var(--st-ink-edge);
         border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface)}
-      .st-split-detail-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);flex:none;
+      .fang-split-detail-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);flex:none;
         padding:var(--st-board-inset-compact) var(--st-board-inset);
         border-bottom:var(--st-hairline,.5px) solid var(--st-ink-hair)}
-      .st-split-detail-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      .fang-split-detail-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
         font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong);
         color:var(--st-text-primary)}
-      .st-split-detail-meta{flex:none;margin-left:auto;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+      .fang-split-detail-meta{flex:none;margin-left:auto;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary)}
-      .st-split-detail-body{flex:1 1 auto;min-height:0;overflow:auto;
+      .fang-split-detail-body{flex:1 1 auto;min-height:0;overflow:auto;
         display:flex;flex-direction:column;gap:var(--st-board-gap);padding:var(--st-board-inset)}
       .st-card{border:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));border-radius:var(--st-radius-md,12px);
         padding:var(--st-space-12,12px) var(--st-space-12,12px);margin-bottom:var(--st-space-8,8px);background:var(--st-surface);min-width:0}
@@ -691,25 +706,25 @@ export const CSS_SHARED = `
       /* THE ONE LIST. Chapters, proposals and snapshots are all "a column of comparable rows":
          every row keeps its own hairline border, there is no gap between them, and the row under
          the pointer lifts off the column. Selected is the same lift with a stronger fill. */
-      .st-list{display:flex;flex-direction:column;gap:var(--st-space-2);min-width:0;min-height:0;flex:1 1 auto;overflow:auto;
+      .fang-list{display:flex;flex-direction:column;gap:var(--st-space-2);min-width:0;min-height:0;flex:1 1 auto;overflow:auto;
         padding:var(--st-space-4);
         border:var(--st-hairline) solid var(--st-ink-edge);border-radius:var(--st-radius-md,12px);corner-shape:round;
         background:var(--st-surface)}
-      .st-list-row{position:relative;display:flex;flex-direction:column;gap:var(--st-space-2,2px);
+      .fang-list-row{position:relative;display:flex;flex-direction:column;gap:var(--st-space-2,2px);
         width:100%;min-width:0;box-sizing:border-box;
         padding:var(--st-space-10,10px) var(--st-space-12,12px);
         border:none;background:transparent;text-align:left;font-family:inherit;
         color:var(--st-text-primary);
         border-radius:var(--st-radius-sm,8px);corner-shape:round;
         transition:background var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out)}
-      .st-list-row:hover{background:var(--st-list-hover)}
-      .st-list-row[data-active="true"]{background:var(--st-selected-fill);
+      .fang-list-row:hover{background:var(--st-list-hover)}
+      .fang-list-row[data-active="true"]{background:var(--st-selected-fill);
         color:var(--st-text-primary)}
-      button.st-list-row{cursor:pointer}
+      button.fang-list-row{cursor:pointer}
       .st-list-row-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-strong)}
-      .st-list-row[data-active="true"] .st-list-row-title{font-weight:var(--st-font-weight-strong)}
-      .st-list-row-meta{min-width:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+      .fang-list-row[data-active="true"] .st-list-row-title{font-weight:var(--st-font-weight-strong)}
+      .fang-list-row-meta{min-width:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-secondary)}
       /* A character card: a name row, one row of short fields, then the notes.
          One field per line made a 178px card out of a name, a role, a goal and a few traits — two
@@ -738,32 +753,32 @@ export const CSS_SHARED = `
          controls paint outside the panel's stacking order: the log filter's option list was
          covered by the control itself, and a bare file input is an OS widget in the middle of
          a styled form. The popup here is a child of the panel, so it always sits above it. */
-      .st-dropdown{position:relative;display:inline-flex;min-width:0;max-width:100%}
-      .st-dropdown-button{box-sizing:border-box;display:inline-flex;align-items:center;gap:var(--st-space-8,8px);
+      .fang-dropdown{position:relative;display:inline-flex;min-width:0;max-width:100%}
+      .fang-dropdown-button{box-sizing:border-box;display:inline-flex;align-items:center;gap:var(--st-space-8,8px);
         width:100%;height:var(--st-row-height,34px);padding:0 var(--st-space-12,12px);
         border:none;border-radius:var(--st-radius-sm,8px);background:var(--st-surface);
         color:var(--st-text-primary);font-family:inherit;
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);text-align:left;
         cursor:pointer;outline:none;white-space:nowrap}
-      .st-dropdown-button:hover{background:var(--st-hover-fill)}
-      .st-dropdown-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-dropdown-value{min-width:0;overflow:hidden;text-overflow:ellipsis}
-      .st-dropdown-list{position:absolute;z-index:var(--st-layer-menu);top:calc(100% + 4px);left:0;
+      .fang-dropdown-button:hover{background:var(--st-hover-fill)}
+      .fang-dropdown-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+      .fang-dropdown-value{min-width:0;overflow:hidden;text-overflow:ellipsis}
+      .fang-dropdown-list{position:absolute;z-index:var(--st-layer-menu);top:calc(100% + 4px);left:0;
         display:flex;flex-direction:column;min-width:100%;max-width:min(320px,calc(100vw - 48px));
         max-height:min(46vh,320px);overflow:auto;padding:var(--st-space-4,4px);
         border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface-high);
         box-shadow:var(--dsw-elevation-prominent,0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.12));
         scrollbar-width:thin}
-      .st-dropdown-option{display:block;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);
+      .fang-dropdown-option{display:block;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);
         border:none;border-radius:var(--st-radius-sm,8px);corner-shape:round;background:transparent;
         color:var(--st-text-primary);font-family:inherit;
         font-size:var(--st-text-md);line-height:var(--st-text-md-leading);text-align:left;
         cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-dropdown-option:hover{background:var(--st-hover-fill)}
-      .st-dropdown-option[aria-selected="true"]{background:var(--st-selected-fill);
+      .fang-dropdown-option:hover{background:var(--st-hover-fill)}
+      .fang-dropdown-option[aria-selected="true"]{background:var(--st-selected-fill);
         color:var(--st-text-primary);font-weight:var(--st-font-weight-strong)}
-      .st-file-button{display:inline-flex;align-items:center;min-width:0}
-      .st-file-input{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
+      .fang-file-button{display:inline-flex;align-items:center;min-width:0}
+      .fang-file-input{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
       /* A field that is only a line of text in a row (renaming a node in the outline) keeps the
          fill but drops the padding: it sits inside the row, not on a page of its own. */
       /* Buttons are text with a hover wash, not bordered chips. A writing surface ringed with
@@ -772,16 +787,16 @@ export const CSS_SHARED = `
          and the circle case (a button holding only an icon) falls out of equal width and
          height for free. Inline controls that live inside a text row (the outline's rename and
          remove marks) override --st-btn-h down to the compact row instead of inheriting it. */
-      .st-btn{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+      .fang-btn{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
         height:var(--st-btn-h,var(--st-btn-h-lg,36px));min-width:var(--st-btn-h,var(--st-btn-h-lg,36px));
         padding:0 var(--st-space-12,12px);
         display:inline-flex;align-items:center;justify-content:center;
         border-radius:var(--st-radius-pill,999px);border:none;corner-shape:round;
         background:transparent;color:var(--st-text-secondary);cursor:pointer;white-space:nowrap;flex:none}
-      .st-btn:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-btn:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
-      .st-btn:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);outline:none}
-      .st-btn:disabled{opacity:.45;cursor:not-allowed}
+      .fang-btn:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
+      .fang-btn:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
+      .fang-btn:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);outline:none}
+      .fang-btn:disabled{opacity:.45;cursor:not-allowed}
       /* The affirmative button fills with the accent, like everything else that means "this one".
          It used to take the host's primary fill, which is the brand token: on the dark theme that
          is near-white, so the confirm button in every dialog was the same white slab as the page's
@@ -790,7 +805,7 @@ export const CSS_SHARED = `
          Its horizontal padding sits a step above the other buttons: a capsule whose two end arcs
          are the widest thing in the shape reads as an oval — the straight run between the ends
          is what makes a pill read as a pill, and a short label needs the extra padding to show it. */
-      .st-btn-primary{background:var(--st-accent,#c3272b);color:var(--st-on-accent,#fff);
+      .fang-btn-primary{background:var(--st-accent,#c3272b);color:var(--st-on-accent,#fff);
         padding:0 var(--st-space-16,16px)}
       /* The session button is the title row's one OUTLINE pill: no fill, so no control dominates
          the row. Its edge is a slow multi-hue light — the flowing ring — drawn by a pseudo-element
@@ -808,7 +823,7 @@ export const CSS_SHARED = `
         background:transparent;color:var(--st-text-primary)}
       .st-session-btn:hover{background:var(--st-hover-fill)}
       /* The flowing outline is a button VARIANT, not a page-local decoration: it keeps the
-         standard pill geometry and shares the same focus/hover rules as every other st-btn. */
+         standard pill geometry and shares the same focus/hover rules as every other fang-btn. */
       .st-btn-flow{position:relative;isolation:isolate;color:var(--st-text-primary)}
       .st-btn-flow::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--st-flow-border-w);
         pointer-events:none;
@@ -834,36 +849,36 @@ export const CSS_SHARED = `
         box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
       @keyframes st-session-text-flow{from{background-position:0% 0}to{background-position:200% 0}}
       @media (prefers-reduced-motion: reduce){.st-session-label{animation:none}}
-      .st-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--st-accent) 86%, #000000);color:var(--st-on-accent,#fff)}
+      .fang-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--st-accent) 86%, #000000);color:var(--st-on-accent,#fff)}
       /* The hero size for a page whose only action is this one button. It is a step on the same
          size ladder, not a local override: height, type and padding move together. */
-      .st-btn.st-btn-xl{--st-btn-h:var(--st-btn-h-xl,48px);font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
+      .fang-btn.fang-btn-xl{--st-btn-h:var(--st-btn-h-xl,48px);font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
         padding:0 var(--st-space-24,24px)}
-      .st-btn-ghost{background:transparent;padding:0 var(--st-space-8,8px);color:var(--st-text-tertiary)}
-      .st-btn-ghost:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-btn-ghost:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
-      /* An icon-only button is the same 36px control as every other st-btn: one height token,
+      .fang-btn-ghost{background:transparent;padding:0 var(--st-space-8,8px);color:var(--st-text-tertiary)}
+      .fang-btn-ghost:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
+      .fang-btn-ghost:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
+      /* An icon-only button is the same 36px control as every other fang-btn: one height token,
          one pill radius, and no text padding. It is a variant, not a bespoke square. */
-      .st-btn-ghost.st-btn-icon{padding:0;background:var(--st-bg);
+      .fang-btn-ghost.fang-btn-icon{padding:0;background:var(--st-bg);
         box-shadow:inset 0 0 0 var(--st-hairline) var(--st-ink-edge)}
       /* Inputs keep a hairline: a field with no edge at all disappears into the page. */
-      .st-btn[aria-pressed="true"]:not(:disabled),.st-btn[aria-pressed="true"]:hover:not(:disabled){background:var(--st-selected-fill);color:var(--st-text-primary)}
+      .fang-btn[aria-pressed="true"]:not(:disabled),.fang-btn[aria-pressed="true"]:hover:not(:disabled){background:var(--st-selected-fill);color:var(--st-text-primary)}
       /* The panel's own tooltip: a dark bubble opening DOWNWARD from the control, with a small
          caret pointing back up at it. It sits on the same grey layer every popover uses — a
          raised card like the rest, not a darker-than-page mix, which on the pure-black ground
          had nothing left to darken into. */
-      .st-tip{position:absolute;z-index:var(--st-layer-menu);transform:translateX(-50%);
+      .fang-tip{position:absolute;z-index:var(--st-layer-menu);transform:translateX(-50%);
         pointer-events:none;padding:var(--st-space-4,4px) var(--st-space-12,12px);
         border:var(--st-hairline) solid color-mix(in srgb, #fff 14%, transparent);border-radius:var(--st-radius-sm,8px);corner-shape:round;
         background:var(--st-surface);
         color:#fff;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, #000 30%, transparent)}
-      .st-tip::after{content:'';position:absolute;top:calc(-1 * var(--st-space-4,4px));left:calc(50% - var(--st-space-4,4px));
+      .fang-tip::after{content:'';position:absolute;top:calc(-1 * var(--st-space-4,4px));left:calc(50% - var(--st-space-4,4px));
         width:var(--st-space-8,8px);height:var(--st-space-8,8px);background:inherit;
         transform:rotate(45deg);border-radius:var(--st-hairline)}
-      .st-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
-      .st-spacer{flex:1 1 auto;min-width:0}
-      .st-muted{color:var(--st-text-tertiary);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
+      .fang-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
+      .fang-spacer{flex:1 1 auto;min-width:0}
+      .fang-muted{color:var(--st-text-tertiary);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
       .st-scan-where{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
         font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
 /* The two halves of a diff sit next to each other with nothing between them, so a deleted

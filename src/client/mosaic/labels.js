@@ -130,7 +130,7 @@ export function describeChange(change, nameOf) {
  */
 export function renderManuscript(markdown, t) {
   const blocks = renderMarkdownBlocks(markdown)
-  if (blocks.length === 0) return [h('div', { className: 'st-muted' }, t('label.emptyManuscript'))]
+  if (blocks.length === 0) return [h('div', { className: 'fang-muted' }, t('label.emptyManuscript'))]
   return blocks.map((block, index) => {
     if (block.type === 'hr') return h('hr', { key: index, className: 'st-md-rule' })
     const spans = block.spans.map((span, i) => (span.style === 'bold'

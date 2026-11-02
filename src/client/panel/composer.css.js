@@ -212,9 +212,6 @@ export const CSS_COMPOSER = `
       /* The effort gives up its room first, so the model name keeps its last pixel. */
       .st-seat-effort{flex-shrink:1000;min-width:0;overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;color:var(--st-text-tertiary)}
-      .st-seat-chevron{flex:0 0 auto;width:var(--st-icon-xs);height:var(--st-icon-xs);color:var(--st-text-tertiary);
-        transition:transform 120ms ease}
-      .st-seat-chevron[data-open="true"]{transform:rotate(180deg)}
 /* Opens upward BY DEFAULT: the composer sits at the bottom of the page, and the host's card
          is placed from the trigger rect for the same reason. The side is decided at the click from
          the room the chip actually has (data-side, set in ComposerModelSeat) — in the settings
@@ -238,7 +235,6 @@ export const CSS_COMPOSER = `
       .st-seat-cell-label{flex:0 0 auto;white-space:nowrap}
       .st-seat-cell-value{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;text-align:right;color:var(--st-text-tertiary)}
-      .st-seat-cell-chevron{flex:0 0 auto;width:var(--st-icon-xs);height:var(--st-icon-xs);color:var(--st-text-tertiary)}
 .st-seat-option{display:flex;align-items:center;gap:var(--st-space-8,8px);width:auto;min-width:100%;
         min-height:var(--st-row-height,34px);padding:var(--st-space-4,4px) var(--st-space-8,8px);border:none;border-radius:var(--st-radius-md,12px);
         background:transparent;color:inherit;font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
@@ -257,7 +253,7 @@ export const CSS_COMPOSER = `
         cursor:pointer;text-align:left;outline:none}
       .st-seat-back:hover,.st-seat-back:focus-visible{background:var(--st-hover-fill);
         color:var(--st-text-primary)}
-      .st-seat-back .st-seat-cell-chevron{width:var(--st-space-12,12px);height:var(--st-space-12,12px);transform:rotate(180deg)}
+      .st-seat-back .fang-chevron-right{width:var(--st-space-12,12px);height:var(--st-space-12,12px);transform:rotate(180deg)}
       .st-model-item-id{margin-left:auto;font-family:var(--st-font-mono);font-size:var(--st-text-sm);
         color:var(--st-text-tertiary);overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;max-width:55%}
@@ -455,7 +451,7 @@ export const CSS_COMPOSER = `
       /* ---- the history drawer's pages: the answers, and the system event log ---- */
       .st-answers-pages{display:flex;flex-direction:column;gap:var(--st-space-12,12px);min-height:0}
       /* The page switcher is a control, not a full-width band. */
-      .st-answers-pages>.st-seg{align-self:flex-start}
+      .st-answers-pages>.fang-segmented{align-self:flex-start}
       /* One row per event: a fixed-width clock column, then the line. Failed calls carry the
          failure code the host reported — the UNKNOWN the writer could previously never see twice
          in context — and are marked in the error colour so a scan finds them. */
@@ -468,7 +464,7 @@ export const CSS_COMPOSER = `
       .st-event-filter{flex:none;width:auto;max-width:100%}
       /* Hug the current value instead of reserving a fixed block: "全部类型" needs four glyphs,
          not a field as wide as the event table. */
-      .st-event-filter .st-dropdown-button{width:auto}
+      .st-event-filter .fang-dropdown-button{width:auto}
       .st-event-filter:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
       .st-event-table{border-bottom:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
       .st-event-head{display:flex;align-items:center;min-width:0;user-select:none}

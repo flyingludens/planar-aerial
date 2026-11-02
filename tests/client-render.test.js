@@ -320,7 +320,7 @@ test('creating a book makes the folder and opens it — and registers no Workspa
   assert.ok(input, 'the create card offers a title field')
   input.props.onChange({ target: { value: '我的书' } })
   const filled = await rerender(plugin.__components.StoryPanel, props)
-  const createButton = findByClass(filled.tree, 'st-btn-primary')
+  const createButton = findByClass(filled.tree, 'fang-btn-primary')
   assert.ok(createButton, 'the create button appears')
   await createButton.props.onClick()
   const afterCreate = await rerender(plugin.__components.StoryPanel, props)
@@ -679,8 +679,8 @@ test('deleting a book also removes its workspace registration', async () => {
   assert.ok(deleteRow, 'the menu offers delete')
   deleteRow.props.onClick({ stopPropagation: () => {} })
   const asking = await rerender(plugin.__components.StoryPanel, props)
-  assert.ok(findByClass(asking.tree, 'st-backdrop'), 'the confirmation is a modal, not a row in the card')
-  const confirm = findByClass(asking.tree, 'st-dialog-actions')
+  assert.ok(findByClass(asking.tree, 'fang-backdrop'), 'the confirmation is a modal, not a row in the card')
+  const confirm = findByClass(asking.tree, 'fang-dialog-actions')
   const buttons = []
   const collect = (node) => {
     if (node === null || node === undefined || typeof node !== 'object') return
@@ -828,7 +828,7 @@ test('the suggestion is a full-measure dock under the page, so it covers nothing
 
   // The textarea is still there, and still the live input: nothing was swapped out for a modal.
   assert.ok(findByClass(mounted.tree, 'st-editor-over'), 'the editor stays mounted and usable')
-  assert.equal(findByClass(mounted.tree, 'st-sheet-backdrop'), undefined, 'it is not a modal either')
+  assert.equal(findByClass(mounted.tree, 'fang-backdrop'), undefined, 'it is not a modal either')
 
   // Every way out is present inside the dock itself, so the writer is never stuck.
   const buttons = []
@@ -1068,9 +1068,9 @@ test('the remaining preference drawers size themselves to their content', async 
   // default ceiling: a short list takes the room it needs.
   const ceilingOf = async (tabLabel) => {
     const { tree } = await mountPanel({ api: apiFor(), open: '我的书', clickDrawer: tabLabel })
-    const sheet = findByClass(tree, 'st-sheet')
+    const sheet = findByClass(tree, 'fang-drawer')
     assert.ok(sheet, `${tabLabel} opens a panel`)
-    return sheet.props.style?.['--st-sheet-max']
+    return sheet.props.style?.['--fang-drawer-max']
   }
   assert.equal(await ceilingOf('tab.typography'), undefined, 'typography sets no ceiling')
   assert.equal(await ceilingOf('tab.models'), undefined, 'models sets no ceiling')
@@ -1080,7 +1080,7 @@ test('the panel comes in from the right edge, rounded like the outline', () => {
   // It used to fade in at the centre while the outline slid in from the left — two kinds of overlay
   // floating over the same page. One motion for both reads as one system.
   const css = readFileSync(new URL('../client.js', import.meta.url), 'utf8')
-  const backdrop = /\.st-sheet-backdrop\{([^}]*)\}/.exec(css)?.[1] ?? ''
+  const backdrop = /\.fang-backdrop:has\(> \.fang-drawer\)\{([^}]*)\}/.exec(css)?.[1] ?? ''
   assert.ok(/justify-content:flex-end/.test(backdrop), 'the backdrop pushes the panel to the right edge')
   assert.ok(/align-items:stretch/.test(backdrop), 'and lets it take the full height')
   // A side panel is not a modal: the manuscript beside it stays readable and usable. The wash it
@@ -1089,26 +1089,26 @@ test('the panel comes in from the right edge, rounded like the outline', () => {
   assert.ok(/background:transparent/.test(backdrop),
     'the layer under a side panel paints nothing, so the page does not go grey')
 
-  const sheet = /\.st-sheet\{([^}]*)\}/.exec(css)?.[1] ?? ''
+  const sheet = /\.fang-drawer\{([^}]*)\}/.exec(css)?.[1] ?? ''
   // Each token may carry a literal fallback, so the pattern has to allow the closing paren after
   // The panel radius comes through the panel's own alias, which points at the host token.
-  assert.ok(/border-radius:var\(--st-radius-panel[^)]*\)\s+0\s+0\s+var\(--st-radius-panel[^)]*\)/.test(sheet),
+  assert.ok(/border-radius:var\(--fang-radius-panel[^)]*\)\s+0\s+0\s+var\(--fang-radius-panel[^)]*\)/.test(sheet),
     'rounded on the inner edge only, square against the frame')
   assert.ok(/border:none/.test(sheet), 'no border: the edge against the window is the frame')
 
-  const keyframes = /@keyframes st-sheet-in\{([^}]*)\}/.exec(css)?.[1] ?? ''
+  const keyframes = /@keyframes fang-drawer-in\{([^}]*)\}/.exec(css)?.[1] ?? ''
   assert.ok(/translateX/.test(keyframes), 'it slides in sideways, not by scaling')
   assert.ok(!/scale/.test(keyframes), 'no zoom: that is what a dialog does, not a panel')
 
   // The width follows the content, within a floor and a ceiling.
   assert.ok(/width:fit-content/.test(sheet), 'it sizes to its content')
   assert.ok(/min-width:min\(320px,100%\)/.test(sheet), 'with a floor, so a one-line panel is not a strip')
-  assert.ok(/max-width:min\(var\(--st-sheet-max\),100%\)/.test(sheet),
+  assert.ok(/max-width:min\(var\(--fang-drawer-max\),100%\)/.test(sheet),
     'and a ceiling a page may raise, capped by the window')
   assert.ok(/@media \(max-width: 640px\)/.test(css), 'a narrow window takes the whole width')
 
   // The backdrop starts below the title row, so the title bar stays readable and clickable.
-  assert.ok(/inset:var\(--st-titlebar-height,68px\) 0 0 0/.test(backdrop),
+  assert.ok(/inset:var\(--fang-titlebar-height\) 0 0 0/.test(backdrop),
     'the drawer does not cover the title bar')
 
   // The shell's own bar takes its top air and page gutter as margins: the shelf head gets the
@@ -1541,7 +1541,7 @@ test('随笔 opens with a blank capture, and the note is written into the book',
   assert.equal(capture.props.value, '', 'opening created a fresh blank note')
   capture.props.onChange({ target: { value: '第三幕的雨' } })
   const { tree: typed } = await mounted.rerender()
-  const rows = allByClass(typed, 'st-list-row')
+  const rows = allByClass(typed, 'fang-list-row')
   assert.equal(rows.length, 1, 'the new note is in the list')
   assert.ok(visibleText(rows[0]).join('').includes('第三幕的雨'), 'and its first line is the list title')
   const typedCapture = findByTestId(typed, 'notes-capture')
@@ -1549,7 +1549,7 @@ test('随笔 opens with a blank capture, and the note is written into the book',
   typedCapture.props.onChange({ target: { value: '第三幕的雨停了' } })
   const { tree: again } = await mounted.rerender()
   assert.equal(findByTestId(again, 'notes-capture').props.value, '第三幕的雨停了', 'the second keystroke appends')
-  assert.equal(allByClass(again, 'st-list-row').length, 1, 'no extra note was created mid-typing')
+  assert.equal(allByClass(again, 'fang-list-row').length, 1, 'no extra note was created mid-typing')
 })
 
 test('the mosaic button toggles the board closed on a second click', async () => {
@@ -1640,7 +1640,7 @@ test('opening the mosaic puts the outline and an open drawer away', async () => 
   assert.ok(modelsButton, 'the models drawer button is in the title row')
   modelsButton.props.onClick()
   const { tree: withDrawer } = await mounted.rerender()
-  assert.ok(findByClass(withDrawer, 'st-sheet-backdrop'), 'the drawer is open')
+  assert.ok(findByClass(withDrawer, 'fang-backdrop'), 'the drawer is open')
   // Now open the mosaic: the drawer closes and the outline stays folded (it starts folded, so
   // the real assertion is that nothing re-opened it and the board is up).
   const open = (function find(node) {
@@ -1656,7 +1656,7 @@ test('opening the mosaic puts the outline and an open drawer away', async () => 
   open.props.onClick()
   const { tree: board } = await mounted.rerender()
   assert.ok(findByClass(board, 'st-mosaic-sheet'), 'the board is open')
-  assert.equal(findByClass(board, 'st-sheet-backdrop'), undefined, 'the drawer was put away')
+  assert.equal(findByClass(board, 'fang-backdrop'), undefined, 'the drawer was put away')
 })
 
 /**
@@ -2036,10 +2036,10 @@ test('the four static pages render from book data', async () => {
   const overview = await go(5)
   const rows = []
   collect(overview, rows, (n) => typeof n.props?.className === 'string'
-    && n.props.className.split(/\s+/).includes('st-list-row'))
+    && n.props.className.split(/\s+/).includes('fang-list-row'))
   assert.equal(rows.length, 1, `one row per chapter leaf, saw ${rows.length}`)
   assert.equal(rows[0].props['data-active'], 'true', 'the first chapter is selected')
-  const pane = findByClass(overview, 'st-split-detail')
+  const pane = findByClass(overview, 'fang-split-detail')
   assert.ok(pane, 'the selected chapter has a reading pane')
   assert.ok(visibleText(pane).join(' ').includes(TEXT), 'the pane shows the chapter prose')
   const input = findByClass(overview, 'st-overview-summary')
@@ -3331,17 +3331,17 @@ test('the overview picks a chapter and shows it in the reading pane', async () =
     onNotice: () => {}, onAdoptWritten: () => {},
   }
   const mounted = await render(plugin.__components.OverviewPage, props)
-  const rows = allByClass(mounted.tree, 'st-list-row')
+  const rows = allByClass(mounted.tree, 'fang-list-row')
   assert.equal(rows.length, 2, 'one row per chapter')
   assert.equal(rows[0].props['data-active'], 'true', 'the first chapter starts selected')
-  assert.ok(visibleText(findByClass(mounted.tree, 'st-split-detail')).join(' ').includes(TEXT),
+  assert.ok(visibleText(findByClass(mounted.tree, 'fang-split-detail')).join(' ').includes(TEXT),
     'the pane shows the first chapter')
   rows[1].props.onClick()
   const next = await rerender(plugin.__components.OverviewPage, props)
-  const nextRows = allByClass(next.tree, 'st-list-row')
+  const nextRows = allByClass(next.tree, 'fang-list-row')
   assert.equal(nextRows[1].props['data-active'], 'true', 'clicking a row selects it')
   assert.equal(nextRows[0].props['data-active'], undefined, 'and deselects the old one')
-  assert.ok(visibleText(findByClass(next.tree, 'st-split-detail')).join(' ').includes('第二章的正文。'),
+  assert.ok(visibleText(findByClass(next.tree, 'fang-split-detail')).join(' ').includes('第二章的正文。'),
     'the pane follows the selection')
 })
 

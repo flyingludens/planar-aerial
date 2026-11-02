@@ -7,7 +7,8 @@
  */
 import { React, h } from '../shared/react.js'
 import { useNotice } from '../shared/hooks.js'
-import { BackIcon, ConfirmDialog } from '../shared/ui.js'
+import { BackIcon } from '../shared/icons.js'
+import { ConfirmDialog } from 'fang-style'
 import { NewBookDialog } from './new-book-dialog.js'
 import { MosaicGallery, MosaicGalleryCard, MosaicCardMenu } from '../mosaic/cards.js'
 
@@ -116,14 +117,14 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
       // library IS the panel, and a back arrow pointing nowhere would be a dead control.
       typeof onBack === 'function' && backTitle
         ? h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost st-btn-icon st-library-back',
+          type: 'button', className: 'fang-btn fang-btn-ghost fang-btn-icon st-library-back',
           title: t('label.backToBook', { title: backTitle }),
           'aria-label': t('label.backToBook', { title: backTitle }),
           onClick: onBack,
         }, h(BackIcon))
         : null,
       h('h2', { className: 'st-library-title' }, t('label.library')),
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
       h('span', { className: 'st-caption' }, t('label.bookCount', { n: books.length }))),
     // The shelf is the SAME card as the board's gallery — one component, one size, one set of
     // shadows. It used to be a private 220px text box with its own border, which read as a row
@@ -184,7 +185,7 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
         h('span', null, t('action.newBook'))),
       // One inline editor at a time: a rename in place reads better than a modal over a shelf.
       renaming === null ? null : h('div', { className: 'st-book-card st-book-new st-book-form' },
-        h('div', { className: 'st-muted st-gap-under-hint' }, t('label.renameBookHint')),
+        h('div', { className: 'fang-muted st-gap-under-hint' }, t('label.renameBookHint')),
         h('input', {
           className: 'st-input', autoFocus: true, value: draftTitle,
           onChange: (e) => setDraftTitle(e.target.value),
@@ -193,9 +194,9 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
             if (e.key === 'Escape') { setRenaming(null) }
           },
         }),
-        h('div', { className: 'st-row st-gap-over-row' },
-          h('button', { type: 'button', className: 'st-btn st-btn-primary', disabled: busy || draftTitle.trim() === '', onClick: commitRename }, t('action.rename')),
-          h('button', { type: 'button', className: 'st-btn', onClick: () => setRenaming(null) }, t('action.cancel'))))),
+        h('div', { className: 'fang-row st-gap-over-row' },
+          h('button', { type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy || draftTitle.trim() === '', onClick: commitRename }, t('action.rename')),
+          h('button', { type: 'button', className: 'fang-btn', onClick: () => setRenaming(null) }, t('action.cancel'))))),
     // Creating a book asks in a modal too. The shelf is a grid of cards; a card that turns into
     // a form re-flows the row and gives the title field 184px, which is narrower than a title.
     creating ? h(NewBookDialog, {
@@ -212,7 +213,7 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
     // preselected. A second question buried in the card was too easy to hit by accident.
     // It sits OUTSIDE the gallery: a dialog is not a card and must not be laid out as one.
     confirming === null ? null : h(ConfirmDialog, {
-      t, busy,
+      busy,
       title: t('label.deleteBookConfirm', { title: confirming.title }),
       children: [
         h('label', { key: 'check', className: 'st-check' },

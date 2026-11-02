@@ -6,7 +6,7 @@ export const CSS_REVIEW = `
       .st-mosaic-head{display:flex;flex-direction:column;gap:var(--st-space-8,8px);margin:0 0 var(--st-space-12,12px)}
       /* The two AI entries read as CHIPS, not as bare text buttons: a hairline edge groups them
          as actions on the page, the way suggestion chips sit under an input in design tools. */
-      .st-mosaic-check-row .st-btn{box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
+      .st-mosaic-check-row .fang-btn{box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
       .st-mosaic-check-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
       /* The result of a 梳理/检查 that produced no review cards: a quiet panel rather than a
          status-bar flash the writer can miss after a long wait. */

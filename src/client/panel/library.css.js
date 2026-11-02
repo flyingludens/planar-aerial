@@ -82,31 +82,31 @@ export const CSS_LIBRARY = `
          learned it.
          Absolute, against the nearest positioned ancestor — the shell — centres on exactly the
          box the writer is looking at, and is not clipped by anything above it. */
-      .st-backdrop{position:absolute;inset:0;z-index:var(--st-layer-modal);display:flex;align-items:center;justify-content:center;
+      .fang-backdrop{position:absolute;inset:0;z-index:var(--st-layer-modal);display:flex;align-items:center;justify-content:center;
         padding:var(--st-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,var(--st-fallback-page)) 62%, transparent);
         backdrop-filter:blur(2px)}
-      .st-dialog{width:min(var(--st-dialog-w),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
+      .fang-dialog{width:min(var(--st-dialog-w),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
         border-radius:var(--st-radius-panel,28px);corner-shape:round;border:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));
         background:var(--st-surface-high);box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04));
         font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);color:var(--st-text-primary)}
-      .st-dialog-title{font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
+      .fang-dialog-title{font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
       /* A reading dialog: a fixed head with the close control, and a body that scrolls. The panel
          caps its height so a long manuscript stays one dialog rather than one very tall page. */
-      .st-dialog-panel{max-height:min(84vh,var(--st-dialog-max-h))}
-      .st-dialog-head{display:flex;align-items:center;gap:var(--st-space-8,8px);flex:none}
-      .st-dialog-scroll{flex:1 1 auto;min-height:0;overflow:auto}
-      .st-dialog-body{display:flex;flex-direction:column;gap:var(--st-space-8,8px);color:var(--st-text-secondary)}
+      .fang-dialog-panel{max-height:min(84vh,var(--st-dialog-max-h))}
+      .fang-dialog-head{display:flex;align-items:center;gap:var(--st-space-8,8px);flex:none}
+      .fang-dialog-scroll{flex:1 1 auto;min-height:0;overflow:auto}
+      .fang-dialog-body{display:flex;flex-direction:column;gap:var(--st-space-8,8px);color:var(--st-text-secondary)}
       /* A labelled field inside a dialog: the label sits above its control, one line of small text. */
       .st-dialog-field{display:flex;flex-direction:column;gap:var(--st-space-4,4px);min-width:0}
       /* A segmented control is a compact choice, not a full-width field. As a flex child of the
          column it would otherwise stretch to the dialog's width and look like a text input. */
-      .st-dialog-field>.st-seg{align-self:flex-start}
+      .st-dialog-field>.fang-segmented{align-self:flex-start}
       .st-dialog-label{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary)}
       .st-dialog-textarea{min-height:var(--st-dialog-textarea-min-h);resize:none;font-family:inherit}
       .st-dialog-error{margin:0;color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
       .st-dialog-hint{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-      .st-dialog-actions{display:flex;justify-content:flex-end;gap:var(--st-space-8,8px);margin-top:var(--st-space-4,4px)}
+      .fang-dialog-actions{display:flex;justify-content:flex-end;gap:var(--st-space-8,8px);margin-top:var(--st-space-4,4px)}
       .st-check{display:flex;align-items:center;gap:var(--st-space-8,8px);font-size:var(--st-text-md);cursor:pointer;
         color:var(--st-text-primary)}
       /* A bottom sheet: slides up over the manuscript, rounded on its top corners only, which is

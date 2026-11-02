@@ -73,7 +73,7 @@ export const CSS_MODELS = `
       .st-custom-provider-meta{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         color:var(--st-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .st-custom-provider-actions{display:flex;align-items:center;gap:var(--st-space-4,4px)}
-      .st-custom-provider-actions .st-btn{font-size:var(--st-text-sm);padding:0 var(--st-space-8,8px)}
+      .st-custom-provider-actions .fang-btn{font-size:var(--st-text-sm);padding:0 var(--st-space-8,8px)}
       .st-custom-model-list{display:flex;flex-wrap:wrap;gap:var(--st-space-4,4px);max-height:var(--st-model-list-max-h,160px);overflow:auto}
       .st-custom-model-chip{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
         padding:var(--st-space-2,2px) var(--st-space-8,8px);border-radius:var(--st-radius-pill,999px);

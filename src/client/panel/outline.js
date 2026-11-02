@@ -83,22 +83,22 @@ export function TreeNav({ t, book, activeId, onSelect, onToggle, collapsed, onRe
         // reachable by double-clicking the name, which nothing announced — while delete had a
         // visible button. A destructive action should not be the discoverable one.
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost st-node-rename',
+          type: 'button', className: 'fang-btn fang-btn-ghost st-node-rename',
           title: t('action.renameNode'), 'aria-label': t('action.renameNode'),
           onClick: (e) => { e.stopPropagation(); setDraft(node.title || ''); setEditingId(node.id) },
         }, '✎'),
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost st-node-remove', title: t('action.removeNode'),
+          type: 'button', className: 'fang-btn fang-btn-ghost st-node-remove', title: t('action.removeNode'),
           onClick: (e) => { e.stopPropagation(); onRemove(node.id) },
         }, '×'),
         isContainer
-          ? h('span', { className: 'st-muted', style: { flex: 'none' } }, String(node.children.length))
-          : h('span', { className: 'st-muted', style: { flex: 'none' } }, chars === 0 ? t('label.emptyNode') : t('label.charCount', { n: chars }))))
+          ? h('span', { className: 'fang-muted', style: { flex: 'none' } }, String(node.children.length))
+          : h('span', { className: 'fang-muted', style: { flex: 'none' } }, chars === 0 ? t('label.emptyNode') : t('label.charCount', { n: chars }))))
       if (isContainer && !folded) walk(node.children, depth + 1)
     }
   }
   walk(book?.nodes ?? [], 0)
-  if (rows.length === 0) return h('div', { className: 'st-muted' }, t('label.emptyChapters'))
+  if (rows.length === 0) return h('div', { className: 'fang-muted' }, t('label.emptyChapters'))
   return h('div', { className: 'st-tree' }, rows)
 }
 
@@ -706,7 +706,7 @@ export function ChapterEditor(props) {
       // Nothing else on this line. The chapter's word count and the save state both already have
       // a home in the status bar, and repeating them under the title made the header a read-out —
       // two places reporting the same number, which is two places that can disagree.
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
     // The find bar is IN the header, not above the page: a row of its own pushed the manuscript
     // down every time it opened, and the writer lost their place in the text for a search.
     finding ? h('div', { className: 'st-find' },
@@ -731,16 +731,16 @@ export function ChapterEditor(props) {
           ? t('label.noMatches')
           : t('label.matchCount', { i: activeHit + 1, n: hits.length })),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', disabled: hits.length === 0,
+        type: 'button', className: 'fang-btn fang-btn-ghost', disabled: hits.length === 0,
         title: t('label.findPrev'), 'aria-label': t('label.findPrev'),
         onClick: () => step(-1),
       }, '↑'),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', disabled: hits.length === 0,
+        type: 'button', className: 'fang-btn fang-btn-ghost', disabled: hits.length === 0,
         title: t('label.findNext'), 'aria-label': t('label.findNext'),
         onClick: () => step(1),
       }, '↓'),
-      h('button', { type: 'button', className: 'st-btn st-btn-ghost', title: t('action.close'), onClick: closeFind }, '✕'))
+      h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', title: t('action.close'), onClick: closeFind }, '✕'))
       // While the bar is open its own controls replace the two buttons: showing both put two
       // ways to close the same thing side by side and made the row wider than the page.
       : h(React.Fragment, null,
@@ -748,7 +748,7 @@ export function ChapterEditor(props) {
         // magnifier reads at the same size the keycaps beside it do. Its title carries the one
         // thing the glyph cannot show — the chord.
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost', title: t('label.findHint'),
+          type: 'button', className: 'fang-btn fang-btn-ghost', title: t('label.findHint'),
           'aria-label': t('action.find'), 'aria-pressed': 'false',
           onClick: () => { setFinding(true); setHitIndex(0) },
         }, h('svg', {
@@ -759,11 +759,11 @@ export function ChapterEditor(props) {
         // panel can do to this chapter. Putting the question box in the window title instead
         // separated it from the button it belongs beside.
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost st-ai-trigger', disabled: busy === true,
+          type: 'button', className: 'fang-btn fang-btn-ghost st-ai-trigger', disabled: busy === true,
           title: t('label.aiTriggerHint', { keys: keys.askHint }), onClick: trigger,
         }, busy === true ? '…' : t('action.aiTrigger'), h('span', { className: 'st-kbd' }, keys.askLabel)),
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost st-ai-trigger',
+          type: 'button', className: 'fang-btn fang-btn-ghost st-ai-trigger',
           'aria-pressed': chat !== undefined && chat !== null && chat.open === true ? 'true' : 'false',
           title: t('label.chatButtonHint', { critique: keys.critiqueHint, review: keys.reviewHint }),
           onClick: () => { if (typeof onChatOpen === 'function') onChatOpen() },
@@ -772,7 +772,7 @@ export function ChapterEditor(props) {
         // was left over from when the two were the same key.
         }, t('action.ask'), h('span', { className: 'st-kbd' }, keys.chatLabel)),
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost st-ai-trigger',
+          type: 'button', className: 'fang-btn fang-btn-ghost st-ai-trigger',
           'aria-pressed': typeof onAnswersOpen === 'function' && onAnswersOpen() === true ? 'true' : 'false',
           onClick: () => { if (typeof onAnswersToggle === 'function') onAnswersToggle() },
         }, t('action.answers'), typeof answerCount === 'number' && answerCount > 0

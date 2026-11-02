@@ -11,7 +11,7 @@ import { rowId } from '../shared/logic.js'
 import { kindLabel, kindFields, fieldLabel, fieldValue } from './labels.js'
 import { CARD_W, CARD_H, PIN_Y, mosaicFreeSpot } from './geometry.js'
 import { patchEntityOnBoard } from './write.js'
-import { Chevron } from '../shared/ui.js'
+import { Chevron } from 'fang-style'
 
 /** The generate-portrait glyph: a four-point sparkle, the shape every image tool uses. Drawn
     rather than typed so it inherits the button's ink; the spin while the model works is applied
@@ -100,12 +100,24 @@ function MosaicPick({ label, testId, value, options, onPick }) {
  */
 function MosaicEdgeDetail({ t, picked, byId, onClose }) {
   const edge = picked.edge
+  const from = byId.get(edge.from)
+  const to = byId.get(edge.to)
   const holderName = (id) => byId.get(id)?.name ?? t('mosaic.untitled')
   return h('div', { className: 'st-mosaic-detail' },
     h('div', { className: 'st-mosaic-detail-head' },
       h('span', { className: 'st-mosaic-detail-title' }, edge.truth.kind || t('mosaic.untitled')),
       edge.retired === true ? h('span', { className: 'st-mosaic-badge' }, t('mosaic.retired')) : null,
-      h('button', { type: 'button', className: 'st-btn st-btn-ghost st-mosaic-detail-close', title: t('action.close'), onClick: onClose }, '✕')),
+      h('button', { type: 'button', className: 'fang-btn fang-btn-ghost st-mosaic-detail-close', title: t('action.close'), onClick: onClose }, '✕')),
+    h('div', { className: 'st-mosaic-detail-section st-mosaic-detail-direction-section' },
+      h('div', { className: 'st-mosaic-detail-label' }, t('mosaic.direction')),
+      h('div', { className: 'st-mosaic-detail-direction' },
+        h('span', { className: 'st-mosaic-detail-party' },
+          h('span', { className: 'st-mosaic-detail-party-label' }, t('mosaic.subject')),
+          h('span', { className: 'st-mosaic-detail-holder' }, from?.name ?? t('mosaic.untitled'))),
+        h('span', { className: 'st-mosaic-detail-direction-arrow', 'aria-hidden': true }, '→'),
+        h('span', { className: 'st-mosaic-detail-party' },
+          h('span', { className: 'st-mosaic-detail-party-label' }, t('mosaic.object')),
+          h('span', { className: 'st-mosaic-detail-holder' }, to?.name ?? t('mosaic.untitled'))))),
     edge.truth.note !== '' ? h('p', { className: 'st-mosaic-detail-note' }, edge.truth.note) : null,
     edge.beliefs.length > 0
       ? h('div', { className: 'st-mosaic-detail-section' },
@@ -184,7 +196,7 @@ function MosaicEntityDetail({ t, picked, byId, onPatchEntity, onClose, onPortrai
           onChange: (e) => patch(isCharacter ? { role: e.target.value } : { summary: e.target.value }),
         })),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost st-mosaic-detail-close',
+        type: 'button', className: 'fang-btn fang-btn-ghost st-mosaic-detail-close',
         title: t('action.close'), 'aria-label': t('action.close'), onClick: onClose,
       }, '✕')),
     // The rest of the kind's schema fields. They are always listed, blank or not: hiding an empty
@@ -481,6 +493,9 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
           h('line', {
             className: 'st-mosaic-edge-hit', 'data-entity': `${edge.id}-hit`,
             x1: start.x, y1: start.y, x2: end.x, y2: end.y,
+            // The transparent hit stroke is the element the pointer actually lands on. The
+            // visible line keeps its handler too, for a browser that hit-tests the painted line.
+            onClick: (e) => { e.stopPropagation?.(); onPick({ kind: 'edge', edge }) },
           }),
           h('line', {
             className: 'st-mosaic-edge' + (pickedEdge ? ' st-mosaic-edge-picked' : ''),
@@ -490,7 +505,8 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
             onClick: (e) => { e.stopPropagation?.(); onPick({ kind: 'edge', edge }) },
           }),
           h('polygon', {
-            className: 'st-mosaic-edge-arrow', points: arrowPoints, 'aria-hidden': true,
+            className: 'st-mosaic-edge-arrow' + (pickedEdge ? ' st-mosaic-edge-arrow-picked' : ''),
+            points: arrowPoints, 'aria-hidden': true,
           }),
           h('text', {
             className: 'st-mosaic-edge-label', x: labelX, y: labelY,
@@ -589,7 +605,7 @@ export function MosaicRelations({ t, mosaic, book, updateBook, picked, onPick, o
         onPick: setViewKind,
       }),
       focusId === null ? null : h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'mosaic-focus-clear',
+        type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'mosaic-focus-clear',
         onClick: () => setFocusId(null),
       }, t('mosaic.focusClear'))),
     )

@@ -512,3 +512,37 @@ test('file IO lives in one module', () => {
   walk(libDir)
   assert.deepEqual(offenders, [], `these modules import node:fs directly: ${offenders.join(' | ')}`)
 })
+
+test('popups come from the shared Dialog/Drawer, never a hand-rolled backdrop', () => {
+  // The context window once hand-rolled its own backdrop and dialog skeleton instead of mounting
+  // the shared Dialog — a second popup implementation that could not inherit the fixes the shared
+  // one gets. The backdrop class now lives in the fang-style library; only the library draws one.
+  // The grandfathered files predate this rule and get folded in when they are next touched.
+  const grandfathered = new Set([
+    'panel/rail-tools.js',
+    'mosaic/review.js',
+    'mosaic/tabs.js',
+  ])
+  const root = join(here, '..', 'src', 'client')
+  const offenders = []
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) { walk(full); continue }
+      if (!entry.name.endsWith('.js') || entry.name.endsWith('.css.js')) continue
+      const rel = full.slice(root.length + 1)
+      if (grandfathered.has(rel)) continue
+      if (/fang-backdrop|st-backdrop|st-sheet-backdrop/.test(readFileSync(full, 'utf8'))) offenders.push(rel)
+    }
+  }
+  walk(root)
+  assert.deepEqual(offenders, [], `hand-rolled popup skeletons: ${offenders.join(' | ')}`)
+})
+
+test('editable boxes never resize: the pane under them keeps its geometry', () => {
+  // A resizable textarea dragged the reading pane's layout around under the text, which is how a
+  // "fixed" page turned into one whose boxes moved on every drag. Every input in the panel is a
+  // fixed box that scrolls; the resize property may only ever be `none`.
+  const resizes = [...css.matchAll(/resize:\s*(vertical|both|horizontal)/g)].map((match) => match[1])
+  assert.deepEqual(resizes, [], `resizable components: ${resizes.join(', ')}`)
+})

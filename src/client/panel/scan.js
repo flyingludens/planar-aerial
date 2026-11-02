@@ -26,9 +26,9 @@ export function ScanDock({ t, scan, onClose, onAgain, onCritique }) {
       // prose and not counted.
       busy || failed ? null : h('span', { className: 'st-scan-count' },
         isCritique ? t('scan.pointCount', { n: rows.length }) : t('scan.issueCount', { n: rows.length })),
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost', title: t('action.close'),
+        type: 'button', className: 'fang-btn fang-btn-ghost', title: t('action.close'),
         'aria-label': t('action.close'), onClick: onClose,
       }, '✕')),
     busy

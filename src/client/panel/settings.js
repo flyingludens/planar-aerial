@@ -5,7 +5,7 @@
  * are here and not on the board.
  */
 import { React, h } from '../shared/react.js'
-import { SegGroup } from '../shared/ui.js'
+import { Segmented } from 'fang-style'
 import { TYPE_PRESETS, TYPOGRAPHY_DEFAULT } from '../shared/logic.js'
 import { AUTO_SAVE_PRESETS } from '../shared/save-queue.js'
 import {
@@ -32,7 +32,7 @@ function TypeChoice({ t, label, options, value, onPick }) {
   const chosen = nearest(Number.isFinite(Number(value)) ? Number(value) : TYPOGRAPHY_DEFAULT[axis])
   return h('div', { className: 'st-type-row' },
     h('span', { className: 'st-type-label' }, label),
-    SegGroup({ label, options: options.map((option) => ({ value: option.value, label: t(option.key) })), value: chosen, onChange: onPick }))
+    Segmented({ label, options: options.map((option) => ({ value: option.value, label: t(option.key) })), value: chosen, onChange: onPick }))
 }
 
 /**
@@ -132,7 +132,7 @@ export function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, 
           title: library ?? '',
         }, library === undefined || library === null || library === '' ? t('settings.libraryEmpty') : library),
         typeof onPickDirectory === 'function'
-          ? h('button', { type: 'button', className: 'st-btn st-btn-ghost', onClick: chooseLibrary }, t('action.choose'))
+          ? h('button', { type: 'button', className: 'fang-btn fang-btn-ghost', onClick: chooseLibrary }, t('action.choose'))
           : null)),
     h('div', { className: 'st-settings-group' },
       h('div', { className: 'st-settings-title' }, t('settings.typography')),
@@ -165,7 +165,7 @@ export function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, 
           }, t('label.typePreview'))),
         h('div', { className: 'st-type-foot' },
           h('button', {
-            type: 'button', className: 'st-btn st-btn-ghost',
+            type: 'button', className: 'fang-btn fang-btn-ghost',
             onClick: () => onChange(TYPOGRAPHY_DEFAULT),
           }, t('action.resetTypography'))))),
     h('div', { className: 'st-settings-group' },
@@ -173,7 +173,7 @@ export function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, 
       h('div', { className: 'st-type' },
         h('div', { className: 'st-type-row' },
           h('span', { className: 'st-type-label' }, t('label.autoSave')),
-          SegGroup({
+          Segmented({
             label: t('label.autoSave'),
             options: AUTO_SAVE_PRESETS.map((option) => ({ value: option.value, label: t(option.key) })),
             value: autoSaveMs, onChange: onAutoSave,
@@ -201,12 +201,12 @@ export function SettingsPage({ t, typography, onChange, autoSaveMs, onAutoSave, 
           // only wants their composer key back should not have to give up the chords they chose
           // for the other three.
           h('button', {
-            type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': `chord-reset-${gesture}`,
+            type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': `chord-reset-${gesture}`,
             title: t('keys.resetHint'),
             onClick: () => onRebind(gesture, defaultChord(keyPlatform, gesture)),
           }, t('keys.resetOne'))))),
         h('button', {
-          type: 'button', className: 'st-btn st-btn-ghost', 'data-testid': 'chords-reset',
+          type: 'button', className: 'fang-btn fang-btn-ghost', 'data-testid': 'chords-reset',
           onClick: onResetChords,
         }, t('keys.reset')))))
 }

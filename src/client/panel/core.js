@@ -16,15 +16,17 @@ import {
 import { findNode } from '../../../domain/tree.js'
 import { statusAfterText } from '../../../domain/book.js'
 import { STORAGE_KEYS, readStored, writeStored, storageAvailable } from '../shared/storage.js'
-import { RailIcon } from '../shared/ui.js'
+import { RailIcon } from '../shared/icons.js'
 import { BookLibrary } from './library.js'
 import { WelcomePage } from './welcome.js'
-import { BoardIcon, ModelIcon, NotebookIcon, SlidersIcon, TooltipLayer, McpIcon } from '../shared/ui.js'
+import { BoardIcon, ModelIcon, NotebookIcon, SlidersIcon, McpIcon } from '../shared/icons.js'
+import { TooltipLayer } from 'fang-style'
 import { RailTools, AboutBox } from './rail-tools.js'
 import { TreeNav, ChapterEditor } from './outline.js'
 import { StatusBar } from './status.js'
 import { ModelsPage } from './models.js'
 import { SettingsPage } from './settings.js'
+import { ContextPage } from './context.js'
 import { McpPanel } from './mcp-panel.js'
 import { useModels } from './models-state.js'
 import { useLibrary } from './library-state.js'
@@ -212,6 +214,8 @@ export function StoryPanelBody(props) {
   // card inside the panel: anything rendered inside it is clipped to 264px of column, so a dialog
   // mounted there centres on the directory instead of on the panel the writer is looking at.
   const [aboutOpen, setAboutOpen] = React.useState(false)
+  // The context window is a standalone popup: it must not compete with the rail or the board.
+  const [contextOpen, setContextOpen] = React.useState(false)
   const [mcpOpen, setMcpOpen] = React.useState(false)
   const [mcpState, setMcpState] = React.useState({ loading: false, error: '', info: null })
   // 随笔 is a book-wide scratchpad, not a panel about one chapter. Its own overlay state here
@@ -440,6 +444,7 @@ export function StoryPanelBody(props) {
     if (keep !== 'about') setAboutOpen(false)
     if (keep !== 'mcp') setMcpOpen(false)
     if (keep !== 'notes') setNotesOpen(false)
+    if (keep !== 'context') setContextOpen(false)
     if (keep !== 'rail') setRailHidden(true)
   }
   const closeAllPanels = () => closePanelsExcept('')
@@ -492,7 +497,7 @@ export function StoryPanelBody(props) {
   const drawerButtons = h(React.Fragment, null,
     drawers.map((key) => h('button', {
       key, type: 'button',
-      className: 'st-btn st-btn-ghost st-drawer-btn',
+      className: 'fang-btn fang-btn-ghost st-drawer-btn',
       'aria-haspopup': 'dialog',
       'aria-expanded': drawer === key ? 'true' : 'false',
       // The open drawer is the button's selected state. Without it the button went back to its
@@ -547,8 +552,8 @@ export function StoryPanelBody(props) {
     // The tree's own box: it scrolls, and the function row below it does not. One scrolling box
     // for both meant a long book pushed the row off the bottom of the panel.
     h('div', { className: 'st-scroll' },
-      h('div', { className: 'st-row st-gap-under-row' },
-        h('button', { type: 'button', className: 'st-btn st-btn-primary', onClick: addUnderSelection }, t('action.addUnder'))),
+      h('div', { className: 'fang-row st-gap-under-row' },
+        h('button', { type: 'button', className: 'fang-btn fang-btn-primary', onClick: addUnderSelection }, t('action.addUnder'))),
       h(TreeNav, {
       // The outline highlights what the WRITER selected, not merely the chapter being edited:
       // a volume or chapter must show as current too, because the next node is created under
@@ -583,6 +588,13 @@ export function StoryPanelBody(props) {
       },
       onNotice: noticeRow,
       onAbout: () => { closePanelsExcept('about'); setAboutOpen(true) },
+      // The context page reads the book that is open; the route names it by ID, so a renamed
+      // folder cannot make it read another one.
+      onContext: () => {
+        flushSave()
+        closePanelsExcept('context')
+        setContextOpen(true)
+      },
       onOpen: pickDirectory === undefined ? undefined : openDirectory,
       saving: saveStatus?.status === 'saving',
     }))
@@ -618,16 +630,16 @@ export function StoryPanelBody(props) {
     // The library is a setting, so the only thing that can be missing here is the settings
     // answer itself: while it is in flight the panel shows its loading state rather than
     // claiming there is no workspace.
-    if (library === undefined) return h('div', { className: 'st-scroll st-muted' }, t('label.loading'))
-    if (state.status === 'loading') return h('div', { className: 'st-scroll st-muted' }, t('label.loading'))
+    if (library === undefined) return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
+    if (state.status === 'loading') return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
     if (state.status === 'error') return h('div', { className: 'st-warn' }, state.error)
     // A book that is selected but not yet in `state` used to render NOTHING here: the middle
     // of the panel went blank while the request was in flight, which reads as the plugin
     // having crashed. Every branch that has a reason to be empty says so instead.
-    if (!book) return h('div', { className: 'st-scroll st-muted' }, t('label.loading'))
+    if (!book) return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
     if (!chapter) {
       return h('div', { className: 'st-mid-body' },
-        h('div', { className: 'st-scroll st-muted' }, t('label.emptyChapters')))
+        h('div', { className: 'st-scroll fang-muted' }, t('label.emptyChapters')))
     }
     // A flex column, not a scrolling box: the editor is the page and takes the remaining
     // height, scrolling internally. Wrapping it in `.st-scroll` left it 220px tall with a
@@ -732,7 +744,7 @@ export function StoryPanelBody(props) {
   // state any more: the library is one directory the plugin is told about, so a fresh profile
   // opens on an empty shelf instead of a warning about a workspace it does not need.
   if (library === undefined) {
-    return h('div', { className: 'st-shell' }, h('div', { className: 'st-scroll st-muted' }, t('label.loading')))
+    return h('div', { className: 'st-shell' }, h('div', { className: 'st-scroll fang-muted' }, t('label.loading')))
   }
   if (startOpen || (bookFolder === undefined && (!startSeen || books.length === 0))) {
     return h('div', { className: 'st-shell', ref: shellRef },
@@ -810,7 +822,7 @@ export function StoryPanelBody(props) {
       },
     },
       h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost st-rail-toggle',
+        type: 'button', className: 'fang-btn fang-btn-ghost st-rail-toggle',
         title: railHidden ? t('action.showRail') : t('action.hideRail'),
         'aria-label': railHidden ? t('action.showRail') : t('action.hideRail'),
         'aria-expanded': railHidden ? 'false' : 'true',
@@ -831,7 +843,7 @@ export function StoryPanelBody(props) {
       // "three things about this panel" instead of "this book, then the panel".
       h('button', {
         type: 'button',
-        className: 'st-btn st-btn-ghost st-drawer-btn',
+        className: 'fang-btn fang-btn-ghost st-drawer-btn',
         'data-testid': 'mosaic-open',
         'aria-haspopup': 'dialog',
         'aria-expanded': mosaicOpen ? 'true' : 'false',
@@ -848,7 +860,7 @@ export function StoryPanelBody(props) {
       // 随笔 sits beside the board button because both act on the book, not on the panel's own
       // settings. It is a separate surface: notes are whole-book, the board is the cast graph.
       book === null || book === undefined ? null : h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost st-drawer-btn',
+        type: 'button', className: 'fang-btn fang-btn-ghost st-drawer-btn',
         'data-testid': 'notes-open', 'aria-haspopup': 'dialog',
         'aria-expanded': notesOpen ? 'true' : 'false',
         'aria-pressed': notesOpen ? 'true' : 'false',
@@ -861,9 +873,9 @@ export function StoryPanelBody(props) {
       // No progress caption beside the title. "1 章 · 已定稿 1 段" read as a label the title needed,
       // when the title is the page's name and needs nothing after it. The same counts are already
       // in the status bar, at the bottom, where a read-out belongs.
-      h('span', { className: 'st-spacer' }),
+      h('span', { className: 'fang-spacer' }),
       mcpInfo === undefined ? null : h('button', {
-        type: 'button', className: 'st-btn st-btn-ghost st-drawer-btn',
+        type: 'button', className: 'fang-btn fang-btn-ghost st-drawer-btn',
         'data-testid': 'mcp-open', 'aria-haspopup': 'dialog', 'aria-expanded': mcpOpen ? 'true' : 'false',
         onClick: openMcp,
       }, h(McpIcon), t('mcp.title')),
@@ -933,6 +945,12 @@ export function StoryPanelBody(props) {
         railMotion.mounted ? leftPane() : null)),
     // 关于, mounted at the PANEL's level. See the note where `aboutOpen` is declared.
     aboutOpen ? h(AboutBox, { t, onClose: () => setAboutOpen(false) }) : null,
+    contextOpen ? h(ContextPage, {
+      t, api,
+      bookFolder, bookId: book?.id, chapterId: chapter?.id,
+      onClose: () => setContextOpen(false),
+      onNotice: noticeRow,
+    }) : null,
     mcpOpen ? h(McpPanel, {
       t, loading: mcpState.loading, error: mcpState.error, info: mcpState.info,
       onClose: () => setMcpOpen(false),

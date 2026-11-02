@@ -150,7 +150,7 @@ test('关于 hands the open to the panel instead of drawing the card itself', as
   const { tree, calls } = await mountTools()
   byTestId(tree, 'rail-about').props.onClick()
   assert.deepEqual(calls, [['about']], 'the press reaches the panel')
-  assert.equal(findByClass(tree, 'st-dialog'), undefined,
+  assert.equal(findByClass(tree, 'fang-dialog'), undefined,
     'and no dialog is drawn inside the rail')
 })
 
@@ -162,7 +162,7 @@ test('关于 names the product and its author, not the open book', async () => {
   const AboutBox = plugin.__components.AboutBox
   assert.ok(AboutBox, 'the card is exposed for a direct mount')
   const opened = await render(AboutBox, { t, onClose: () => {} })
-  const dialog = findByClass(opened.tree, 'st-dialog')
+  const dialog = findByClass(opened.tree, 'fang-dialog')
   assert.ok(dialog, 'the card opens')
   const text = visibleText(dialog).join(' ')
   assert.ok(text.includes('brand.full'), 'it names the product')
