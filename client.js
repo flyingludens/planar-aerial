@@ -1310,11 +1310,11 @@ function InfoIcon() {
   );
 }
 
-// ../Projects/fang-style/src/react.js
+// node_modules/fang-style/src/react.js
 var import_react2 = __toESM(require("react"), 1);
 var h2 = import_react2.default.createElement;
 
-// ../Projects/fang-style/src/widgets/overlays.js
+// node_modules/fang-style/src/widgets/overlays.js
 function Drawer({ title, children, onClose, size, bodyClassName, closing = false, closeLabel = "\u5173\u95ED" }) {
   import_react2.default.useEffect(() => {
     const onKey = (e) => {
@@ -1448,7 +1448,7 @@ function Dialog({ title, children, onClose, size, bodyClassName, panelClassName,
   );
 }
 
-// ../Projects/fang-style/src/storage.js
+// node_modules/fang-style/src/storage.js
 function storageAvailable() {
   try {
     return typeof window !== "undefined" && window.localStorage !== void 0 && window.localStorage !== null;
@@ -1474,7 +1474,7 @@ function writeStored(key, value) {
   }
 }
 
-// ../Projects/fang-style/src/hooks.js
+// node_modules/fang-style/src/hooks.js
 function createStateStore() {
   const values = /* @__PURE__ */ new Map();
   const listeners = /* @__PURE__ */ new Map();
@@ -1577,7 +1577,7 @@ function useDismiss(rootRef, open, onClose) {
   }, [rootRef, open]);
 }
 
-// ../Projects/fang-style/src/widgets/dropdown.js
+// node_modules/fang-style/src/widgets/dropdown.js
 function Chevron({ open, direction }) {
   const down = direction !== "right";
   return h2("svg", {
@@ -1647,7 +1647,7 @@ function Dropdown({ label, value, options, onChange, testId, className }) {
   );
 }
 
-// ../Projects/fang-style/src/widgets/file-button.js
+// node_modules/fang-style/src/widgets/file-button.js
 function FileButton({ label, accept, onFile, className, testId }) {
   const inputRef = import_react2.default.useRef(null);
   return h2(
@@ -1677,7 +1677,7 @@ function FileButton({ label, accept, onFile, className, testId }) {
   );
 }
 
-// ../Projects/fang-style/src/widgets/segmented.js
+// node_modules/fang-style/src/widgets/segmented.js
 function Segmented({ label, options, value, onChange, testId, disabled = false }) {
   return h2(
     "div",
@@ -1694,7 +1694,7 @@ function Segmented({ label, options, value, onChange, testId, disabled = false }
   );
 }
 
-// ../Projects/fang-style/src/widgets/list.js
+// node_modules/fang-style/src/widgets/list.js
 function SplitPane({ list, detail, listProps, detailProps }) {
   const rows = Array.isArray(list) ? list : list === void 0 ? [] : [list];
   const body = Array.isArray(detail) ? detail : detail === void 0 ? [] : [detail];
@@ -1723,7 +1723,7 @@ function ListRow({ className, active, onActivate, children, ...rest }) {
   }, ...rows);
 }
 
-// ../Projects/fang-style/src/widgets/tooltip.js
+// node_modules/fang-style/src/widgets/tooltip.js
 function TooltipLayer({ rootRef }) {
   const [tip, setTip] = import_react2.default.useState(null);
   const held = import_react2.default.useRef(null);
@@ -1785,7 +1785,7 @@ function TooltipLayer({ rootRef }) {
   return h2("div", { className: "fang-tip", role: "tooltip", style: { left: tip.left, top: tip.top } }, tip.text);
 }
 
-// ../Projects/fang-style/src/tokens.css.js
+// node_modules/fang-style/src/tokens.css.js
 var FANG_TOKENS = `
       .fang-shell{
         /* \u5F3A\u8C03\u8272\u53EA\u6709\u4E00\u4E2A\u51FA\u5904\uFF1A\u7126\u70B9\u73AF\u3001\u9009\u4E2D\u6001\u3001\u5361\u7247\u63CF\u8FB9\u3001\u4E3B\u6309\u94AE\u90FD\u8BFB\u8FD9\u4E00\u4E2A\u53D8\u91CF\u3002
@@ -1982,7 +1982,7 @@ var FANG_TOKENS = `
       }
 `;
 
-// ../Projects/fang-style/src/frame.css.js
+// node_modules/fang-style/src/frame.css.js
 var FANG_FRAME = `
       .fang-root,.fang-root *,.fang-shell *{box-sizing:border-box}
       /* \u6392\u7248\u58F0\u660E\u5728\u6BCF\u4E2A\u89C4\u5219\u90FD\u5750\u5728\u91CC\u9762\u7684\u90A3\u4E00\u4E2A\u5143\u7D20\u4E0A\uFF1A\u5B57\u4F53\u65CF\u5728\u8FD9\u91CC\u800C\u4E0D\u662F\u5206\u6563\u5230\u6BCF\u4E2A
@@ -2076,7 +2076,7 @@ var FANG_FRAME = `
         color:var(--fang-ink-secondary)}
 `;
 
-// ../Projects/fang-style/src/components.css.js
+// node_modules/fang-style/src/components.css.js
 var FANG_COMPONENTS = `
       /* \u80CC\u677F\u3002\u5F39\u7A97\u4E0E\u62BD\u5C49\u5171\u7528\u4E00\u4E2A\u7C7B\uFF1A\u516C\u5171\u9AA8\u67B6\u662F\u5F39\u7A97\u7684\u2014\u2014\u5C45\u4E2D\u3001\u8C03\u6697\u3001\u6A21\u7CCA\uFF0C\u538B\u5728
          modal \u5C42\uFF1B\u62BD\u5C49\u7684\u80CC\u677F\u4E0D\u662F\u6A21\u6001\uFF0C\u7531\u4E0B\u9762\u4E00\u6761\u6309\u5B50\u5143\u7D20\u533A\u5206\u7684\u89C4\u5219\u63A5\u7BA1\u51E0\u4F55\u3002 */
@@ -2199,6 +2199,11 @@ var FANG_COMPONENTS = `
       .fang-btn-primary{background:var(--fang-accent);color:var(--fang-on-accent);
         padding:0 var(--fang-space-16)}
       .fang-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--fang-accent) 86%, #000000);color:var(--fang-on-accent)}
+      /* \u5371\u9669\u6309\u94AE\uFF1AConfirmDialog \u7684 danger=true \u7528\u5B83\u3002\u590D\u5408\u5728 fang-btn \u4E0A\u800C\u4E0D\u662F\u5355\u7C7B\u2014\u2014
+         \u5355\u7C7B\u4F1A\u88AB\u540E\u52A0\u8F7D\u7684 fang-btn \u57FA\u8272\u76D6\u6210\u6B7B\u89C4\u5219\u3002\u586B\u5145\u4ECE\u5F3A\u8C03\u8272\u6362\u6210 --fang-danger
+         \uFF08error \u7EA2\uFF09\uFF0C\u60AC\u505C\u52A0\u6DF1\u4E0E\u4E3B\u6309\u94AE\u540C\u4E00\u914D\u65B9\u3002 */
+      .fang-btn.fang-danger{background:var(--fang-danger);color:var(--fang-on-accent)}
+      .fang-btn.fang-danger:hover:not(:disabled){background:color-mix(in srgb, var(--fang-danger) 86%, #000000);color:var(--fang-on-accent)}
       /* \u4E00\u9875\u53EA\u6709\u4E00\u4E2A\u52A8\u4F5C\u65F6\u7684\u4E3B\u6309\u94AE\u5C3A\u5BF8\uFF1A\u540C\u4E00\u67B6\u68AF\u5B50\u4E0A\u7684\u4E00\u6863\uFF0C\u9AD8\u3001\u5B57\u8DDD\u3001\u5185\u8FB9\u8DDD\u4E00\u8D77\u52A8\u3002 */
       .fang-btn.fang-btn-xl{--fang-btn-height:var(--fang-btn-height-xl);font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
         padding:0 var(--fang-space-24)}
@@ -2247,7 +2252,7 @@ var FANG_COMPONENTS = `
         box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-border-strong)}
 `;
 
-// ../Projects/fang-style/src/styles.js
+// node_modules/fang-style/src/styles.js
 var FANG_CSS = `${FANG_TOKENS}
 ${FANG_FRAME}
 ${FANG_COMPONENTS}`;
