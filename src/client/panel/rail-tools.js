@@ -237,7 +237,7 @@ export function AboutBox({ t, onClose }) {
     h('div', { className: 'fang-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('rail.about') },
       h('div', { className: 'fang-dialog-title' }, t('rail.about')),
       h('div', { className: 'fang-dialog-body' },
-        rows.map((row) => h('div', { key: row.key, className: 'fang-row st-gap-under-hint' },
+        rows.map((row) => h('div', { key: row.key, className: 'fang-row fang-gap-under-hint' },
           h('span', { className: 'fang-muted' }, row.name),
           h('span', { className: 'fang-spacer' }),
           h('span', null, row.value)))),

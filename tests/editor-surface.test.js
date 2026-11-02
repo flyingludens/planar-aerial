@@ -894,10 +894,10 @@ test('the status bar is the bottom edge of the panel, outside the page', async (
   // it. It belongs to the panel, one row across everything.
   const panel = await mountPanel()
   await new Promise((resolve) => setTimeout(resolve, 0))
-  const shell = findByClass(panel.tree, 'st-shell')
+  const shell = findByClass(panel.tree, 'fang-shell')
   const bar = findByClass(panel.tree, 'st-statusbar')
   assert.ok(shell, 'the panel shell is rendered')
-  // The bar is a direct child of the shell, not nested inside `.st-root` (which holds the columns).
+  // The bar is a direct child of the shell, not nested inside `.fang-root` (which holds the columns).
   const direct = (shell.children ?? []).some((child) => child === bar
     || (child.props?.className ?? '') === 'st-statusbar')
   assert.ok(direct, 'the bar is a child of the shell, not of the writing column')
@@ -1044,7 +1044,7 @@ test('the idle hairline sits on the bottom edge, not 18px above it', async () =>
   // The horizontal and vertical steps come from the spacing scale, so the assertion reads the SCALE
   // rather than a pixel literal: what matters is that the shorthand ends in 0 — no bottom padding
   // under the dock — not which token the other two sides happen to use.
-  assert.match(desk, /padding:\s*var\(--st-space-\d+,\d+px\)\s+var\(--st-space-\d+,\d+px\)\s+0/,
+  assert.match(desk, /padding:\s*var\(--fang-space-\d+(,\d+px)?\)\s+var\(--fang-space-\d+(,\d+px)?\)\s+0/,
     'the desk keeps no bottom pad under the dock')
 })
 
@@ -1143,7 +1143,7 @@ test('the retained selection uses the accent, not a near-background grey', () =>
   const rule = /\.st-selected\{([^}]*)\}/.exec(css)?.[1] ?? ''
   assert.ok(rule !== '', 'the rule exists')
   assert.ok(rule.includes('color-mix'), 'it is a mixed wash, so it can carry the accent')
-  assert.ok(rule.includes('--st-accent'), 'derived from the theme accent')
+  assert.ok(rule.includes('--fang-accent'), 'derived from the theme accent')
   assert.ok(!/background:var\(--dsw-alias-bg-module-platform[,)]/.test(rule),
     'not the flat module-platform token that was invisible against the page')
   assert.ok(rule.includes('box-shadow'), 'and it carries an edge, so a faint wash still reads as a range')
@@ -1178,7 +1178,7 @@ test('the retained selection uses the accent, not a near-background grey', () =>
   const rule = /\.st-selected\{([^}]*)\}/.exec(css)?.[1] ?? ''
   assert.ok(rule !== '', 'the rule exists')
   assert.ok(rule.includes('color-mix'), 'it is a mixed wash, so it can carry the accent')
-  assert.ok(rule.includes('--st-accent'), 'derived from the theme accent')
+  assert.ok(rule.includes('--fang-accent'), 'derived from the theme accent')
   assert.ok(!/background:var\(--dsw-alias-bg-module-platform[,)]/.test(rule),
     'not the flat module-platform token that was invisible against the page')
   assert.ok(rule.includes('box-shadow'), 'and it carries an edge, so a faint wash still reads as a range')
@@ -1193,7 +1193,7 @@ test('only a proposed passage is set in the manuscript type', () => {
   const dockRule = /\.st-ai-dock\{([^}]*)\}/.exec(css)?.[1] ?? ''
   // The dock's chrome is 13px, the size the rest of dsh uses. It was the manuscript's once, which
   // made every control in the card as loud as the prose; enlarging the buttons was never asked for.
-  assert.ok(dockRule.includes('font-size:var(--st-text-md)'),
+  assert.ok(dockRule.includes('font-size:var(--fang-font-size-md)'),
     'the dock defaults to interface type')
   assert.ok(!dockRule.includes('font-size:var(--st-font-size'),
     'and not to the manuscript size')
@@ -1211,10 +1211,10 @@ test('only a proposed passage is set in the manuscript type', () => {
 
   // A reply is a remark about the writing, so it is interface type like the rest of the dock.
   const chatRule = /\[data-kind="chat"\] \.st-ai-dock-text\{([^}]*)\}/.exec(css)?.[1] ?? ''
-  assert.ok(chatRule.includes('font-size:var(--st-text-md)'),
+  assert.ok(chatRule.includes('font-size:var(--fang-font-size-md)'),
     'a chat reply is interface type')
   assert.ok(!chatRule.includes('font-size:inherit'), 'it does not inherit the book size')
-  assert.ok(chatRule.includes('color:var(--st-text-primary)'),
+  assert.ok(chatRule.includes('color:var(--fang-ink-primary)'),
     'the reply is in the primary ink: it is content, not a caption')
 
   // The input is the ONE control at the larger fixed size: it is what the writer types into, and
@@ -1248,8 +1248,8 @@ test('every accent-coloured control reads one variable, defined at the panel roo
   // The accent used to be declared only on the dock, so every rule outside it that read the accent
   // with a blue fallback fell through to that fallback: the panel was half themed, half default.
   const css = readFileSync(new URL('../client.js', import.meta.url), 'utf8')
-  const shellRule = /\.st-shell\{([^}]*)\}/.exec(css)?.[1] ?? ''
-  assert.ok(shellRule.includes('--st-accent:'), 'the accent is declared on the panel root')
+  const shellRule = /\.fang-shell\{([^}]*)\}/.exec(css)?.[1] ?? ''
+  assert.ok(shellRule.includes('--fang-accent:'), 'the accent is declared on the panel root')
 
   // No rule may reach past it to a fixed blue token for a themed affordance.
   const rules = [...css.matchAll(/\.(st-[a-zA-Z-]+)[^{}]*\{([^}]*)\}/g)]
@@ -1257,7 +1257,7 @@ test('every accent-coloured control reads one variable, defined at the panel roo
     .filter(([, , body]) => /--dsw-alias-state-business-primary|--dsw-alias-button-info-fill/.test(body))
     .map(([, name]) => name)
   // The declaration itself may mention it as a last-resort fallback, and nothing else may.
-  const allowed = new Set(['st-shell'])
+  const allowed = new Set(['fang-shell'])
   assert.deepEqual(offenders.filter((name) => !allowed.has(name)), [],
     'these rules still hard-code a blue instead of reading the accent')
 })

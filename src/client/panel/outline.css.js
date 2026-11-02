@@ -3,31 +3,31 @@
  */
 export const CSS_OUTLINE = `
       /* ---- the outline: the chapter tree and its inline editors ---- */
-      .st-tree{display:flex;flex-direction:column;gap:var(--st-space-2,2px)}
-.st-node{display:flex;align-items:baseline;gap:var(--st-space-8,8px);padding:var(--st-space-4,4px) var(--st-space-8,8px) var(--st-space-4,4px) 0;border-radius:var(--st-radius-sm,8px);
-        cursor:pointer;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);color:var(--st-text-secondary);min-width:0;corner-shape:round;}
-      .st-node:hover{background:var(--st-hover-fill)}
-      .st-node[data-current="true"]{background:var(--st-selected-fill);color:var(--st-text-primary)}
-      .st-node[data-level="volume"]{color:var(--st-text-primary);font-weight:var(--st-font-weight-strong)}
-      .st-node[data-level="chapter"]{font-weight:var(--st-font-weight-medium);color:var(--st-text-primary)}
-      .st-node-caret{flex:none;width:var(--st-space-12,12px);font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
-      .st-node-dot{flex:none;width:var(--st-mark-sm,4px);height:var(--st-mark-sm,4px);border-radius:var(--st-radius-pill,999px);corner-shape:round;background:var(--dsw-alias-border-l4,var(--st-fallback-border-l4));margin-top:var(--st-space-8,8px)}
-      .st-node-input{flex:1 1 auto;min-width:0;font-size:var(--st-text-md);padding:var(--st-space-2,2px) var(--st-space-4,4px)}
+      .st-tree{display:flex;flex-direction:column;gap:var(--fang-space-2,2px)}
+.st-node{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);padding:var(--fang-space-4,4px) var(--fang-space-8,8px) var(--fang-space-4,4px) 0;border-radius:var(--fang-radius-sm,8px);
+        cursor:pointer;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);color:var(--fang-ink-secondary);min-width:0;corner-shape:round;}
+      .st-node:hover{background:var(--fang-hover-fill)}
+      .st-node[data-current="true"]{background:var(--fang-selected-fill);color:var(--fang-ink-primary)}
+      .st-node[data-level="volume"]{color:var(--fang-ink-primary);font-weight:var(--fang-font-weight-strong)}
+      .st-node[data-level="chapter"]{font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary)}
+      .st-node-caret{flex:none;width:var(--fang-space-12,12px);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-node-dot{flex:none;width:var(--st-mark-sm,4px);height:var(--st-mark-sm,4px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;background:var(--fang-border-strong);margin-top:var(--fang-space-8,8px)}
+      .st-node-input{flex:1 1 auto;min-width:0;font-size:var(--fang-font-size-md);padding:var(--fang-space-2,2px) var(--fang-space-4,4px)}
       /* The two actions appear together on hover: they belong to the same row and hiding one of
          them made the other look like the row's only option. They override the button height
          down to the compact row, so the pill system does not inflate the tree. */
-      .st-node-remove,.st-node-rename{--st-btn-h:var(--st-btn-h-sm,26px);opacity:0;flex:none;padding:0 var(--st-space-4,4px);line-height:var(--st-text-sm-leading)}
+      .st-node-remove,.st-node-rename{--fang-btn-height:var(--fang-btn-height-sm,26px);opacity:0;flex:none;padding:0 var(--fang-space-4,4px);line-height:var(--fang-line-height-sm)}
       .st-node:hover .st-node-remove,.st-node:hover .st-node-rename,
       .st-node:focus-within .st-node-remove,.st-node:focus-within .st-node-rename{opacity:1}
-      .st-node-rename:hover{color:var(--st-accent) !important}
-      .st-node-remove:hover{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error)) !important}
+      .st-node-rename:hover{color:var(--fang-accent) !important}
+      .st-node-remove:hover{color:var(--dsw-alias-state-error-primary,#ec1313) !important}
 /* The name is part of a clickable row, so it takes the hand too. It used to say "text",
          which made the row read as a line of prose you could put a caret in — the row selects a
          chapter, it does not edit one. Double-click still renames, and the caret appears in the
          input that opens for it, which is where a text cursor belongs. */
       .st-node-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-        cursor:pointer;border-radius:var(--st-radius-xs,4px);corner-shape:round;}
-      .st-node:hover .st-node-name{color:var(--st-text-primary)}
+        cursor:pointer;border-radius:var(--fang-radius-xs,4px);corner-shape:round;}
+      .st-node:hover .st-node-name{color:var(--fang-ink-primary)}
 
       /* The mosaic sheet: a card that drops from the panel's top edge, the way a reference panel
          unfolds downward. It stops above the dock — the composer is the one region of the page

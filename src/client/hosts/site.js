@@ -91,7 +91,7 @@ function SiteDownload({ t }) {
 
 const root = document.getElementById('root')
 root.replaceChildren()
-createRoot(root).render(h('div', { className: 'st-shell' },
+createRoot(root).render(h('div', { className: 'fang-shell' },
   h(WelcomePage, {
     t,
     api: {},

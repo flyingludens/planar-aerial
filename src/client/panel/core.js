@@ -74,7 +74,7 @@ export class StoryPanelBoundary extends React.Component {
     // Shown where the writer is looking, in the panel's own chrome, rather than as a blank
     // column: the message and the first frames are what turn "it is gone" into a diagnosis.
     const error = this.state.error
-    return h('div', { className: 'st-shell' },
+    return h('div', { className: 'fang-shell' },
       h('div', { className: 'st-warn' },
         h('div', null, '写故事面板渲染时出错：'),
         h('pre', { style: { whiteSpace: 'pre-wrap', margin: '6px 0 0' } },
@@ -551,8 +551,8 @@ export function StoryPanelBody(props) {
   const leftPane = () => h('div', { className: 'st-rail-body' },
     // The tree's own box: it scrolls, and the function row below it does not. One scrolling box
     // for both meant a long book pushed the row off the bottom of the panel.
-    h('div', { className: 'st-scroll' },
-      h('div', { className: 'fang-row st-gap-under-row' },
+    h('div', { className: 'fang-scroll' },
+      h('div', { className: 'fang-row fang-gap-under-row' },
         h('button', { type: 'button', className: 'fang-btn fang-btn-primary', onClick: addUnderSelection }, t('action.addUnder'))),
       h(TreeNav, {
       // The outline highlights what the WRITER selected, not merely the chapter being edited:
@@ -630,21 +630,21 @@ export function StoryPanelBody(props) {
     // The library is a setting, so the only thing that can be missing here is the settings
     // answer itself: while it is in flight the panel shows its loading state rather than
     // claiming there is no workspace.
-    if (library === undefined) return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
-    if (state.status === 'loading') return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
+    if (library === undefined) return h('div', { className: 'fang-scroll fang-muted' }, t('label.loading'))
+    if (state.status === 'loading') return h('div', { className: 'fang-scroll fang-muted' }, t('label.loading'))
     if (state.status === 'error') return h('div', { className: 'st-warn' }, state.error)
     // A book that is selected but not yet in `state` used to render NOTHING here: the middle
     // of the panel went blank while the request was in flight, which reads as the plugin
     // having crashed. Every branch that has a reason to be empty says so instead.
-    if (!book) return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
+    if (!book) return h('div', { className: 'fang-scroll fang-muted' }, t('label.loading'))
     if (!chapter) {
-      return h('div', { className: 'st-mid-body' },
-        h('div', { className: 'st-scroll fang-muted' }, t('label.emptyChapters')))
+      return h('div', { className: 'fang-main-body' },
+        h('div', { className: 'fang-scroll fang-muted' }, t('label.emptyChapters')))
     }
     // A flex column, not a scrolling box: the editor is the page and takes the remaining
-    // height, scrolling internally. Wrapping it in `.st-scroll` left it 220px tall with a
+    // height, scrolling internally. Wrapping it in `.fang-scroll` left it 220px tall with a
     // second scrollbar around it.
-    return h('div', { className: 'st-mid-body' },
+    return h('div', { className: 'fang-main-body' },
       h(ChapterEditor, {
         t, chapter,
         // The panel resolves the chords once; the editor only reads them.
@@ -744,10 +744,10 @@ export function StoryPanelBody(props) {
   // state any more: the library is one directory the plugin is told about, so a fresh profile
   // opens on an empty shelf instead of a warning about a workspace it does not need.
   if (library === undefined) {
-    return h('div', { className: 'st-shell' }, h('div', { className: 'st-scroll fang-muted' }, t('label.loading')))
+    return h('div', { className: 'fang-shell' }, h('div', { className: 'fang-scroll fang-muted' }, t('label.loading')))
   }
   if (startOpen || (bookFolder === undefined && (!startSeen || books.length === 0))) {
-    return h('div', { className: 'st-shell', ref: shellRef },
+    return h('div', { className: 'fang-shell', ref: shellRef },
       h(WelcomePage, {
         t, api, books,
         hasBook: bookFolder !== undefined,
@@ -770,7 +770,7 @@ export function StoryPanelBody(props) {
       h(TooltipLayer, { rootRef: shellRef }))
   }
   if (bookFolder === undefined) {
-    return h('div', { className: 'st-shell', ref: shellRef },
+    return h('div', { className: 'fang-shell', ref: shellRef },
       h(BookLibrary, {
         t, api, library, books, workspaces, workspaceSnapshot,
         onNotice: setShelfNotice,
@@ -799,9 +799,9 @@ export function StoryPanelBody(props) {
       h(TooltipLayer, { rootRef: shellRef }))
   }
 
-  return h('div', { className: 'st-shell', ref: shellRef },
+  return h('div', { className: 'fang-shell', ref: shellRef },
     h('div', {
-      className: 'st-titlebar',
+      className: 'fang-titlebar',
       // Empty space in the title row puts the board away.
       //
       // The board owns the page while it is open, and the row above it is the one strip that
@@ -822,7 +822,7 @@ export function StoryPanelBody(props) {
       },
     },
       h('button', {
-        type: 'button', className: 'fang-btn fang-btn-ghost st-rail-toggle',
+        type: 'button', className: 'fang-btn fang-btn-ghost fang-rail-toggle',
         title: railHidden ? t('action.showRail') : t('action.hideRail'),
         'aria-label': railHidden ? t('action.showRail') : t('action.hideRail'),
         'aria-expanded': railHidden ? 'false' : 'true',
@@ -836,7 +836,7 @@ export function StoryPanelBody(props) {
       // as its last row; the caret beside it invited a click that opened a list over the page the
       // writer was reading. The title of a page is a heading — switching books is the shelf's job,
       // and the shelf is one press away in the outline's own menu.
-      h('h1', { className: 'st-title' }, book?.title || t('panel')),
+      h('h1', { className: 'fang-title' }, book?.title || t('panel')),
       // The board button sits against the title, not with the preference drawers at the far end.
       // It acts on the book the title names — the same subject — while 模型 and 排版 are the
       // panel's own settings; putting all three together made a writer read the row as
@@ -887,18 +887,18 @@ export function StoryPanelBody(props) {
         type: 'button', className: 'st-session-btn',
         onClick: openConversation,
       }, h('span', { className: 'st-session-label' }, t('action.openChat'))) : null),
-    h('div', { className: 'st-root' },
+    h('div', { className: 'fang-root' },
       // No side chat: the book's conversation is a real dsh Session behind 去完整对话, so a
       // second, cut-down chat beside the manuscript was a worse copy of the same idea.
       // The outline is an OVERLAY on the page rather than a column beside it: it slides in
       // from the left edge, over the text, and closing it gives the manuscript its width back.
-      h('div', { className: 'st-col st-mid' }, middle(),
+      h('div', { className: 'fang-col fang-main' }, middle(),
         // The click-away layer stays over the PAGE and nothing else. Inside the rail's own layer it
         // would span the status bar and the composer too, so a click in the question box would
         // dismiss the outline instead of typing — and the box is exactly where the writer's hand
         // goes next.
         railMotion.mounted
-          ? h('div', { className: 'st-rail-scrim', onClick: () => setRailHidden(true), role: 'presentation' })
+          ? h('div', { className: 'fang-rail-scrim', onClick: () => setRailHidden(true), role: 'presentation' })
           : null)),
     // The status bar is the bottom edge of the PANEL, not of the writing column: it spans the
     // whole width, under the outline and the page alike, so it stays put when the outline
@@ -936,12 +936,12 @@ export function StoryPanelBody(props) {
     // writing column it stopped at the bar's top edge, which left a strip of page under a card
     // that is meant to be flush with the frame. z-index keeps it under the overlays below.
     h('div', {
-      className: `st-rail-layer${railMotion.closing ? ' st-closing' : ''}`,
+      className: `fang-rail-layer${railMotion.closing ? ' fang-closing' : ''}`,
     },
       // The rail node always exists and carries its own collapsed class: the exit animation needs
       // the node for its duration, and the state is readable from the class whether or not a
       // browser is animating it.
-      h('div', { className: `st-rail${railHidden ? ' st-rail-collapsed' : ''}` },
+      h('div', { className: `fang-rail${railHidden ? ' fang-rail-collapsed' : ''}` },
         railMotion.mounted ? leftPane() : null)),
     // 关于, mounted at the PANEL's level. See the note where `aboutOpen` is declared.
     aboutOpen ? h(AboutBox, { t, onClose: () => setAboutOpen(false) }) : null,

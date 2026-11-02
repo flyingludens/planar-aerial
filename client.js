@@ -3784,7 +3784,7 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
     // the leading clearance, so the shelf title sits on the same line the book title occupies.
     h(
       "div",
-      { className: "st-titlebar st-library-head" },
+      { className: "fang-titlebar st-library-head" },
       // Back to the book that was open. Only offered when there is one: on a first visit the
       // library IS the panel, and a back arrow pointing nowhere would be a dead control.
       typeof onBack === "function" && backTitle ? h("button", {
@@ -3880,7 +3880,7 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
       renaming === null ? null : h(
         "div",
         { className: "st-book-card st-book-new st-book-form" },
-        h("div", { className: "fang-muted st-gap-under-hint" }, t("label.renameBookHint")),
+        h("div", { className: "fang-muted fang-gap-under-hint" }, t("label.renameBookHint")),
         h("input", {
           className: "st-input",
           autoFocus: true,
@@ -3898,7 +3898,7 @@ function BookLibrary({ t, api: api2, books, workspaces, workspaceSnapshot, onOpe
         }),
         h(
           "div",
-          { className: "fang-row st-gap-over-row" },
+          { className: "fang-row fang-gap-over-row" },
           h("button", { type: "button", className: "fang-btn fang-btn-primary", disabled: busy || draftTitle.trim() === "", onClick: commitRename }, t("action.rename")),
           h("button", { type: "button", className: "fang-btn", onClick: () => setRenaming(null) }, t("action.cancel"))
         )
@@ -4456,7 +4456,7 @@ function AboutBox({ t, onClose }) {
         { className: "fang-dialog-body" },
         rows.map((row) => h(
           "div",
-          { key: row.key, className: "fang-row st-gap-under-hint" },
+          { key: row.key, className: "fang-row fang-gap-under-hint" },
           h("span", { className: "fang-muted" }, row.name),
           h("span", { className: "fang-spacer" }),
           h("span", null, row.value)
@@ -5399,7 +5399,7 @@ function ChapterEditor(props) {
     const ours = (event) => {
       const target = event?.target;
       if (target === null || target === void 0) return true;
-      if (typeof target.closest === "function" && target.closest(".st-shell") !== null) return true;
+      if (typeof target.closest === "function" && target.closest(".fang-shell") !== null) return true;
       const tag = String(target.tagName ?? "").toUpperCase();
       return tag === "BODY" || tag === "HTML";
     };
@@ -8894,7 +8894,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
     }
   };
   if (book === null || book === void 0) {
-    return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
+    return h("div", { className: "fang-scroll fang-muted" }, t("label.loading"));
   }
   const chapters = book.chapters ?? [];
   const selected = chapters.find((chapter) => chapter.id === pickedId) ?? chapters[0];
@@ -9005,7 +9005,7 @@ function OverviewPage({ t, book, bookFolder, api: api2, onAdoptWritten, onNotice
       ),
       h(
         "div",
-        { className: "fang-row st-gap-over-section" },
+        { className: "fang-row fang-gap-over-section" },
         h("button", { type: "button", className: "fang-btn fang-btn-primary", onClick: runManuscript }, t("action.manuscript")),
         h("button", { type: "button", className: "fang-btn", onClick: runConsistency }, t("action.consistency"))
       ),
@@ -10524,224 +10524,37 @@ function usePreferences({ platform, saveInterval }) {
 }
 
 // src/client/shared/styles.js
+var CSS_BRIDGE = `
+      .fang-shell{
+        --fang-ink-primary:var(--dsw-alias-label-primary,#f2f2f3);
+        --fang-ink-secondary:var(--dsw-alias-label-secondary,#b8b8bd);
+        --fang-ink-tertiary:var(--dsw-alias-label-tertiary,#8e8e93);
+        --fang-bg-layer-1:var(--dsw-alias-bg-layer-1,#1c1c1e);
+        --fang-bg-layer-2:var(--dsw-alias-bg-layer-2,#2c2c2e);
+        --fang-border-hair:var(--dsw-alias-border-l2,#ffffff14);
+        --fang-border-edge:var(--dsw-alias-border-l3,#ffffff1f);
+        --fang-border-strong:var(--dsw-alias-border-l4,#ffffff29);
+        --fang-radius-xs:var(--dsw-radius-xs,4px);
+        --fang-radius-sm:var(--dsw-radius-sm,8px);
+        --fang-radius-md:var(--dsw-radius-md,12px);
+        --fang-radius-lg:var(--dsw-radius-lg,16px);
+        --fang-radius-panel:var(--dsw-radius-panel,28px);
+        --fang-focus-ring-width:var(--dsw-focus-ring-width,2px);
+      }
+`;
 var CSS_SHARED = `
-      /* Radii, semantic colours and the focus ring are host tokens, read from the shipped theme
-         rather than invented. Type is NOT: the panel has its own four-step scale and its own font
-         stack, because a writing surface mounted into an arbitrary host column should not inherit
-         its typography from an ancestor it does not control. See the scale below.
-         The one host-managed offset is --dsh-frame-leading-clearance: the shell raises it when
-         the sidebar collapses so the frame's leading controls keep their seat. */
-      .st-root,.st-root *,.st-shell *{box-sizing:border-box}
-      /* The single place the accent is decided: every focus ring, selection, card edge, primary
-         action and the send key read this one variable.
-         It is the panel's OWN colour, not the host's brand token. The host's brand resolves to a
-         near-white on the dark theme the panel runs on, so everything painted with it came out
-         white on a near-black page \u2014 the panel's "accent" was the absence of one. Naming a colour
-         here is what makes the panel look like itself on either host theme.
-         The colour is \u6731\u7EA2 (#c3272b), picked on the dark canvas the panel actually runs on \u2014
-         the earlier #e34234 read orange against the near-black page, so the accent is a step
-         redder and a step darker than that first literal.
-         The literal is the value itself rather than a variable: a var() whose fallback is another
-         var() is not a fallback at all, and with no theme loaded the whole declaration is invalid
-         and every background: var(--st-accent) rule silently paints nothing. */
-      /* The panel's type, declared on the one element every other rule sits inside.
-         Family here rather than per component, and the working size too: a rule that sets no size
-         inherits 13/20, which is what almost every control in this panel is. That is what makes the
-         31 "font-family: inherit" rules mean something \u2014 they inherit the PANEL's stack, not
-         whichever host ancestor happened to declare one. */
-      .st-shell{font-family:var(--st-font-family);
-        font-size:var(--st-text-md);
-        --st-accent:#c3272b;
-        --st-on-accent:#ffffff;
-        /* The panel's ground: pure black by decision, not the host's bg token \u2014 the host's base
-           in the running dark theme is a grey. Layered surfaces (rail, cards, inputs) keep their
-           theme layers and read as raised off this ground. The status bar shares it, so the
-           bottom strip does not read as a separate grey band. */
-        --st-bg:#000;
-        /* THE FALLBACK PALETTE: what every host alias resolves to when the theme is absent.
-           Defined once, here; the var(--alias, var(--st-fallback-*)) pattern is safe because these
-           are declared on this same rule, in scope for every rule that reads them \u2014 unlike a
-           literal copied into two hundred var() calls, where changing one changed only one. */
-        --st-fallback-ink:#0f1115;
-        --st-fallback-ink-soft:#61666b;
-        --st-fallback-ink-faint:#81858c;
-        --st-fallback-ink-caption:#adb2b8;
-        --st-fallback-ink-dimmed:#e1e5ee;
-        --st-fallback-ink-contrast:#fff;
-        --st-fallback-hover:#2631480f;
-        --st-fallback-border-l2:#00000014;
-        --st-fallback-border-l3:#0000001f;
-        --st-fallback-border-l4:#00000029;
-        --st-fallback-page:#f2f3f5;
-        --st-fallback-error:#ec1313;
-        --st-fallback-warn:#f59e0b;
-        --st-fallback-green:#22c55e;
-        --st-fallback-scrollbar:#e5e5e5;
-        --st-fallback-scrollbar-hover:#d4d4d4;
-        /* THE TEXT INK TIERS. Three names for three jobs: a heading or value (primary), body
-           copy and controls (secondary), and labels, metadata and disabled copy (tertiary).
-           Captions used to have a fourth, almost identical tier; they use tertiary now, so two
-           labels side by side can no longer be two different greys by accident. */
-        --st-text-primary:var(--dsw-alias-label-primary,var(--st-fallback-ink));
-        --st-text-secondary:var(--dsw-alias-label-secondary,var(--st-fallback-ink-soft));
-        --st-text-tertiary:var(--dsw-alias-label-tertiary,var(--st-fallback-ink-faint));        /* THE SPACING SCALE.
-           Six steps, not seventeen near-duplicates: 2px is the hairline step for marks and tight
-           controls, then every layout distance is 4, 8, 12, 16 or 24. A step off that rhythm (6, 10,
-           14, 20) is exactly how two adjacent cards came to have 10 and 12 of inner padding: each
-           looked right where it was typed, and nothing kept them in step.
-           The steps are named by their value rather than by size (sm/md/lg) because a name is an
-           opinion and a number is a fact \u2014 --st-space-8 says exactly what it is. */
-        --st-space-2:2px;
-        --st-space-4:4px;
-        --st-space-8:8px;
-        --st-space-12:12px;
-        --st-space-16:16px;
-        --st-space-24:24px;
-        /* THE LAYOUT SCALE. Spacing says how far apart two things are; these say how a page is
-           built, and they must be shared or every board page becomes its own grid. The three
-           board steps are what the investigation board's pages, its split panes and its slide-over
-           all read, so a page cannot drift a few pixels away from its neighbour. The inset ladder
-           is the same idea for controls: an inner padding is one of four sizes, never a one-off. */
-        --st-board-gap:var(--st-space-12);
-        --st-board-inset:var(--st-space-16);
-        --st-board-inset-compact:var(--st-space-12);
-        --st-inset-xs:var(--st-space-4);
-        --st-inset-sm:var(--st-space-8);
-        --st-inset-md:var(--st-space-12);
-        --st-inset-xl:var(--st-space-24);
-        /* THE RADIUS SCALE, on the same principle as the spacing one.
-           The host ships five radii (xs 4, sm 8, md 12, lg 16, panel 28) and every one of them is used
-           here through its token. What was NOT covered were the values written locally \u2014 1, 2, 3, 6,
-           7, 9 and 18 \u2014 each one a small radius that happened to look right where it was typed, and
-           none of them shared with the rule beside it. That is the same fragmentation the spacing
-           scale was introduced to end: two adjacent chips with 3px and 4px corners, a tag with 2px
-           next to a badge with 6px.
-           The steps below are the ones this panel actually needs, mapped onto the host's tokens where
-           a token exists so a change of theme still reaches them. --st-radius-pill covers 999px,
-           which is not a measurement but "as round as the box allows" \u2014 it is the same intention
-           everywhere it appears, so it deserves a name too. */
-        --st-radius-xs:var(--dsw-radius-xs,4px);
-        --st-radius-sm:var(--dsw-radius-sm,8px);
-        --st-radius-md:var(--dsw-radius-md,12px);
-        --st-radius-lg:var(--dsw-radius-lg,16px);
-        --st-radius-panel:var(--dsw-radius-panel,28px);
-        /* A SHAPE, not a step. The five above are sizes and come from dsh; this one says "as round as
-           the box allows", which is a different intention and the only way a 4px dot and a 30px pill
-           can both be round. dsh itself writes 999px where it means this, so the value is the same
-           as the host's rather than a new invention \u2014 it just needed a name so it is not a stray
-           literal in sixteen rules. */
-        --st-radius-pill:999px;
-        /* The two inks the panel draws its own depth with. Not host tokens because they are not part
-           of the theme: a drop shadow is black at some opacity whatever the palette says, and the
-           highlight that catches a floating card's top edge is white. Naming them keeps the exact
-           rgba out of five different rules. */
-        --st-shade:0,0,0;
-        --st-highlight:#fff;
+      /* ---- project tokens, on the same shell the library's tokens sit on.
+         Business tokens only: the welcome canvas, the glyph field, the context bar's
+         tones, the board's wall and wires, the composer's flow ring. Everything generic
+         reads a --fang- token; where a value here used to restate a scale step it now
+         points at that step instead of copying it. */
+      .fang-shell{
         /* The send key. It used to be \u6731\u7EA2, a second colour of the panel's own; now it is the
            accent, so the one affirmative control in the composer and every other accented control
            are the same colour instead of two near-misses. The hover is a shade of that same
            colour rather than a second literal, the way the session button's is. */
-        --st-send:var(--st-accent,#c3272b);
-        --st-send-hover:color-mix(in srgb, var(--st-accent) 86%, #000000);
-        /* The keyboard-focus ink. Not the host's focus-ring-color: the shipped dark theme sets it
-           to transparent, which on the pure-black ground made every focused control invisible.
-           Derived from the primary label so it reads on the ground, on the grey layers and on
-           the accent fills alike; each rule keeps its own ring geometry (box-shadow or outline). */
-        --st-focus-ink:color-mix(in srgb, var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast)) 45%, transparent);
-        /* The two raised surfaces, derived FROM the host's layer tokens instead of read raw: the
-           host tuned its greys for its own near-black base, and on the pure-black ground they sat
-           a step too light. Each surface pulls its layer 72% toward the ground \u2014 one visible step
-           of separation, not the full gap. Every raised fill in the panel reads one of these two:
-           cards, rail, menus and the tooltip on --st-surface; inputs, selected pills, sheets and
-           the model pickers on --st-surface-high. */
-        --st-surface:color-mix(in srgb, var(--dsw-alias-bg-layer-1,#232324) 72%, var(--st-bg));
-        --st-surface-high:color-mix(in srgb, var(--dsw-alias-bg-layer-2,#2c2c2e) 72%, var(--st-bg));
-        /* The selected state of a button, a tab or a list row. Surface-high against the page floor
-           was only a few percent of grey apart, which on the near-black ground read as "not
-           selected". This mixes the theme ink into the raised surface so the step is visible in
-           both themes: lighter than the floor on dark, darker on light.
-           The hover tier is quieter than selection on purpose \u2014 hover says "under the pointer",
-           selection says "this is the one open right now". */
-        --st-selected-fill:color-mix(in srgb, var(--st-text-primary) 18%, var(--st-surface));
-        /* One hover wash for every button, tab and row. The old per-component hover used a 6%
-           transparent ink that disappeared on the near-black ground; this is the same visual
-           weight everywhere, so hover and selection cannot look like two different systems. */
-        --st-hover-fill:color-mix(in srgb, var(--st-text-primary) 9%, var(--st-surface));
-        /* A pressed control is one step darker than hover but still quieter than selection. */
-        --st-active-fill:color-mix(in srgb, var(--st-text-primary) 14%, var(--st-surface));
-        --st-list-hover:var(--st-hover-fill);
-        /* The ink tiers: how strongly the theme's own ink is laid over a surface, for edges,
-           dividers, hover ghosts and placeholder glyphs. Written as whole colour mixes (the ink
-           at a strength over transparency) so a rule states the TIER it wants, not a percentage.
-           Four tiers, quietest first:
-             whisper  3%   hover ghosts, marks that are almost not there
-             hair     8%   inset dividers and the quietest strokes
-             edge    14%   every visible border and ring
-             faint   45%   placeholder glyphs that must still be read as a character */
-        --st-ink-whisper:color-mix(in srgb, var(--st-text-primary) 3%, transparent);
-        --st-ink-hair:color-mix(in srgb, var(--st-text-primary) 8%, transparent);
-        --st-ink-edge:color-mix(in srgb, var(--st-text-primary) 14%, transparent);
-        --st-ink-faint:color-mix(in srgb, var(--st-text-primary) 45%, transparent);
-        /* The ink that sits ON an accent surface: primary buttons, the send key, accent badges.
-           Not the host's label-primary-foreground alias \u2014 in the theme the panel runs on that
-           alias resolves to a dark ink, which read on the old light pink but turns into black
-           text on the dark vermilion. White is a constant on purpose, for the same reason the
-           tooltip bubble's ink is one. */
-        /* The title row's height, in one place: the drawers start below it, so the number cannot
-           drift from the row it describes. */
-        /* THE TYPE SCALE: four steps, and the panel's own.
-           The panel used the host's eleven-step ramp, of which it actually needed nine \u2014 and three
-           of those nine were token names the host does not ship (2xs-12, l-18, 2xl-22), so those
-           rules silently fell back to their literal and stopped tracking the theme. Nine sizes for
-           one panel is also more than the panel can use: 12 and 13 sat one pixel apart and were
-           picking up each other's work, so the same caption tier read at two sizes in two drawers.
-           Four steps, chosen by ROLE rather than by size, because a role is what a rule is trying
-           to express when it sets type:
-
-             --st-text-sm    12px/18   the smallest tier: badges, counts, keycaps, IDs, group labels
-             --st-text-md    13px/20   the working size: every control, field, card label, menu row
-             --st-text-lg    16px/24   section and dialog titles, and the manuscript's interface type
-             --st-text-xl    20px/28   a page title, and the one oversized glyph on the new-book tile
-
-           Two things are deliberately NOT on this scale:
-             the manuscript itself, which is the writer's own size setting (--st-font-size), and
-             the composer's field, which is interface type held at 16/24 so a one-line question is
-             not typed at caption size (--st-font-ui).
-
-           Every step carries its leading with it: a size and its line height are one decision, and
-           splitting them is how 94 rules ended up with a leading from a different tier than their
-           size. */
-        --st-text-sm:12px;
-        --st-text-sm-leading:18px;
-        --st-text-md:13px;
-        --st-text-md-leading:20px;
-        --st-text-lg:16px;
-        --st-text-lg-leading:24px;
-        --st-text-xl:20px;
-        --st-text-xl-leading:28px;
-        /* The two line-height tiers. The steps above carry their own leading for CONTROL text;
-           these two are the PROSE rhythms: 1.6 for interface prose that sits inside cards and
-           drawers, 1.9 for the manuscript itself (--st-line-height, set per writer in the type
-           page \u2014 this one is the default, not the floor). */
-        --st-line-height-ui:1.6;
-        --st-line-height-reading:1.65;
-        /* The font family, declared ONCE.
-           The panel used to inherit whatever the host's body carried, with four rules repeating the
-           host token in full and thirty-one saying "inherit". Both were guesses about a context the
-           panel does not own: it is mounted into whichever column the host chooses, and a font
-           declared by an ancestor two levels up is not a decision this panel made.
-           The stack is written out as literals rather than as the host's font variable because the
-           panel is not meant to nod along with the host's typography \u2014 it is a writing surface, and
-           its own text metrics are its own. The CJK faces are named explicitly: without them a CJK
-           fallback is chosen per-platform and the same document reads at different widths on two
-           machines. */
-        --st-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",Roboto,sans-serif;
-        /* The three weights the panel uses. Read from variables so a rule states intent, not a number. */
-        --st-font-weight-normal:400;
-        --st-font-weight-medium:500;
-        --st-font-weight-strong:600;
-        /* The monospace stack, for keycaps and model ids. */
-        --st-font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+        --st-send:var(--fang-accent);
+        --st-send-hover:color-mix(in srgb, var(--fang-accent) 86%, #000000);
         /* The welcome page speaks in a serif face; the manuscript page keeps the UI sans. */
         --st-font-serif:"Iowan Old Style","Palatino Linotype","Songti SC","Noto Serif SC",serif;
         --st-welcome-title:clamp(56px,8.4vw,118px);
@@ -10759,14 +10572,14 @@ var CSS_SHARED = `
         /* The pointer's glyph field on the welcome canvas. */
         --st-glyph-radius:130px;
         --st-glyph-size:17px;
-        --st-glyph-depth:color-mix(in srgb,var(--st-text-primary) 18%,transparent);
+        --st-glyph-depth:color-mix(in srgb,var(--fang-ink-primary) 18%,transparent);
         --st-glyph-flip:380ms;
         --st-glyph-z:1;
         --st-glyph-blur:4px;
         --st-glyph-content-pad:6px;
-        --st-glyph-ink:color-mix(in srgb,var(--st-text-tertiary) 45%,transparent);
-        --st-glyph-ink-primary:color-mix(in srgb,var(--st-text-primary) 26%,transparent);
-        --st-glyph-ink-accent:color-mix(in srgb,var(--st-accent) 35%,transparent);
+        --st-glyph-ink:color-mix(in srgb,var(--fang-ink-tertiary) 45%,transparent);
+        --st-glyph-ink-primary:color-mix(in srgb,var(--fang-ink-primary) 26%,transparent);
+        --st-glyph-ink-accent:color-mix(in srgb,var(--fang-accent) 35%,transparent);
         --st-flow-border-w:1px;
         --st-flow-duration:4.5s;
         --st-welcome-wedge-z:0;
@@ -10783,14 +10596,7 @@ var CSS_SHARED = `
         /* The menu glyph size. One step above the 16px interface icons so four rows at 16px type
            read as a list of destinations rather than as a column of small print, and below the
            label's own size so the glyph never outweighs the word it stands for. */
-        /* ICON SIZES. One ladder for every glyph in the panel: 12 inline, 14 small actions,
-           16 controls, 18 title-row/rail icons. A 13px book glyph next to an 18px board glyph
-           was the same kind of control drawn at two weights. */
-        --st-icon-xs:12px;
-        --st-icon-sm:14px;
-        --st-icon-md:16px;
-        --st-icon-lg:18px;
-        --st-icon-menu:var(--st-icon-lg);
+        --st-icon-menu:var(--fang-icon-lg);
         /* The \u22EF affordance on a card: a small hit box with three 2px dots in it.
            The dots are a MARK, not an icon \u2014 at 4px they read as three buttons stacked, and at 1px
            they disappear on a light picture. The hit box stays comfortable because a 2px target is
@@ -10803,8 +10609,8 @@ var CSS_SHARED = `
 
         /* ---- component geometry ----
            Every length below is a named decision rather than a number typed where it was needed.
-           They are grouped here, next to the scale they extend, so a page that wants the same
-           measure as another page finds it instead of inventing a second one. */
+           They are grouped here, next to the library scale they extend, so a page that wants the
+           same measure as another page finds it instead of inventing a second one. */
         /* The dock's hairline row: tall enough for the copy above the line to breathe. */
         --st-hairline-row-h:22px;
         /* The event log's table: the drag handle's hit width, and the reading ceiling of the
@@ -10813,9 +10619,10 @@ var CSS_SHARED = `
         --st-event-body-max-h:320px;
         /* A drawn rule: the light line under the dock and the busy bar's top edge. */
         --st-rule-h:1px;
-        /* A row of segmented choices, and the round send control beside it. */
-        --st-seg-h:28px;
-        --st-send-size:var(--st-btn-h-lg,36px);
+        /* A row of segmented choices, and the round send control beside it. The track height
+           itself is the library's \u2014 the context bar reads the same one the Segmented does. */
+        --st-seg-gap:2px;
+        --st-send-size:var(--fang-btn-height-lg);
         /* Chevrons and status dots: the small marks inside a row. */
         --st-mark-sm:4px;
         --st-mark-md:9px;
@@ -10844,34 +10651,16 @@ var CSS_SHARED = `
         --st-effort-tick:5px;
 
         --st-icon-menu-hit:20px;
-        /* 8px of top air (the same drop the shelf head gets from its container) plus the bar
-           itself: 16px padding-top, one 36px pill row, 8px padding-bottom. The overlay insets
-           declare this value, so bar and overlays move together. */
-        --st-titlebar-height:68px;
         /* The session button's flowing ring: the band's width, the gradient itself, and one
            revolution's duration. The two companion hues are literals on purpose \u2014 they are a
            fixed chromatic chord around the accent, not theme surfaces, and all three stops sit
            at a lightness that reads on both themes. */
-        --st-session-text-flow:linear-gradient(110deg, var(--st-accent), color-mix(in srgb, var(--st-accent) 45%, #fff), var(--st-accent));
+        --st-session-text-flow:linear-gradient(110deg, var(--fang-accent), color-mix(in srgb, var(--fang-accent) 45%, #fff), var(--fang-accent));
         --st-session-text-dur:5s;
-        /* The heights of the panel's own control rows. These are not spacing steps: a menu row is as
-           tall as one line of text plus its padding, and two menus that answer the same question must
-           not be 34 and 32 tall because they were written a week apart.
-           The "lg" step carries the rail's menu. It is derived from the row's own parts rather than
-           written as a number: the menu's type is one step up from the working size, and a row is its
-           line box plus the padding above and below it. Written as 36 it was correct only while the
-           menu was at 14px \u2014 the moment the type grew, the row kept the old height and the glyph sat
-           in it with 8px less room than the padding says it should have. */
-        --st-row-height-lg:calc(var(--st-text-lg-leading) + var(--st-space-16,16px));
-        /* The BUTTON height ladder: one step for standalone buttons (title row, dialogs, panels),
-           one for the inline marks that live inside a text row. Rows and fields keep the row
-           heights above \u2014 buttons and rows are different ladders. */
-        --st-btn-h-xl:48px;
-        --st-btn-h-lg:36px;
-        --st-btn-h-sm:26px;
-        --st-row-height:34px;
-        --st-row-height-compact:26px;
-        --st-hit-target:44px;
+        /* The rail's menu row. It is derived from the row's own parts rather than written as a
+           number: the menu's type is one step up from the working size, and a row is its line box
+           plus the padding above and below it. */
+        --st-row-height-lg:calc(var(--fang-line-height-lg) + var(--fang-space-16));
         /* The gallery card's size. A DIFFERENT card from the graph's: the gallery is a page of
            objects read side by side, the graph is a map with wires that have to land on a known
            box. They shared one variable once, which meant the graph's 140px silently set the
@@ -10899,8 +10688,15 @@ var CSS_SHARED = `
            what every printed card game uses, and a reader has handled enough of them to feel when a
            card is wrong: 1:1.25 read as a square tile, not as a card. 184 * 1.4 = 258. */
         --st-gallery-h:258px;
-        /* The board's own stacking order, INSIDE the sheet. These are not the panel's
-           --st-layer-* planes \u2014 they are the layers a board page stacks among itself: the
+        /* A BOOK card's height, stated as its parts: a square cover (which is the width), the
+           identity line under it, one line of meta, and the ACTIONS ROW. Both the shelf card and
+           the two trailing tiles (new book, rename) take this one value, so a row of the grid is
+           level \u2014 written twice it was two numbers to keep in step for one intention. */
+        --st-book-card-h:calc(var(--st-gallery-w) + var(--fang-row-height-compact)
+          + var(--fang-line-height-sm) + var(--fang-row-height-compact)
+          + var(--fang-space-4) + var(--fang-space-24));
+        /* The board's own stacking order, INSIDE the sheet. These are not the library's
+           --fang-layer-* planes \u2014 they are the layers a board page stacks among itself: the
            detail popover over the canvas, the card's \u22EF menu over the card, and the detail page
            over everything but the tabs. Written as numbers they were four unrelated integers;
            as a group they say "what covers what" in one place. */
@@ -10920,14 +10716,14 @@ var CSS_SHARED = `
         /* The investigation wall: a dark board, a red thread, and the metal pin at each card's
            top edge. The thread is a physical object, so its weight and colour are separate from
            the accent used by buttons and focus rings. */
-        --st-board-wall:color-mix(in srgb, var(--st-bg,#000) 82%, #5b3a2e);
+        --st-board-wall:color-mix(in srgb, var(--fang-bg) 82%, #5b3a2e);
         --st-thread-idle:#f2f2f3;
         --st-thread-selected:#d24b4b;
         --st-thread:#d24b4b;
         --st-thread-ink:#f2f2f3;
         --st-thread-w:2;
         --st-thread-picked-w:3;
-        --st-thread-label-size:var(--st-text-sm);
+        --st-thread-label-size:var(--fang-font-size-sm);
         --st-thread-halo-w:3px;
         --st-pin-size:14px;
         --st-pin-metal:radial-gradient(circle at 32% 28%, #fff 0, #d8d8d8 28%, #8a8a8a 66%, #4a4a4a 100%);
@@ -10950,29 +10746,16 @@ var CSS_SHARED = `
         --st-canvas-dot-size:1px;
         --st-canvas-grid:24px;
         --st-canvas-glow:160px;
-        --st-canvas-dot:color-mix(in srgb, var(--st-text-primary) 14%, transparent);
-        --st-canvas-dot-bright:color-mix(in srgb, var(--st-text-primary) 45%, transparent);
-        /* The page gutter: the shelf's side padding, and the inset both titlebars' dividers keep
-           from the panel edges. Wider than a spacing step, because the dot field needs air at the
-           edges to read as a canvas rather than as a padded form. */
-        --st-shelf-gutter:28px;
-        /* Fixed widths that are a layout decision, not a spacing step: the outline's column, the
-           confirmation dialog's reading width, and the gap the board keeps from the panel edges.
-           Named so a rule that wants one does not carry its own copy of the number. */
-        /* THE WIDTH LADDER. Panels used to carry their own pixel widths inline: a dialog said 820,
-           its sibling 620, a drawer 720, another 980. Those are six fixed tiers now, so a panel
-           picks a role ("wide", "reading") instead of memorising a number, and two dialogs that
-           hold the same kind of content cannot end up 200px apart. */
-        --st-w-narrow:340px;
-        --st-w-compact:440px;
-        --st-w-medium:620px;
-        --st-w-reading:720px;
-        --st-w-wide:820px;
-        --st-w-max:980px;
+        --st-canvas-dot:color-mix(in srgb, var(--fang-ink-primary) 14%, transparent);
+        --st-canvas-dot-bright:color-mix(in srgb, var(--fang-ink-primary) 45%, transparent);
+        /* The three board steps are what the investigation board's pages, its split panes and
+           its slide-over all read, so a page cannot drift a few pixels away from its neighbour.
+           The values are the library's spacing steps, named here by what they do on the board. */
+        --st-board-gap:var(--fang-space-12);
+        --st-board-inset:var(--fang-space-16);
+        --st-board-inset-compact:var(--fang-space-12);
         /* The context composition bar. Each segment takes a tone from this eight-colour set,
            stable per part name so the same part keeps its colour when the scene changes. */
-        --st-seg-h:26px;
-        --st-seg-gap:2px;
         --st-seg-0:#6f7f95;
         --st-seg-1:#8f7552;
         --st-seg-2:#5f7f68;
@@ -10981,20 +10764,15 @@ var CSS_SHARED = `
         --st-seg-5:#7f7956;
         --st-seg-6:#726394;
         --st-seg-7:#8f6565;
-        --st-rail-w:264px;
-        --st-dialog-w:var(--st-w-compact);
-        --st-dialog-textarea-min-h:64px;
-        --st-dialog-max-h:760px;
         --st-overlay-inset:32px;
-        /* The overview page's master-detail: the chapter list's column, the floor below which the
-           split stops shrinking (it scrolls instead), and the summary field's fixed height. */
-        --st-split-list-w:220px;
-        --st-split-min-h:320px;
+        --st-dialog-textarea-min-h:64px;
+        /* The overview page's master-detail: the summary field's fixed height. The list column
+           and the split's floor live with the library's split. */
         --st-overview-summary-h:96px;
         /* The card-detail surfaces. The popover, the page's portrait and the picture button are one
            system, so their three sizes live together rather than as fallbacks written where each
            rule happens to use them. */
-        --st-detail-w:var(--st-w-narrow);
+        --st-detail-w:var(--fang-width-narrow);
         --st-detail-portrait:104px;
         --st-page-portrait:132px;
         --st-generate-size:28px;
@@ -11003,249 +10781,19 @@ var CSS_SHARED = `
            only fixed widths in that table. */
         --st-log-col-time:96px;
         --st-log-col-name:190px;
-        /* The board's floor clearance for the composer dock, and the side sheet's default ceiling.
-           Both are layout decisions read from one place rather than fallbacks typed in the rule. */
+        /* The board's floor clearance for the composer dock. */
         --st-mosaic-dock-clearance:150px;
-        --st-sheet-max:var(--st-w-wide);
         /* \u968F\u7B14's dialog height: the capture field plus the list/detail split, not a full-height
            workspace. */
         --st-notes-h:348px;
+        --st-notes-capture-h:120px;
         /* Custom-provider model chips: tall enough for a few rows, then scroll. */
         --st-model-list-max-h:160px;
-        --st-notes-capture-h:120px;
-        /* A card's edge. Half a pixel at 1x, one at 2x \u2014 the browser rounds it, and writing 1px
-           made every card look like it had a drawn border. Named because the same hairline is the
-           first layer of every shadow in this stylesheet. */
-        --st-hairline:.5px;
-        /* THE CARD SHADOW, in two states.
-           This used to be argued the other way: "a box-shadow cannot be a token, because a layer
-           list carries its own colours, so a stored offset list could not be re-coloured". That is
-           true of storing the OFFSETS alone \u2014 and it is exactly why the recipe was then written
-           out longhand in every card rule. The conclusion did not follow: storing the WHOLE shadow,
-           colours included, works, because each colour is a color-mix of the theme ink and is
-           substituted wherever the token is used. Two rules now share one recipe instead of
-           agreeing by luck.
-
-           What is stored is the recipe itself: a hairline contact layer, a close ambient layer, a
-           wide soft layer. The first layer takes the shared hairline width, so a card's edge and
-           the shadow sitting on that edge cannot drift apart. */
-        --st-card-shadow:
-          0 0 0 var(--st-hairline) color-mix(in srgb, var(--st-text-primary) 6%, transparent),
-          0 1px 2px color-mix(in srgb, var(--st-text-primary) 7%, transparent),
-          0 6px 16px color-mix(in srgb, var(--st-text-primary) 6%, transparent);
-        /* The lifted state: the same three layers, closer and darker, so a card reads as picked up
-           rather than as a different object. */
-        --st-card-shadow-lift:
-          0 0 0 var(--st-hairline) color-mix(in srgb, var(--st-text-primary) 8%, transparent),
-          0 2px 4px color-mix(in srgb, var(--st-text-primary) 9%, transparent),
-          0 12px 26px color-mix(in srgb, var(--st-text-primary) 10%, transparent);
-        /* THE PANEL SHADOW, for the surfaces that slide in over the page: the two side sheets and
-           the outline card.
-           A card sits ON something, so its shadow is a contact layer \u2014 a hairline, a close cast,
-           one soft spread. A panel does not sit on anything: it is a whole surface lifted off the
-           page, and it needs separation at its own scale.
-           There are two of them, because the direction is not shareable: the sheet enters from the
-           RIGHT and its shadow is thrown LEFT, and the outline enters from the left and throws its
-           shadow right. One token cannot carry both signs, and a rule that flipped the offset
-           with calc() would be a second place the distance can be got wrong. The offset and blur
-           are not spacing steps \u2014 they describe a light, not a gap \u2014 so they are written here
-           rather than borrowed from the spacing scale.
-           The reach is deliberately short: 6px of offset and 20px of blur is enough to lift the
-           surface off the page and no more. A wide, dark throw (18/48 at 18%) looked like the panel
-           was hovering half a metre above the page, and on a full-height sheet it read as a dark
-           band down the side of the manuscript rather than as depth.
-           Every colour is a mix of the theme ink, never a literal black: a fixed rgba shadow is
-           invisible on the dark theme, which is how the old shelf card disappeared. */
-        --st-panel-shadow-left:
-          0 0 0 var(--st-hairline) color-mix(in srgb, var(--st-text-primary) 8%, transparent),
-          -6px 0 20px color-mix(in srgb, var(--st-text-primary) 10%, transparent);
-        --st-panel-shadow-right:
-          0 0 0 var(--st-hairline) color-mix(in srgb, var(--st-text-primary) 8%, transparent),
-          6px 0 20px color-mix(in srgb, var(--st-text-primary) 10%, transparent);
-        /* The panel's INNER rim: a light line along the top edge, so the surface reads as having a
-           thickness rather than being a rectangle of paint. Inset, because a real light would catch
-           that edge and not the outside of it. Kept apart from the outer shadow so a rule can take
-           one without the other. */
-        --st-panel-rim:
-          inset 0 1px 0 0 color-mix(in srgb, var(--st-text-primary) 6%, transparent);
-        /* A card's state motion: the lift, the edge and the shadow, all on one duration. The
-           fallbacks are written in ms rather than .14s so the value still reads as a literal length
-           to the stylesheet's own hygiene check. */
-        --st-card-motion:box-shadow var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out),
-          transform var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out),
-          border-color var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out);
-        /* A BOOK card's height, stated as its parts: a square cover (which is the width), the
-           identity line under it, one line of meta, and the ACTIONS ROW. Both the shelf card and
-           the two trailing tiles (new book, rename) take this one value, so a row of the grid is
-           level \u2014 written twice it was two numbers to keep in step for one intention.
-
-           The actions row is the term that is easy to forget and was: the card clips its contents
-           (overflow: hidden, so a hover lift cannot spill), so a row that the sum did not account
-           for was not visible but was cut off. Rename and delete sat below the card's own bottom
-           edge \u2014 present in the tree, unreachable by a pointer. */
-        /* The three --st-* terms need no fallback: they are declared on this same rule, a few lines
-           above. The host font token DOES, because "no theme" is a supported state and a var()
-           without one invalidates the whole declaration. */
-        --st-book-card-h:calc(var(--st-gallery-w) + var(--st-row-height-compact)
-          + var(--st-text-sm-leading) + var(--st-row-height-compact)
-          + var(--st-space-4) + var(--st-space-24));
-        /* THE LAYER TABLE.
-           Overlays used to carry their own z-index where they were written, so which one covered
-           which was decided by DOM order and by luck: the board and a drawer were both 70, and a
-           model menu (60) opened while the board was up disappeared behind it. Every overlay now
-           takes its layer from this table, and the ordering below IS the rule:
-           the outline sits lowest, menus above it, the shared scrim above those, the board above
-           the scrim, a drawer above the board (opening one from the board must work), and the
-           status popover on top of everything because it is a transient reply. */
-        --st-layer-rail:30;
-        --st-layer-menu:60;
+        /* The board's plane in the layer table. The rail, menus, drawers and modals read the
+           library's planes; this one is the board's own, between the drawer and the status
+           popover \u2014 the board page is stacked among itself and over the page below it. */
         --st-layer-mosaic:70;
-        --st-layer-drawer:75;
-        --st-layer-status:80;
-        --st-layer-modal:90;
-        /* THE MOTION PAIR. One duration for every overlay, so the outline, a drawer and the board
-           all feel like the same system. Closing is faster than opening: an entrance is read,
-           an exit only has to get out of the way. */
-        --st-motion-open:180ms;
-        --st-motion-close:140ms;
-        display:flex;flex-direction:column;height:100%;min-height:0;min-width:0;
-        font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        background:var(--st-bg);color:var(--st-text-primary)}
-
-      /* ---- the title row: the book title, its menu, and the three drawer buttons ---- */
-      .st-titlebar{display:flex;align-items:center;gap:var(--st-space-8,8px);flex:none;margin-bottom:var(--st-space-16,16px);min-width:0;
-        /* No fixed height: the bar is its content (one row of 36px pills) plus vertical padding,
-           so it can never clip its own controls. The padding must keep the bar at the height the
-           overlay insets declare (--st-titlebar-height) \u2014 bar and insets move together. */
-        padding-top:var(--st-space-16,16px);padding-bottom:var(--st-space-8,8px);padding-left:max(var(--st-space-16,16px), calc(var(--dsh-frame-leading-clearance, 0) + var(--st-space-8,8px)));padding-right:var(--st-space-12,12px);
-        border-bottom:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
-      /* A border paints on the element's own box, so the element's padding cannot inset it \u2014
-         only a container or a margin can. The shelf head sits inside its scroll container, whose
-         padding supplies the top air and the page gutter; the shell's own bar has no container,
-         so it declares the same two insets as margins. Both dividers then share one geometry:
-         the same side inset and the same drop from the panel's top edge. */
-      .st-shell>.st-titlebar{margin-top:var(--st-space-8,8px);margin-left:var(--st-shelf-gutter);margin-right:var(--st-shelf-gutter)}
-      .st-title{margin:0;font-size:var(--st-text-xl);line-height:var(--st-text-xl-leading);font-weight:var(--st-font-weight-strong);color:var(--st-text-primary);
-        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:0 1 auto}
-      /* The title row's icons. The drawer buttons and the mosaic entry are flex rows so an icon
-         and its label share a baseline; the icon never shrinks and never takes the label's last
-         pixel. */
-      .st-bar-icon{flex:none;width:var(--st-icon-lg);height:var(--st-icon-lg)}
-      .st-card-action-icon{flex:none;width:var(--st-icon-sm);height:var(--st-icon-sm)}
-      .st-icon-xs{flex:none;width:var(--st-icon-xs);height:var(--st-icon-xs)}
-      .st-icon-sm{flex:none;width:var(--st-icon-sm);height:var(--st-icon-sm)}
-      .st-icon-md{flex:none;width:var(--st-icon-md);height:var(--st-icon-md)}
-      .st-icon-lg{flex:none;width:var(--st-icon-lg);height:var(--st-icon-lg)}
-
-      /* The frame: rail, page column, and the scroll area inside them ---- */
-      .st-root{display:flex;flex:1 1 auto;min-height:0;min-width:0;width:100%;overflow:hidden}
-      .st-col{display:flex;flex-direction:column;min-height:0;min-width:0}
-      /* The outline is an overlay, not a column: it covers the left edge of the page and slides in
-         from there. inset-block:0 with left:0 is what makes it flush: the card touches the
-         panel's left edge and both the top and the bottom with no gap, and only its right side is
-         rounded, because the other two corners are against the frame.
-         Its positioning context is this layer, which spans the whole shell BELOW the title row:
-         the card has to reach the panel's bottom edge, and the status bar is inside that span, so
-         a context that ended at the bar could never produce it. */
-      .st-rail-layer{position:absolute;z-index:var(--st-layer-rail);
-        inset:var(--st-titlebar-height,68px) 0 0 0;
-        /* A span, not a surface: it paints nothing and takes no clicks, so a folded outline cannot
-           swallow a click meant for the page under it. */
-        pointer-events:none}
-      .st-rail{position:absolute;inset:0 auto 0 0;width:var(--st-rail-w);pointer-events:auto;
-        display:flex;flex-direction:column;min-height:0;
-        background:var(--st-surface);border:none;
-        border-radius:0 var(--st-radius-lg,16px) var(--st-radius-lg,16px) 0;
-        /* The left-entry twin of the sheet's shadow: this card is attached to the left frame and
-           comes in from that edge, so its cast goes right, away from where it is anchored. */
-        box-shadow:var(--st-panel-rim),var(--st-panel-shadow-right);
-        animation:st-rail-in var(--st-motion-open,180ms) var(--ds-ease-in-out,ease-in-out) both}
-      @keyframes st-rail-in{from{transform:translateX(-18px);opacity:0}to{transform:none;opacity:1}}
-      /* Leaving is the entrance run backwards, and faster: an exit only has to get out of the way.
-         A closing overlay keeps its node for the duration, so the animation is seen instead of the
-         element vanishing between frames. */
-      .st-closing .st-rail{animation:st-rail-out var(--st-motion-close,140ms) var(--ds-ease-in-out,ease-in-out) both}
-      @keyframes st-rail-out{from{transform:none;opacity:1}to{transform:translateX(-18px);opacity:0}}
-      .st-rail-collapsed{display:none}
-      /* The scrim is invisible: the page stays readable while the outline is open, and a dimming
-         layer over the manuscript would defeat the point of glancing at the contents. */
-      .st-rail-scrim{position:absolute;inset:0;z-index:calc(var(--st-layer-rail) - 1);background:transparent}
-      /* The few gaps that used to be inline styles on individual elements. They are the same steps as
-         the scale above, named by what they do \u2014 the margin between two rows, a hint under its field,
-         a block of evidence under a section \u2014 so the JSX says what the gap is FOR and the number
-         lives in one place with every other number. */
-      .st-gap-under-row{margin-bottom:var(--st-space-12,12px)}
-      .st-gap-under-hint{margin-bottom:var(--st-space-8,8px)}
-      .st-gap-over-row{margin-top:var(--st-space-8,8px)}
-      .st-gap-over-section{margin-top:var(--st-space-12,12px)}
-      .st-mid{flex:1 1 auto;min-width:0}
-      .st-rail-toggle{display:inline-flex;align-items:center;justify-content:center;
-        /* flex: none below already forbids shrinking; max-width/max-height said the same thing twice
-           more, which is three places to keep in step for one intention. */
-        /* The hit target, not the compact row step. It was 26 square \u2014 the size of a chip inside a
-           field \u2014 and it is not inside a field: it is the first control in the title row, beside
-           buttons that all sit at 26 with a gap. At the shared target step it is as reachable as
-           anything else in that row and no longer reads as decoration. */
-        width:var(--st-btn-h-lg,36px);height:var(--st-btn-h-lg,36px);padding:0;
-        border:none;background:transparent;color:var(--st-text-primary);cursor:pointer;white-space:nowrap;
-        border-radius:var(--st-radius-pill,999px);flex:none;corner-shape:round;
-        /* The leading inset is the titlebar's own padding (the same leading clearance the shelf
-           head takes) \u2014 no per-button margin on top of it, so both views start their row at the
-           same distance from the frame edge. */}
-      /* The rail's own scroll box fills the card: the tree is longer than the card on any book
-         with more than a handful of sections, and a box sized to its content pushed the last row
-         past the bottom edge instead of scrolling to it. */
-      .st-rail .st-scroll{flex:1 1 auto;min-height:0}
-      .st-scroll{overflow:auto;padding:var(--st-space-12,12px);min-height:0;min-width:0}
-      /* ---- the shared master-detail split: \u6982\u89C8 / \u63D0\u6848 / \u6D41\u6D3E ---- */
-      .fang-split{display:flex;gap:var(--st-board-gap);flex:1 1 auto;min-height:var(--st-split-min-h,320px);min-width:0}
-      .fang-split-list{flex:0 0 var(--st-split-list-w,220px);min-width:0;min-height:0;
-        display:flex;flex-direction:column;overflow:hidden;padding:0}
-      .fang-split-detail{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0;
-        overflow:hidden;border:var(--st-hairline,.5px) solid var(--st-ink-edge);
-        border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface)}
-      .fang-split-detail-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);flex:none;
-        padding:var(--st-board-inset-compact) var(--st-board-inset);
-        border-bottom:var(--st-hairline,.5px) solid var(--st-ink-hair)}
-      .fang-split-detail-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-        font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong);
-        color:var(--st-text-primary)}
-      .fang-split-detail-meta{flex:none;margin-left:auto;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
-      .fang-split-detail-body{flex:1 1 auto;min-height:0;overflow:auto;
-        display:flex;flex-direction:column;gap:var(--st-board-gap);padding:var(--st-board-inset)}
-      .st-card{border:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));border-radius:var(--st-radius-md,12px);
-        padding:var(--st-space-12,12px) var(--st-space-12,12px);margin-bottom:var(--st-space-8,8px);background:var(--st-surface);min-width:0}
-      .st-card[data-status="pending"]{border-color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
-      .st-card[data-status="final"]{border-color:var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
-      .st-card[data-collapsed="true"]{padding:var(--st-space-8,8px) var(--st-space-12,12px)}
-      /* THE ONE LIST. Chapters, proposals and snapshots are all "a column of comparable rows":
-         every row keeps its own hairline border, there is no gap between them, and the row under
-         the pointer lifts off the column. Selected is the same lift with a stronger fill. */
-      .fang-list{display:flex;flex-direction:column;gap:var(--st-space-2);min-width:0;min-height:0;flex:1 1 auto;overflow:auto;
-        padding:var(--st-space-4);
-        border:var(--st-hairline) solid var(--st-ink-edge);border-radius:var(--st-radius-md,12px);corner-shape:round;
-        background:var(--st-surface)}
-      .fang-list-row{position:relative;display:flex;flex-direction:column;gap:var(--st-space-2,2px);
-        width:100%;min-width:0;box-sizing:border-box;
-        padding:var(--st-space-10,10px) var(--st-space-12,12px);
-        border:none;background:transparent;text-align:left;font-family:inherit;
-        color:var(--st-text-primary);
-        border-radius:var(--st-radius-sm,8px);corner-shape:round;
-        transition:background var(--ds-transition-duration-fast,140ms) var(--ds-ease-in-out,ease-in-out)}
-      .fang-list-row:hover{background:var(--st-list-hover)}
-      .fang-list-row[data-active="true"]{background:var(--st-selected-fill);
-        color:var(--st-text-primary)}
-      button.fang-list-row{cursor:pointer}
-      .st-list-row-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-strong)}
-      .fang-list-row[data-active="true"] .st-list-row-title{font-weight:var(--st-font-weight-strong)}
-      .fang-list-row-meta{min-width:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary)}
-      /* A character card: a name row, one row of short fields, then the notes.
-         One field per line made a 178px card out of a name, a role, a goal and a few traits \u2014 two
-         people filled the drawer and the rest was scrolling. The name gets its own line because it
-         is what the row is about; the other three share the next one. */
+      }
 
       /* ---- input fields: one borderless convention ----
          Every field in the panel is a soft well, not a boxed control: a quiet layer fill, no
@@ -11254,75 +10802,31 @@ var CSS_SHARED = `
          borderless. This is the rule the rest of the panel now follows instead of each field
          carrying its own border and its own radius. */
       .st-input,.st-find-input,.st-chat-input,.st-scan-steer-input{
-        box-sizing:border-box;min-width:0;background:var(--st-surface);
-        color:var(--st-text-primary);border:none;border-radius:var(--st-radius-sm,8px);
-        padding:var(--st-space-4,4px) var(--st-space-8,8px);font-family:inherit;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+        box-sizing:border-box;min-width:0;background:var(--fang-surface);
+        color:var(--fang-ink-primary);border:none;border-radius:var(--fang-radius-sm);
+        padding:var(--fang-space-4) var(--fang-space-8);font-family:inherit;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         outline:none}
       .st-input::placeholder,.st-find-input::placeholder,
-      .st-chat-input::placeholder,.st-scan-steer-input::placeholder{color:var(--dsw-alias-label-dimmed,var(--st-fallback-ink-dimmed))}
+      .st-chat-input::placeholder,.st-scan-steer-input::placeholder{color:var(--dsw-alias-label-dimmed,#e1e5ee)}
       /* Focus is the edge: the ring appears, and nothing shifts, because the border that used to
          change colour is gone and no replacement width is added. */
       .st-input:focus,.st-find-input:focus,.st-chat-input:focus,
-      .st-scan-steer-input:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      /* The panel's own dropdown and file trigger. Both exist because the browser's native
-         controls paint outside the panel's stacking order: the log filter's option list was
-         covered by the control itself, and a bare file input is an OS widget in the middle of
-         a styled form. The popup here is a child of the panel, so it always sits above it. */
-      .fang-dropdown{position:relative;display:inline-flex;min-width:0;max-width:100%}
-      .fang-dropdown-button{box-sizing:border-box;display:inline-flex;align-items:center;gap:var(--st-space-8,8px);
-        width:100%;height:var(--st-row-height,34px);padding:0 var(--st-space-12,12px);
-        border:none;border-radius:var(--st-radius-sm,8px);background:var(--st-surface);
-        color:var(--st-text-primary);font-family:inherit;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);text-align:left;
-        cursor:pointer;outline:none;white-space:nowrap}
-      .fang-dropdown-button:hover{background:var(--st-hover-fill)}
-      .fang-dropdown-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .fang-dropdown-value{min-width:0;overflow:hidden;text-overflow:ellipsis}
-      .fang-dropdown-list{position:absolute;z-index:var(--st-layer-menu);top:calc(100% + 4px);left:0;
-        display:flex;flex-direction:column;min-width:100%;max-width:min(320px,calc(100vw - 48px));
-        max-height:min(46vh,320px);overflow:auto;padding:var(--st-space-4,4px);
-        border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface-high);
-        box-shadow:var(--dsw-elevation-prominent,0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.12));
-        scrollbar-width:thin}
-      .fang-dropdown-option{display:block;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);
-        border:none;border-radius:var(--st-radius-sm,8px);corner-shape:round;background:transparent;
-        color:var(--st-text-primary);font-family:inherit;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);text-align:left;
-        cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .fang-dropdown-option:hover{background:var(--st-hover-fill)}
-      .fang-dropdown-option[aria-selected="true"]{background:var(--st-selected-fill);
-        color:var(--st-text-primary);font-weight:var(--st-font-weight-strong)}
-      .fang-file-button{display:inline-flex;align-items:center;min-width:0}
-      .fang-file-input{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
-      /* A field that is only a line of text in a row (renaming a node in the outline) keeps the
-         fill but drops the padding: it sits inside the row, not on a page of its own. */
-      /* Buttons are text with a hover wash, not bordered chips. A writing surface ringed with
-         outlines reads as a form; the host's own toolbars are flat, and so is this. */
-      /* Buttons are equal-height pills: one height token, the shape closed by the pill radius,
-         and the circle case (a button holding only an icon) falls out of equal width and
-         height for free. Inline controls that live inside a text row (the outline's rename and
-         remove marks) override --st-btn-h down to the compact row instead of inheriting it. */
-      .fang-btn{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        height:var(--st-btn-h,var(--st-btn-h-lg,36px));min-width:var(--st-btn-h,var(--st-btn-h-lg,36px));
-        padding:0 var(--st-space-12,12px);
-        display:inline-flex;align-items:center;justify-content:center;
-        border-radius:var(--st-radius-pill,999px);border:none;corner-shape:round;
-        background:transparent;color:var(--st-text-secondary);cursor:pointer;white-space:nowrap;flex:none}
-      .fang-btn:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .fang-btn:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
-      .fang-btn:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);outline:none}
-      .fang-btn:disabled{opacity:.45;cursor:not-allowed}
-      /* The affirmative button fills with the accent, like everything else that means "this one".
-         It used to take the host's primary fill, which is the brand token: on the dark theme that
-         is near-white, so the confirm button in every dialog was the same white slab as the page's
-         own controls and the panel's colour appeared nowhere. */
-      /* The affirmative button fills with the accent, like everything else that means "this one".
-         Its horizontal padding sits a step above the other buttons: a capsule whose two end arcs
-         are the widest thing in the shape reads as an oval \u2014 the straight run between the ends
-         is what makes a pill read as a pill, and a short label needs the extra padding to show it. */
-      .fang-btn-primary{background:var(--st-accent,#c3272b);color:var(--st-on-accent,#fff);
-        padding:0 var(--st-space-16,16px)}
+      .st-scan-steer-input:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
+      /* A character card: a name row, one row of short fields, then the notes.
+         One field per line made a 178px card out of a name, a role, a goal and a few traits \u2014 two
+         people filled the drawer and the rest was scrolling. The name gets its own line because it
+         is what the row is about; the other three share the next one. */
+      .st-card{border:.5px solid var(--fang-border-edge);border-radius:var(--fang-radius-md);
+        padding:var(--fang-space-12) var(--fang-space-12);margin-bottom:var(--fang-space-8);background:var(--fang-surface);min-width:0}
+      .st-card[data-status="pending"]{border-color:var(--dsw-alias-state-warn-primary,#f59e0b)}
+      .st-card[data-status="final"]{border-color:var(--fang-border-edge)}
+      .st-card[data-collapsed="true"]{padding:var(--fang-space-8) var(--fang-space-12)}
+      /* The title line of a list row. The row itself is the library's ListRow; this is the
+         project's one addition to it \u2014 the bold first line each page fills in. */
+      .st-list-row-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);font-weight:var(--fang-font-weight-strong)}
+      .fang-list-row[data-active="true"] .st-list-row-title{font-weight:var(--fang-font-weight-strong)}
       /* The session button is the title row's one OUTLINE pill: no fill, so no control dominates
          the row. Its edge is a slow multi-hue light \u2014 the flowing ring \u2014 drawn by a pseudo-element
          masked to a thin band, so the gradient follows the pill's radius and the centre stays
@@ -11331,19 +10835,19 @@ var CSS_SHARED = `
       /* The session button's label carries the accent's own light: the gradient is clipped to the
          GLYPHS (background-clip: text), so the button keeps a quiet outline-free body and only
          the word Harness flows. Hover lifts the light instead of washing a box behind it. */
-      .st-session-btn{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        height:var(--st-btn-h,var(--st-btn-h-lg,36px));min-width:var(--st-btn-h,var(--st-btn-h-lg,36px));
+      .st-session-btn{font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        height:var(--fang-btn-height,var(--fang-btn-height-lg));min-width:var(--fang-btn-height,var(--fang-btn-height-lg));
         display:inline-flex;align-items:center;justify-content:center;
-        padding:0 var(--st-space-16,16px);
-        border:none;border-radius:var(--st-radius-pill,999px);cursor:pointer;white-space:nowrap;flex:none;corner-shape:round;
-        background:transparent;color:var(--st-text-primary)}
-      .st-session-btn:hover{background:var(--st-hover-fill)}
+        padding:0 var(--fang-space-16);
+        border:none;border-radius:var(--fang-radius-pill);cursor:pointer;white-space:nowrap;flex:none;corner-shape:round;
+        background:transparent;color:var(--fang-ink-primary)}
+      .st-session-btn:hover{background:var(--fang-hover-fill)}
       /* The flowing outline is a button VARIANT, not a page-local decoration: it keeps the
          standard pill geometry and shares the same focus/hover rules as every other fang-btn. */
-      .st-btn-flow{position:relative;isolation:isolate;color:var(--st-text-primary)}
+      .st-btn-flow{position:relative;isolation:isolate;color:var(--fang-ink-primary)}
       .st-btn-flow::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--st-flow-border-w);
         pointer-events:none;
-        background:conic-gradient(from var(--st-flow-angle),var(--st-accent),color-mix(in srgb,var(--st-accent) 38%,#fff),var(--st-accent));
+        background:conic-gradient(from var(--st-flow-angle),var(--fang-accent),color-mix(in srgb,var(--fang-accent) 38%,#fff),var(--fang-accent));
         -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
         -webkit-mask-composite:xor;
         mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
@@ -11358,46 +10862,25 @@ var CSS_SHARED = `
          into the glyphs. */
       .st-session-label{background-image:var(--st-session-text-flow);background-size:200% 100%;
         -webkit-background-clip:text;background-clip:text;color:transparent;
-        font-style:italic;font-weight:var(--st-font-weight-strong,600);
+        font-style:italic;font-weight:var(--fang-font-weight-strong,600);
         animation:st-session-text-flow var(--st-session-text-dur,5s) linear infinite}
       .st-session-btn:hover .st-session-label{filter:brightness(1.15)}
       .st-session-btn:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       @keyframes st-session-text-flow{from{background-position:0% 0}to{background-position:200% 0}}
       @media (prefers-reduced-motion: reduce){.st-session-label{animation:none}}
-      .fang-btn-primary:hover:not(:disabled){background:color-mix(in srgb, var(--st-accent) 86%, #000000);color:var(--st-on-accent,#fff)}
-      /* The hero size for a page whose only action is this one button. It is a step on the same
-         size ladder, not a local override: height, type and padding move together. */
-      .fang-btn.fang-btn-xl{--st-btn-h:var(--st-btn-h-xl,48px);font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        padding:0 var(--st-space-24,24px)}
-      .fang-btn-ghost{background:transparent;padding:0 var(--st-space-8,8px);color:var(--st-text-tertiary)}
-      .fang-btn-ghost:hover:not(:disabled){background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .fang-btn-ghost:active:not(:disabled){background:var(--st-active-fill);color:var(--st-text-primary)}
-      /* An icon-only button is the same 36px control as every other fang-btn: one height token,
-         one pill radius, and no text padding. It is a variant, not a bespoke square. */
-      .fang-btn-ghost.fang-btn-icon{padding:0;background:var(--st-bg);
-        box-shadow:inset 0 0 0 var(--st-hairline) var(--st-ink-edge)}
-      /* Inputs keep a hairline: a field with no edge at all disappears into the page. */
-      .fang-btn[aria-pressed="true"]:not(:disabled),.fang-btn[aria-pressed="true"]:hover:not(:disabled){background:var(--st-selected-fill);color:var(--st-text-primary)}
-      /* The panel's own tooltip: a dark bubble opening DOWNWARD from the control, with a small
-         caret pointing back up at it. It sits on the same grey layer every popover uses \u2014 a
-         raised card like the rest, not a darker-than-page mix, which on the pure-black ground
-         had nothing left to darken into. */
-      .fang-tip{position:absolute;z-index:var(--st-layer-menu);transform:translateX(-50%);
-        pointer-events:none;padding:var(--st-space-4,4px) var(--st-space-12,12px);
-        border:var(--st-hairline) solid color-mix(in srgb, #fff 14%, transparent);border-radius:var(--st-radius-sm,8px);corner-shape:round;
-        background:var(--st-surface);
-        color:#fff;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, #000 30%, transparent)}
-      .fang-tip::after{content:'';position:absolute;top:calc(-1 * var(--st-space-4,4px));left:calc(50% - var(--st-space-4,4px));
-        width:var(--st-space-8,8px);height:var(--st-space-8,8px);background:inherit;
-        transform:rotate(45deg);border-radius:var(--st-hairline)}
-      .fang-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
-      .fang-spacer{flex:1 1 auto;min-width:0}
-      .fang-muted{color:var(--st-text-tertiary);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
+      /* The title row's icons. The drawer buttons and the mosaic entry are flex rows so an icon
+         and its label share a baseline; the icon never shrinks and never takes the label's last
+         pixel. */
+      .st-bar-icon{flex:none;width:var(--fang-icon-lg);height:var(--fang-icon-lg)}
+      .st-card-action-icon{flex:none;width:var(--fang-icon-sm);height:var(--fang-icon-sm)}
+      .st-icon-xs{flex:none;width:var(--fang-icon-xs);height:var(--fang-icon-xs)}
+      .st-icon-sm{flex:none;width:var(--fang-icon-sm);height:var(--fang-icon-sm)}
+      .st-icon-md{flex:none;width:var(--fang-icon-md);height:var(--fang-icon-md)}
+      .st-icon-lg{flex:none;width:var(--fang-icon-lg);height:var(--fang-icon-lg)}
       .st-scan-where{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-/* The two halves of a diff sit next to each other with nothing between them, so a deleted
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary)}
+      /* The two halves of a diff sit next to each other with nothing between them, so a deleted
          run and the added run that replaces it read as one string. A hair of horizontal padding
          and a small gap separates them without adding punctuation that is not in the text.
          The fills are mixed from the theme's diff colours at low strength rather than used whole:
@@ -11410,33 +10893,33 @@ var CSS_SHARED = `
          change. These blocks are mixed from the theme's own opaque greens and reds at a strength
          chosen to stay readable behind text, and the text colour is set to match so the words on
          top are not fighting their own background. */
-      .st-add{background:color-mix(in srgb, var(--dsw-static-green-500,var(--st-fallback-green)) 22%, var(--dsw-alias-bg-base,var(--st-fallback-page)));
-        color:var(--st-text-primary);
-        border-radius:var(--st-radius-xs,4px);padding:0 var(--st-space-2,2px);
+      .st-add{background:color-mix(in srgb, var(--dsw-static-green-500,#22c55e) 22%, var(--dsw-alias-bg-base,#f2f3f5));
+        color:var(--fang-ink-primary);
+        border-radius:var(--fang-radius-xs);padding:0 var(--fang-space-2);
         box-decoration-break:clone;-webkit-box-decoration-break:clone;corner-shape:round;}
-/* A removed run is a wash, an added run is a block: what is gone should recede, what is new
+      /* A removed run is a wash, an added run is a block: what is gone should recede, what is new
          should be read. The deletion is genuinely translucent \u2014 it sits over the page rather than
          replacing it \u2014 while the addition stays opaque so it does not disappear into the prose. */
       .st-del{background:color-mix(in srgb, var(--dsw-static-red-400,#f25a5a) 22%, transparent);
         text-decoration:line-through;text-decoration-thickness:1px;
-        color:var(--st-text-secondary);
-        border-radius:var(--st-radius-xs,4px);padding:0 var(--st-space-2,2px);margin-right:var(--st-space-2,2px);
+        color:var(--fang-ink-secondary);
+        border-radius:var(--fang-radius-xs);padding:0 var(--fang-space-2);margin-right:var(--fang-space-2);
         box-decoration-break:clone;-webkit-box-decoration-break:clone;corner-shape:round;}
       /* The words either side of an INSERTION, at low opacity and slightly smaller: they are there
          for orientation, not to be read. They must never compete with the suggestion itself. */
       .st-ctx{opacity:.34;font-size:95%;letter-spacing:.01em}
-      .st-ctx-before{margin-right:var(--st-space-2,2px)}
-      .st-ctx-after{margin-left:var(--st-space-2,2px)}
+      .st-ctx-before{margin-right:var(--fang-space-2)}
+      .st-ctx-after{margin-left:var(--fang-space-2)}
       /* An ellipsis marks a cut in the context, so a short window does not look like the whole of
          the surrounding prose. */
-      .st-ctx-before::before,.st-ctx-after::after{content:'\u2026';opacity:.6;margin:0 var(--st-space-2,2px)}
+      .st-ctx-before::before,.st-ctx-after::after{content:'\u2026';opacity:.6;margin:0 var(--fang-space-2)}
       /* An insertion has no diff styling: it is not a change to existing text, it is a sentence
          being added, and marking it green (or tinted) made it look like an edit. The contrast with
          the faded neighbours is what separates it \u2014 no colour needed. */
-      .st-insert{color:var(--st-text-primary)}
+      .st-insert{color:var(--fang-ink-primary)}
       /* The pending completion: pale text under the caret, the host's code face. */
-      .st-warn{padding:var(--st-space-8,8px) var(--st-space-12,12px);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn));
-        border-bottom:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
+      .st-warn{padding:var(--fang-space-8) var(--fang-space-12);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--dsw-alias-state-warn-primary,#f59e0b);
+        border-bottom:.5px solid var(--fang-border-edge)}
       /* The merged manuscript reads as a document, not as source: the headings carry the level
          structure the generator wrote, and the prose is the writer's own face and measure. */
 `;
@@ -11444,48 +10927,48 @@ var CSS_SHARED = `
 // src/client/panel/core.css.js
 var CSS_CORE = `
       /* ---- the manuscript preview: headings, paragraphs, rules, and the issue marks in the text ---- */
-      .st-manuscript{margin:var(--st-space-8,8px) 0 0;padding:var(--st-space-16,16px) var(--st-space-16,16px);max-height:min(60vh,640px);overflow:auto;
-        word-break:break-word;font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:1.9;
-        color:var(--st-text-primary);background:var(--st-surface-high);
-        border-radius:var(--st-radius-md,12px)}
-      .st-md-h{margin:1.1em 0 .5em;font-weight:var(--st-font-weight-strong);line-height:1.4;color:var(--st-text-primary)}
+      .st-manuscript{margin:var(--fang-space-8,8px) 0 0;padding:var(--fang-space-16,16px) var(--fang-space-16,16px);max-height:min(60vh,640px);overflow:auto;
+        word-break:break-word;font-family:var(--fang-font-family);font-size:var(--fang-font-size-md);line-height:1.9;
+        color:var(--fang-ink-primary);background:var(--fang-surface-high);
+        border-radius:var(--fang-radius-md,12px)}
+      .st-md-h{margin:1.1em 0 .5em;font-weight:var(--fang-font-weight-strong);line-height:1.4;color:var(--fang-ink-primary)}
       .st-md-h:first-child{margin-top:0}
-      .st-md-h1{font-size:var(--st-text-xl)}
-      .st-md-h2{font-size:var(--st-text-lg)}
-      .st-md-h3{font-size:var(--st-text-lg)}
-      .st-md-h4,.st-md-h5,.st-md-h6{font-size:var(--st-text-lg);color:var(--st-text-secondary)}
+      .st-md-h1{font-size:var(--fang-font-size-xl)}
+      .st-md-h2{font-size:var(--fang-font-size-lg)}
+      .st-md-h3{font-size:var(--fang-font-size-lg)}
+      .st-md-h4,.st-md-h5,.st-md-h6{font-size:var(--fang-font-size-lg);color:var(--fang-ink-secondary)}
       .st-md-p{margin:0 0 .85em;text-indent:2em}
       .st-md-p:last-child{margin-bottom:0}
-      .st-md-rule{border:none;border-top:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));margin:1.2em 0}
-      .st-issue{display:flex;gap:var(--st-space-8,8px);align-items:baseline;padding:var(--st-space-4,4px) 0;font-size:var(--st-text-md);line-height:var(--st-line-height-ui)}
+      .st-md-rule{border:none;border-top:.5px solid var(--fang-border-edge);margin:1.2em 0}
+      .st-issue{display:flex;gap:var(--fang-space-8,8px);align-items:baseline;padding:var(--fang-space-4,4px) 0;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui)}
       /* Scrollbars: the host themes them; leaving them default is the most visible inconsistency. */
-      .st-scroll{scrollbar-gutter:stable}
-      .st-scroll::-webkit-scrollbar{width:var(--st-space-12,12px);height:var(--st-space-12,12px)}
-      .st-scroll::-webkit-scrollbar-track{background:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar));border-radius:var(--st-radius-pill,999px);corner-shape:round;margin:var(--st-space-2,2px)}
-      .st-scroll::-webkit-scrollbar-thumb{background:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar));border-radius:var(--st-radius-pill,999px);corner-shape:round}
-      .st-scroll::-webkit-scrollbar-thumb:hover{background:var(--dsw-alias-scrollbar-hover-l2,var(--st-fallback-scrollbar-hover))}
-      .st-scroll{scrollbar-width:thin;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar)) transparent}
+      .fang-scroll{scrollbar-gutter:stable}
+      .fang-scroll::-webkit-scrollbar{width:var(--fang-space-12,12px);height:var(--fang-space-12,12px)}
+      .fang-scroll::-webkit-scrollbar-track{background:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5);border-radius:var(--fang-radius-pill,999px);corner-shape:round;margin:var(--fang-space-2,2px)}
+      .fang-scroll::-webkit-scrollbar-thumb{background:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5);border-radius:var(--fang-radius-pill,999px);corner-shape:round}
+      .fang-scroll::-webkit-scrollbar-thumb:hover{background:var(--dsw-alias-scrollbar-hover-l2,#d4d4d4)}
+      .fang-scroll{scrollbar-width:thin;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
       /* Text selection follows the theme instead of the browser default blue.
          It is mixed from the ACCENT, not filled with a surface token: the module-platform token is
          a page background (a near-white grey), so the selection read as a grey slab laid over the
          text and the ink under it disappeared into the slab. A tint of the brand colour at low
          opacity marks the range and leaves the words readable, which is the only thing a
          selection has to do. */
-      .st-shell::selection{background:color-mix(in srgb, var(--st-accent) 26%, transparent);
-        color:var(--st-text-primary)}
+      .fang-shell::selection{background:color-mix(in srgb, var(--fang-accent) 26%, transparent);
+        color:var(--fang-ink-primary)}
       /* Destructive hover on the book delete affordance. */
       /* Caption tier: quieter than secondary, for counts and metadata. */
-      .st-caption{color:var(--st-text-tertiary);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
+      .st-caption{color:var(--fang-ink-tertiary);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm)}
       /* Rail toggle: a proper hit target rather than a bare glyph. */
       /* The page owns the full width now: the outline floats over it instead of taking a column. */
-      .st-mid{padding:0 var(--st-space-4,4px);position:relative}
+      .fang-main{padding:0 var(--fang-space-4,4px);position:relative}
       /* The overlay covers the page and nothing else: the title bar stays reachable, which is
          where its toggle lives. */
-      .st-root{position:relative}
+      .fang-root{position:relative}
       /* The library: a card grid, using the host's raised-surface radius. */
 
       /* ---- the sheet: a drawer that drops from the title row, and the desk under it ---- */
-      .st-shell{position:relative}
+      .fang-shell{position:relative}
       /* An icon and a label in one control: flex with centred alignment, or the svg sits on the
          text baseline and rides above it. The gap is the space between them. */
       /* Title-row buttons share the rail toggle's height, so the row is a line of EQUAL pills \u2014
@@ -11494,10 +10977,10 @@ var CSS_CORE = `
          white on the dark theme \u2014 not the quieter secondary the inner-panel ghosts use, which
          all but disappears against the frame edge. The session button's flowing label paints its
          own gradient and is untouched by this. */
-      .st-titlebar .fang-btn{color:var(--st-text-primary)}
-      .st-titlebar .st-rail-toggle{color:var(--st-text-primary)}
-      .st-drawer-btn{display:inline-flex;align-items:center;gap:var(--st-space-4,4px);
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);padding:0 var(--st-space-8,8px)}
+      .fang-titlebar .fang-btn{color:var(--fang-ink-primary)}
+      .fang-titlebar .fang-rail-toggle{color:var(--fang-ink-primary)}
+      .st-drawer-btn{display:inline-flex;align-items:center;gap:var(--fang-space-4,4px);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);padding:0 var(--fang-space-8,8px)}
       /* Icons never stretch or shrink with the label beside them. */
       .st-drawer-btn .st-bar-icon{display:block}
       /* The writing surface: one uninterrupted editor with its own header. */
@@ -11505,17 +10988,17 @@ var CSS_CORE = `
          it takes every pixel the header leaves and scrolls internally. Its width is a variable
          because the writer can set it, and the two text layers read their metrics from the same
          three variables so they cannot drift apart. */
-      .st-mid-body{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;min-width:0}
+      .fang-main-body{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;min-width:0}
       .st-desk{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;width:100%;
-        max-width:var(--st-width,760px);margin:0 auto;padding:var(--st-space-16,16px) var(--st-space-24,24px) 0}
+        max-width:var(--st-width,760px);margin:0 auto;padding:var(--fang-space-16,16px) var(--fang-space-24,24px) 0}
       /* The dock slot is the panel's bottom edge in every state \u2014 box open, folded to the
          hairline, or idle. The desk's bottom padding would sit UNDER the hairline as a strip of
          dead page and push the line off the edge, so the padding moves into the slot itself:
          content keeps its breathing room above the line, and the line touches the edge. */
       .st-desk{padding-bottom:0}
-      .st-dock-slot{padding-top:var(--st-space-16,16px)}
-      .st-desk-head{display:flex;align-items:center;gap:var(--st-space-12,12px);margin-bottom:var(--st-space-16,16px);flex-wrap:wrap}
-      .st-desk-title{margin:0;font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
+      .st-dock-slot{padding-top:var(--fang-space-16,16px)}
+      .st-desk-head{display:flex;align-items:center;gap:var(--fang-space-12,12px);margin-bottom:var(--fang-space-16,16px);flex-wrap:wrap}
+      .st-desk-title{margin:0;font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong)}
       /* flex:1 plus a zero min-height is what makes a textarea take the remaining height: without
          the min-height reset a flex child refuses to shrink and the editor collapses to one line. */
       .st-editor-wrap{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
@@ -11530,42 +11013,42 @@ var CSS_CORE = `
         white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word;
         tab-size:4;box-sizing:border-box}
       .st-editor-paint{position:absolute;inset:0;overflow:hidden;pointer-events:none;
-        color:var(--st-text-primary)}
+        color:var(--fang-ink-primary)}
       /* The continuation reads as "the sentence going on", so it is the same text in a lighter
          ink rather than a block underneath. */
       .st-editor-full{flex:1 1 auto;min-height:0;resize:none}
       .st-editor-over{position:relative;width:100%;height:100%;background:transparent;
-        color:transparent;caret-color:var(--st-text-primary);outline:none;resize:none;
+        color:transparent;caret-color:var(--fang-ink-primary);outline:none;resize:none;
         overflow:auto;scrollbar-gutter:stable}
       /* The overlay is transparent ink drawn ON TOP of the paint layer, so its selection must be
          a tint without a colour: filling it with a surface token covered the visible text with a
          grey rectangle. A tint over a transparent fill marks the range and lets the paint show. */
-      .st-editor-over::selection{background:color-mix(in srgb, var(--st-accent) 26%, transparent);color:transparent}
+      .st-editor-over::selection{background:color-mix(in srgb, var(--fang-accent) 26%, transparent);color:transparent}
       /* A selection the textarea cannot draw because focus moved away \u2014 the composer, a button \u2014
          is drawn here instead. It is mixed from the accent so it is unmistakably a selection and
          still quieter than a live one: the module-platform token is only a few points off the page
          background, which made the passage look unselected again, the exact thing this is here to
          prevent. */
-      .st-selected{background:color-mix(in srgb, var(--st-accent) 26%, transparent);
-        border-radius:var(--st-radius-xs,4px);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--st-accent) 38%, transparent)}
+      .st-selected{background:color-mix(in srgb, var(--fang-accent) 26%, transparent);
+        border-radius:var(--fang-radius-xs,4px);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--fang-accent) 38%, transparent)}
       /* A search hit is a wash behind the glyphs; the current one also gets a ring. The text
          colour is deliberately left alone: overriding it made the highlighted word unreadable on
          some themes, and a highlight that recolours the words it marks is worse than one that
          does not. A colour mix rather than a background token keeps the wash visible on both the
          light and the dark page. */
-      .st-hit{background:color-mix(in srgb, var(--st-accent) 30%, transparent);
-        border-radius:var(--st-radius-xs,4px)}
-      .st-hit[data-active="true"]{background:color-mix(in srgb, var(--dsw-alias-state-warn-primary,var(--st-fallback-warn)) 55%, transparent);
-        box-shadow:inset 0 0 0 1px var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
+      .st-hit{background:color-mix(in srgb, var(--fang-accent) 30%, transparent);
+        border-radius:var(--fang-radius-xs,4px)}
+      .st-hit[data-active="true"]{background:color-mix(in srgb, var(--dsw-alias-state-warn-primary,#f59e0b) 55%, transparent);
+        box-shadow:inset 0 0 0 1px var(--dsw-alias-state-warn-primary,#f59e0b)}
       /* The find bar: one row above the page, never over it, so the text does not reflow while
          the writer moves between hits. */
       /* In the header row: no margin of its own, and allowed to shrink, or it would push the
          header wider than the measure on a narrow window. */
-      .st-find{display:flex;align-items:center;gap:var(--st-space-4,4px);flex:0 1 auto;min-width:0}
+      .st-find{display:flex;align-items:center;gap:var(--fang-space-4,4px);flex:0 1 auto;min-width:0}
       /* The search field is one of the shared borderless fields; only its width belongs here.
          It sits in the header row, so it keeps the row's height rather than the page's. */
-      .st-find-input{width:var(--st-find-w,170px);min-width:var(--st-find-min-w,60px);flex:0 1 auto;padding:var(--st-space-2,2px) var(--st-space-8,8px)}
-      .st-find-count{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
+      .st-find-input{width:var(--st-find-w,170px);min-width:var(--st-find-min-w,60px);flex:0 1 auto;padding:var(--fang-space-2,2px) var(--fang-space-8,8px)}
+      .st-find-count{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
         flex:none;font-variant-numeric:tabular-nums}
       /* Typography: three rows of named steps.
          A fixed width on the page, not fit-content: the preview's text gets wider as the size goes
@@ -11575,31 +11058,18 @@ var CSS_CORE = `
          percentage width counts as auto while the drawer measures its content, so the preview's
          text at 20px made the sheet 860px wide and at 14px 624px \u2014 the panel resized itself when
          the writer changed the size, which is exactly what the preview must not do. */
-      .st-type{display:flex;flex-direction:column;gap:var(--st-space-8,8px);width:var(--st-settings-w,340px);max-width:100%}
-      .st-type-row{display:flex;align-items:center;gap:var(--st-space-12,12px);min-width:0}
-      .st-type-label{flex:none;width:var(--st-gutter-w,52px);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary)}
-      /* The segmented control: one track, the chosen step raised inside it. Cheaper than three
-         sliders and it says how many choices there are before you touch it. */
-      .fang-segmented{display:inline-flex;align-items:center;gap:var(--st-space-2,2px);min-width:0;padding:var(--st-space-2,2px);
-        border-radius:var(--st-radius-pill,999px);corner-shape:round;background:var(--st-surface);
-        box-shadow:inset 0 0 0 var(--st-hairline) var(--dsw-alias-border-l2,var(--st-fallback-border-l2))}
-      .fang-segmented-item{font-family:inherit;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:var(--st-space-2,2px) var(--st-space-12,12px);
-        border:none;border-radius:var(--st-radius-pill,999px);background:transparent;corner-shape:round;
-        color:var(--st-text-secondary);cursor:pointer;white-space:nowrap}
-      .fang-segmented-item:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .fang-segmented-item:active{background:var(--st-active-fill)}
-      .fang-segmented-item:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .fang-segmented-item[aria-pressed="true"]{background:var(--st-selected-fill);
-        color:var(--st-text-primary);
-        box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
+      .st-type{display:flex;flex-direction:column;gap:var(--fang-space-8,8px);width:var(--st-settings-w,340px);max-width:100%}
+      .st-type-row{display:flex;align-items:center;gap:var(--fang-space-12,12px);min-width:0}
+      .st-type-label{flex:none;width:var(--st-gutter-w,52px);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary)}
+      /* The segmented control on this page is the library's Segmented: its rules live in
+         fang-style, and nothing here shadows them. */
       /* A FIXED frame, and a smaller one than before: the sample is one line, so the frame is one
          line of the largest offered type plus padding \u2014 72px, not the 150px the three-line copy
          needed. Fixed, not content-sized: the frame must not jump when the type changes. */
-      .st-type-preview{height:var(--st-preview-h,72px);padding:var(--st-space-12,12px) var(--st-space-16,16px);border-radius:var(--st-radius-sm,8px);
-        background:var(--st-surface);color:var(--st-text-primary);
-        box-shadow:inset 0 0 0 var(--st-hairline) var(--dsw-alias-border-l2,var(--st-fallback-border-l2));
+      .st-type-preview{height:var(--st-preview-h,72px);padding:var(--fang-space-12,12px) var(--fang-space-16,16px);border-radius:var(--fang-radius-sm,8px);
+        background:var(--fang-surface);color:var(--fang-ink-primary);
+        box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-border-hair);
         overflow:hidden;contain:content}
       .st-type-preview-in{white-space:pre-wrap;overflow-wrap:anywhere}
       .st-type-foot{display:flex;justify-content:flex-end}
@@ -11625,29 +11095,29 @@ var CSS_LIBRARY = `
         background-size:var(--st-canvas-grid) var(--st-canvas-grid);
         -webkit-mask-image:radial-gradient(circle var(--st-canvas-glow) at var(--st-pointer-x,-999px) var(--st-pointer-y,-999px), #000, transparent);
         mask-image:radial-gradient(circle var(--st-canvas-glow) at var(--st-pointer-x,-999px) var(--st-pointer-y,-999px), #000, transparent)}
-      .st-library{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--st-space-8,8px) var(--st-shelf-gutter) var(--st-space-24,24px)}
-      /* The head carries .st-titlebar (the titlebar row recipe): divider, paddings and the
+      .st-library{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--fang-space-8,8px) var(--fang-frame-gutter) var(--fang-space-24,24px)}
+      /* The head carries .fang-titlebar (the titlebar row recipe): divider, paddings and the
          leading clearance all come from there. What is local: the gap to the grid below, and
          the min-width floor for the truncating title. */
-      .st-library-head{margin-bottom:var(--st-space-16,16px);min-width:0}
-      .st-library-title{margin:0;font-size:var(--st-text-xl);line-height:var(--st-text-xl-leading);font-weight:var(--st-font-weight-strong);color:var(--st-text-primary)}
+      .st-library-head{margin-bottom:var(--fang-space-16,16px);min-width:0}
+      .st-library-title{margin:0;font-size:var(--fang-font-size-xl);line-height:var(--fang-line-height-xl);font-weight:var(--fang-font-weight-strong);color:var(--fang-ink-primary)}
       /* The shelf's cards ARE the board's gallery cards: one component, one size, one set of
          shadows, so the two places the writer browses look like one system. What is left here is
          the part a gallery card does not provide \u2014 the two inline editors and the body inside a
          card. Shadows are mixed from the theme ink rather than written as black: a literal rgba
          shadow is invisible on a dark theme, which is exactly how the old shelf card disappeared. */
-      .st-book-card{display:flex;flex-direction:column;gap:var(--st-space-4,4px);padding:var(--st-space-16,16px) var(--st-space-16,16px);text-align:left;
+      .st-book-card{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);padding:var(--fang-space-16,16px) var(--fang-space-16,16px);text-align:left;
         font-family:inherit;
-        border:var(--st-hairline) solid var(--st-ink-edge);
-        border-radius:var(--st-radius-lg,16px);background:var(--st-surface);color:var(--st-text-primary);
+        border:var(--fang-hairline) solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-lg,16px);background:var(--fang-surface);color:var(--fang-ink-primary);
         /* The shared card recipe: a book and a character sit at the same height because they read
            the same two tokens, not because two rules were written to agree. */
-        box-shadow:var(--st-card-shadow);
+        box-shadow:var(--fang-card-shadow);
         /* The hovered card lifts, like every other card in the panel: the row of covers reads as
            pickable objects rather than as text tiles. */
-        transition:var(--st-card-motion)}
-      .st-book-card:hover{transform:translateY(-2px);box-shadow:var(--st-card-shadow-lift)}
-      .st-book-meta{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-secondary)}
+        transition:var(--fang-card-motion)}
+      .st-book-card:hover{transform:translateY(-2px);box-shadow:var(--fang-card-shadow-lift)}
+      .st-book-meta{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-secondary)}
       /* The two trailing tiles are CARDS, not buttons: same width, same radius, same dashed edge as
          a book card, so the last cell of the grid lines up with the ones before it. A fluid-width
          tile in a fixed-width grid was visibly a different size \u2014 the thing the writer pointed at. */
@@ -11655,21 +11125,21 @@ var CSS_LIBRARY = `
         /* The same height as a book card, for the same reason: the grid's last cell is a card too. */
         height:var(--st-book-card-h);
         align-items:center;justify-content:center;text-align:center;
-        border-style:dashed;color:var(--st-text-secondary)}
-      .st-book-plus{font-size:var(--st-text-xl);line-height:1;font-weight:var(--st-font-weight-normal)}
+        border-style:dashed;color:var(--fang-ink-secondary)}
+      .st-book-plus{font-size:var(--fang-font-size-xl);line-height:1;font-weight:var(--fang-font-weight-normal)}
       /* The new-book tile is the only CONTROL in the shelf grid, and it is a real <button>. Two
          things follow from that and neither was written down: a button does not get a hand cursor
          by default, and st-book-card carries no state motion, so the tile sat perfectly still
          while every book beside it lifted under the pointer. That stillness is what read as "this
          one is not a card you can pick". The lift itself is NOT redefined here \u2014 the tile is
          grouped into the gallery card's hover rule, so there is one recipe for the whole grid. */
-      .st-book-add{cursor:pointer;transition:var(--st-card-motion)}
+      .st-book-add{cursor:pointer;transition:var(--fang-card-motion)}
       /* The ring is an OUTLINE, not a box-shadow. The hover state further down the sheet paints a
          box-shadow, and a focus ring written the same way would lose to it \u2014 same specificity, and
          the hover rule comes later. Outline lives on its own channel, so focus stays visible while
          the pointer is over the tile. */
-      .st-book-add:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--st-focus-ink);
-        outline-offset:var(--st-space-2,2px)}
+      .st-book-add:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--fang-focus-ink);
+        outline-offset:var(--fang-space-2,2px)}
       /* Pressing settles it back down. Written as :hover:active rather than :active so it beats the
          hover rule above on specificity instead of relying on source order. */
       .st-book-add:hover:active{transform:none}
@@ -11679,45 +11149,27 @@ var CSS_LIBRARY = `
       /* The click target inside a card. It is a div, not a button: the gallery card around it is
          already the button, and a button inside a button is invalid markup that browsers resolve
          by ignoring one of the two. */
-      .st-book-open{display:flex;flex-direction:column;gap:var(--st-space-4,4px);flex:1 1 auto;min-width:0;
+      .st-book-open{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);flex:1 1 auto;min-width:0;
         background:none;border:none;padding:0;text-align:left;font-family:inherit;color:inherit;cursor:pointer}
-      /* A real modal: the whole panel is dimmed and the question sits in a rounded card. */
-      /* A dialog is centred on the PANEL, which is the surface it belongs to.
-         It was fixed-positioned, and that means "the viewport" \u2014 but this panel is one occupant
-         of the host's centre column, and that column clips its contents. A fixed overlay inside
-         a clipped ancestor is still clipped by it, and is placed against the viewport rather than
-         against the panel, so the card sat off-centre and its edges were cut. This panel's own
-         sidebar comment already records the same lesson for the drawer; the dialogs had not
-         learned it.
-         Absolute, against the nearest positioned ancestor \u2014 the shell \u2014 centres on exactly the
-         box the writer is looking at, and is not clipped by anything above it. */
-      .fang-backdrop{position:absolute;inset:0;z-index:var(--st-layer-modal);display:flex;align-items:center;justify-content:center;
-        padding:var(--st-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,var(--st-fallback-page)) 62%, transparent);
+      /* The backdrop is re-declared here on purpose: the dim reads the host theme's base
+         colour, not the library's pure black, so the scrim matches whichever theme is loaded.
+         Everything else about the dialog \u2014 sizing, shape, surface, shadow \u2014 is the library
+         .fang-dialog rule's job, and nothing here shadows it. */
+      .fang-backdrop{position:absolute;inset:0;z-index:var(--fang-layer-modal);display:flex;align-items:center;justify-content:center;
+        padding:var(--fang-space-24,24px);background:color-mix(in srgb, var(--dsw-alias-bg-base,#f2f3f5) 62%, transparent);
         backdrop-filter:blur(2px)}
-      .fang-dialog{width:min(var(--fang-dialog-width,var(--st-dialog-w)),100%);display:flex;flex-direction:column;gap:var(--st-inset-md);padding:var(--st-inset-xl);
-        border-radius:var(--st-radius-panel,28px);corner-shape:round;border:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));
-        background:var(--st-surface-high);box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04));
-        font-family:var(--st-font-family);font-size:var(--st-text-md);line-height:var(--st-line-height-ui);color:var(--st-text-primary)}
-      .fang-dialog-title{font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
-      /* A reading dialog: a fixed head with the close control, and a body that scrolls. The panel
-         caps its height so a long manuscript stays one dialog rather than one very tall page. */
-      .fang-dialog-panel{max-height:min(84vh,var(--st-dialog-max-h))}
-      .fang-dialog-head{display:flex;align-items:center;gap:var(--st-space-8,8px);flex:none}
-      .fang-dialog-scroll{flex:1 1 auto;min-height:0;overflow:auto}
-      .fang-dialog-body{display:flex;flex-direction:column;gap:var(--st-space-8,8px);color:var(--st-text-secondary)}
       /* A labelled field inside a dialog: the label sits above its control, one line of small text. */
-      .st-dialog-field{display:flex;flex-direction:column;gap:var(--st-space-4,4px);min-width:0}
+      .st-dialog-field{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);min-width:0}
       /* A segmented control is a compact choice, not a full-width field. As a flex child of the
          column it would otherwise stretch to the dialog's width and look like a text input. */
       .st-dialog-field>.fang-segmented{align-self:flex-start}
-      .st-dialog-label{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
+      .st-dialog-label{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
       .st-dialog-textarea{min-height:var(--st-dialog-textarea-min-h);resize:none;font-family:inherit}
-      .st-dialog-error{margin:0;color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
-      .st-dialog-hint{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-      .fang-dialog-actions{display:flex;justify-content:flex-end;gap:var(--st-space-8,8px);margin-top:var(--st-space-4,4px)}
-      .st-check{display:flex;align-items:center;gap:var(--st-space-8,8px);font-size:var(--st-text-md);cursor:pointer;
-        color:var(--st-text-primary)}
+      .st-dialog-error{margin:0;color:var(--dsw-alias-state-warn-primary,#f59e0b)}
+      .st-dialog-hint{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary)}
+      .st-check{display:flex;align-items:center;gap:var(--fang-space-8,8px);font-size:var(--fang-font-size-md);cursor:pointer;
+        color:var(--fang-ink-primary)}
       /* A bottom sheet: slides up over the manuscript, rounded on its top corners only, which is
          what makes it read as "coming from the edge" rather than as a floating dialog. */
       /* The panel renders inside the host's centre column, which has overflow: hidden, so a fixed
@@ -11730,37 +11182,37 @@ var CSS_LIBRARY = `
 var CSS_WELCOME = `
       /* ---- the welcome page: one display line, one door ---- */
       .st-welcome{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;
-        padding:var(--st-space-16,16px) var(--st-welcome-gutter) var(--st-space-24,24px)}
+        padding:var(--fang-space-16,16px) var(--st-welcome-gutter) var(--fang-space-24,24px)}
       /* The page is a canvas, not a document: the same lattice the shelf uses, with a quiet accent
          wedge at the far edge so the empty first screen has a direction. */
       .st-welcome::after{content:'';position:absolute;right:0;bottom:0;width:38%;height:54%;pointer-events:none;
-        background:linear-gradient(135deg,transparent 18%,color-mix(in srgb,var(--st-accent) 22%,transparent) 78%);
+        background:linear-gradient(135deg,transparent 18%,color-mix(in srgb,var(--fang-accent) 22%,transparent) 78%);
         clip-path:polygon(100% 0,100% 100%,0 100%);opacity:.55;z-index:var(--st-welcome-wedge-z)}
       .st-welcome-main{margin:auto 0;width:100%;max-width:var(--st-welcome-measure);display:flex;flex-direction:column;
         align-items:flex-start;position:relative;z-index:var(--st-welcome-main-z)}
-      .st-welcome-title{display:inline-block;margin:var(--st-space-8,8px) 0 0;font-family:var(--st-font-serif);font-weight:var(--st-font-weight-normal);
+      .st-welcome-title{display:inline-block;margin:var(--fang-space-8,8px) 0 0;font-family:var(--st-font-serif);font-weight:var(--fang-font-weight-normal);
         font-size:var(--st-welcome-title);line-height:var(--st-welcome-title-leading);letter-spacing:var(--st-welcome-title-tracking);
-        color:var(--st-text-primary);white-space:nowrap}
-      .st-welcome-accent{color:var(--st-accent)}
-      .st-welcome-latin{width:fit-content;margin:var(--st-space-12,12px) 0 0 var(--st-welcome-latin-nudge);font-family:var(--st-font-serif);font-style:italic;
+        color:var(--fang-ink-primary);white-space:nowrap}
+      .st-welcome-accent{color:var(--fang-accent)}
+      .st-welcome-latin{width:fit-content;margin:var(--fang-space-12,12px) 0 0 var(--st-welcome-latin-nudge);font-family:var(--st-font-serif);font-style:italic;
         font-size:var(--st-welcome-latin-size);line-height:var(--st-welcome-latin-leading);
-        letter-spacing:var(--st-welcome-latin-tracking);color:var(--st-text-secondary)}
+        letter-spacing:var(--st-welcome-latin-tracking);color:var(--fang-ink-secondary)}
       /* One column, not four separate boxes: the gaps between the blocks are the part that most
          often caught a glyph between two headings, so the wash spans the whole copy column. The
          width follows the content, leaving the empty canvas to the right sharp. */
       /* The copy column is a layout wrapper only. The blur lives on individual glyphs (see
          glyph-field.css), never on a background patch behind the column. */
       .st-welcome-copy{display:flex;flex-direction:column;align-items:flex-start;width:fit-content;max-width:100%}
-      .st-welcome-lede{width:fit-content;max-width:var(--st-welcome-measure);margin:var(--st-space-24,24px) 0 0;font-family:var(--st-font-serif);
-        font-size:var(--st-welcome-lede-size);line-height:var(--st-line-height-reading);color:var(--st-text-secondary)}
-      .st-welcome-cta{display:flex;flex-direction:column;align-items:flex-start;gap:var(--st-space-12,12px);
-        margin-top:var(--st-space-24,24px);padding-top:var(--st-space-16,16px)}
-      .st-welcome-actions{width:fit-content;display:flex;align-items:center;gap:var(--st-space-16,16px);flex-wrap:wrap}
-      .st-welcome-error{margin:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
+      .st-welcome-lede{width:fit-content;max-width:var(--st-welcome-measure);margin:var(--fang-space-24,24px) 0 0;font-family:var(--st-font-serif);
+        font-size:var(--st-welcome-lede-size);line-height:var(--fang-line-height-reading);color:var(--fang-ink-secondary)}
+      .st-welcome-cta{display:flex;flex-direction:column;align-items:flex-start;gap:var(--fang-space-12,12px);
+        margin-top:var(--fang-space-24,24px);padding-top:var(--fang-space-16,16px)}
+      .st-welcome-actions{width:fit-content;display:flex;align-items:center;gap:var(--fang-space-16,16px);flex-wrap:wrap}
+      .st-welcome-error{margin:0;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--dsw-alias-state-warn-primary,#f59e0b)}
       @media (max-width: 640px){.st-welcome-title{white-space:normal}}
 
-      .st-welcome-back{position:absolute;z-index:var(--st-welcome-back-z);left:max(var(--st-welcome-gutter,28px),calc(var(--dsh-frame-leading-clearance,0px) + var(--st-space-8,8px)));top:var(--st-space-16,16px);
-        color:var(--st-text-primary)}
+      .st-welcome-back{position:absolute;z-index:var(--st-welcome-back-z);left:max(var(--st-welcome-gutter,28px),calc(var(--dsh-frame-leading-clearance,0px) + var(--fang-space-8,8px)));top:var(--fang-space-16,16px);
+        color:var(--fang-ink-primary)}
 
 
 `;
@@ -11768,54 +11220,54 @@ var CSS_WELCOME = `
 // src/client/panel/new-book-dialog.css.js
 var CSS_NEWBOOK = `
       .st-newbook-backdrop{position:absolute;inset:0;z-index:var(--st-welcome-dialog-z);display:grid;place-items:center;
-        padding:var(--st-space-24,24px);background:color-mix(in srgb,var(--st-bg,#000) 68%,transparent);
+        padding:var(--fang-space-24,24px);background:color-mix(in srgb,var(--fang-bg,#000) 68%,transparent);
         animation:st-newbook-backdrop-in 160ms ease both}
-      .st-newbook{width:min(var(--st-welcome-dialog-w),100%);display:flex;flex-direction:column;gap:var(--st-space-24,24px);
-        padding:var(--st-space-24,24px);border:var(--st-hairline) solid var(--st-ink-edge);
-        border-radius:var(--st-radius-lg,16px);background:var(--st-surface-high);
-        box-shadow:var(--st-card-shadow-lift);animation:st-newbook-in 180ms var(--ds-ease-in-out,ease-in-out) both}
+      .st-newbook{width:min(var(--st-welcome-dialog-w),100%);display:flex;flex-direction:column;gap:var(--fang-space-24,24px);
+        padding:var(--fang-space-24,24px);border:var(--fang-hairline) solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-lg,16px);background:var(--fang-surface-high);
+        box-shadow:var(--fang-card-shadow-lift);animation:st-newbook-in 180ms var(--ds-ease-in-out,ease-in-out) both}
       .st-newbook-title{margin:0;font-family:var(--st-font-serif);font-size:var(--st-welcome-dialog-title-size);
-        line-height:var(--st-text-xl-leading);font-weight:var(--st-font-weight-normal);color:var(--st-text-primary)}
-      .st-newbook-input{width:100%;box-sizing:border-box;padding:var(--st-space-8,8px) 0;
-        border:none;border-bottom:var(--st-hairline) solid var(--st-ink-edge);border-radius:0;
-        background:transparent;color:var(--st-text-primary);font-family:var(--st-font-serif);
-        font-size:var(--st-welcome-dialog-input-size);line-height:var(--st-text-xl-leading);outline:none}
-      .st-newbook-input::placeholder{color:var(--st-text-tertiary)}
-      .st-newbook-input:focus{border-bottom-color:var(--st-accent);box-shadow:0 1px 0 var(--st-accent)}
-      .st-newbook-error{margin:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
-      .st-newbook-actions{display:flex;justify-content:flex-end;gap:var(--st-space-8,8px)}
+        line-height:var(--fang-line-height-xl);font-weight:var(--fang-font-weight-normal);color:var(--fang-ink-primary)}
+      .st-newbook-input{width:100%;box-sizing:border-box;padding:var(--fang-space-8,8px) 0;
+        border:none;border-bottom:var(--fang-hairline) solid var(--fang-ink-edge);border-radius:0;
+        background:transparent;color:var(--fang-ink-primary);font-family:var(--st-font-serif);
+        font-size:var(--st-welcome-dialog-input-size);line-height:var(--fang-line-height-xl);outline:none}
+      .st-newbook-input::placeholder{color:var(--fang-ink-tertiary)}
+      .st-newbook-input:focus{border-bottom-color:var(--fang-accent);box-shadow:0 1px 0 var(--fang-accent)}
+      .st-newbook-error{margin:0;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--dsw-alias-state-warn-primary,#f59e0b)}
+      .st-newbook-actions{display:flex;justify-content:flex-end;gap:var(--fang-space-8,8px)}
       .st-newbook-open{margin-right:auto}
       @keyframes st-newbook-backdrop-in{from{opacity:0}to{opacity:1}}
-      @keyframes st-newbook-in{from{opacity:0;translate:0 var(--st-space-4,4px)}to{opacity:1;translate:0 0}}
+      @keyframes st-newbook-in{from{opacity:0;translate:0 var(--fang-space-4,4px)}to{opacity:1;translate:0 0}}
       @media (prefers-reduced-motion: reduce){.st-newbook-backdrop,.st-newbook{animation:none}}
 `;
 
 // src/client/panel/mcp-panel.css.js
 var CSS_MCP = `
       .st-mcp-backdrop{position:absolute;inset:0;z-index:var(--st-mcp-z);display:flex;align-items:flex-start;justify-content:flex-end;
-        padding:var(--st-space-24,24px);background:color-mix(in srgb,var(--st-bg,#000) 40%,transparent)}
-      .st-mcp-panel{width:min(var(--st-mcp-w),100%);display:flex;flex-direction:column;gap:var(--st-space-12,12px);
-        padding:var(--st-space-20,20px);border:var(--st-hairline) solid var(--st-ink-edge);
-        border-radius:var(--st-radius-lg,16px);background:var(--st-surface-high);
-        box-shadow:var(--st-card-shadow-lift)}
-      .st-mcp-head{display:flex;align-items:center;justify-content:space-between;gap:var(--st-space-8,8px)}
-      .st-mcp-title{margin:0;font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong)}
-      .st-mcp-note,.st-mcp-error{margin:0;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
-      .st-mcp-error{color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
-      .st-mcp-row{display:flex;align-items:center;gap:var(--st-space-8,8px);min-width:0}
+        padding:var(--fang-space-24,24px);background:color-mix(in srgb,var(--fang-bg,#000) 40%,transparent)}
+      .st-mcp-panel{width:min(var(--st-mcp-w),100%);display:flex;flex-direction:column;gap:var(--fang-space-12,12px);
+        padding:var(--st-space-20,20px);border:var(--fang-hairline) solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-lg,16px);background:var(--fang-surface-high);
+        box-shadow:var(--fang-card-shadow-lift)}
+      .st-mcp-head{display:flex;align-items:center;justify-content:space-between;gap:var(--fang-space-8,8px)}
+      .st-mcp-title{margin:0;font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong)}
+      .st-mcp-note,.st-mcp-error{margin:0;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm)}
+      .st-mcp-error{color:var(--dsw-alias-state-warn-primary,#f59e0b)}
+      .st-mcp-row{display:flex;align-items:center;gap:var(--fang-space-8,8px);min-width:0}
       .st-mcp-row-config{justify-content:space-between}
-      .st-mcp-label{font-size:var(--st-text-sm);color:var(--st-text-tertiary);flex:none}
-      .st-mcp-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--st-font-mono);
-        font-size:var(--st-text-sm);color:var(--st-text-primary)}
-      .st-mcp-config{margin:0;padding:var(--st-space-12,12px);overflow:auto;max-height:var(--st-mcp-code-h);
-        border-radius:var(--st-radius-md,12px);background:var(--st-bg);font-family:var(--st-font-mono);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-secondary);white-space:pre}
+      .st-mcp-label{font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary);flex:none}
+      .st-mcp-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fang-font-mono);
+        font-size:var(--fang-font-size-sm);color:var(--fang-ink-primary)}
+      .st-mcp-config{margin:0;padding:var(--fang-space-12,12px);overflow:auto;max-height:var(--st-mcp-code-h);
+        border-radius:var(--fang-radius-md,12px);background:var(--fang-bg);font-family:var(--fang-font-mono);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-secondary);white-space:pre}
 
-      .st-mcp-status{display:flex;align-items:center;gap:var(--st-space-6,6px);font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
-      .st-mcp-dot{width:var(--st-mcp-dot);height:var(--st-mcp-dot);border-radius:var(--st-radius-pill);background:var(--st-text-tertiary);flex:none}
-      .st-mcp-connected{color:var(--st-text-secondary)}
-      .st-mcp-connected .st-mcp-dot{background:var(--st-accent)}
+      .st-mcp-status{display:flex;align-items:center;gap:var(--st-space-6,6px);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-mcp-dot{width:var(--st-mcp-dot);height:var(--st-mcp-dot);border-radius:var(--fang-radius-pill);background:var(--fang-ink-tertiary);flex:none}
+      .st-mcp-connected{color:var(--fang-ink-secondary)}
+      .st-mcp-connected .st-mcp-dot{background:var(--fang-accent)}
 `;
 
 // src/client/panel/glyph-field.css.js
@@ -11825,18 +11277,18 @@ var CSS_GLYPH = `
         mask-image:radial-gradient(circle var(--st-glyph-radius) at var(--st-pointer-x,-999px) var(--st-pointer-y,-999px),#000 0%,#000 70%,transparent 100%)}
       .st-glyph-field::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity var(--ds-transition-duration-fast,.12s);
         background:radial-gradient(circle var(--st-glyph-radius) at var(--st-pointer-x,-999px) var(--st-pointer-y,-999px),
-          var(--st-bg,#0b0b0c) 0%, var(--st-bg,#0b0b0c) 70%, transparent 100%)}
+          var(--fang-bg,#0b0b0c) 0%, var(--fang-bg,#0b0b0c) 70%, transparent 100%)}
       .st-glyph-field[data-visible="true"]::before{opacity:1}
       .st-glyph-slot{position:absolute;left:0;top:0;width:var(--st-canvas-grid);height:var(--st-canvas-grid);
         display:grid;place-items:center;perspective:var(--st-glyph-perspective,120px)}
-      .st-glyph-face{font-family:var(--st-font-serif);font-size:var(--st-glyph-size);line-height:1;font-weight:var(--st-font-weight-normal);
+      .st-glyph-face{font-family:var(--st-font-serif);font-size:var(--st-glyph-size);line-height:1;font-weight:var(--fang-font-weight-normal);
         opacity:0;color:var(--st-glyph-ink);text-shadow:0 1px 0 var(--st-glyph-depth);
         transform:rotateX(var(--st-glyph-rx,0deg)) rotateY(calc(var(--st-glyph-ry,0deg) - 82deg)) scale(.72);
         transform-style:preserve-3d;transition:opacity var(--st-glyph-flip,320ms) ease;
         will-change:transform,opacity}
       /* Clear the lattice under an active cell. The soft radial shade alone left stray dots in
          the gaps between glyphs, which made the patch read as text pasted over the canvas. */
-      .st-glyph-slot[data-on="true"]{background:var(--st-bg,#0b0b0c)}
+      .st-glyph-slot[data-on="true"]{background:var(--fang-bg,#0b0b0c)}
       .st-glyph-slot[data-tone="primary"] .st-glyph-face{color:var(--st-glyph-ink-primary)}
       .st-glyph-slot[data-tone="accent"] .st-glyph-face{color:var(--st-glyph-ink-accent)}
       /* Only the glyph is filtered. A backdrop or tint here would paint a visible rectangle over
@@ -11854,7 +11306,7 @@ var CSS_GLYPH = `
 
 // src/client/panel/notes.css.js
 var CSS_NOTES = `
-      .st-notes-dialog{height:min(72vh,var(--st-notes-h));padding-top:var(--st-inset-md)}
+      .st-notes-dialog{height:min(72vh,var(--st-notes-h));padding-top:var(--fang-padding-md)}
       /* The notebook is an aside, not a modal takeover: the page behind stays sharp. */
       .st-notes-backdrop{backdrop-filter:none;-webkit-backdrop-filter:none}
       .fang-dialog-body.st-notes-body{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden}
@@ -11862,36 +11314,36 @@ var CSS_NOTES = `
       /* The capture area is its own region; the list and the detail below are two independent
          boxes with a gap between them, not one outer frame split by a line. */
       .st-notes-capture{flex:none;padding-bottom:var(--st-board-gap);
-        border-bottom:var(--st-hairline) solid var(--st-ink-edge)}
+        border-bottom:var(--fang-hairline) solid var(--fang-ink-edge)}
       /* The panel's standard borderless input, sized for a thought rather than one line. Its
          focus ring is suppressed here: a bordered focus state made the capture box look like a
          form field, which is the opposite of a quick note. */
       .st-notes-capture .st-input{min-height:var(--st-notes-capture-h);resize:none;
-        background:var(--st-surface-high);padding:var(--st-inset-sm) var(--st-inset-md)}
+        background:var(--fang-surface-high);padding:var(--fang-padding-sm) var(--fang-padding-md)}
       .st-notes-capture .st-input:focus{box-shadow:none}
       .st-notes .fang-split{flex:1 1 auto;min-height:0}
       /* A pane title is part of its content; no rule between them. */
       .st-notes .fang-split-detail-head{border-bottom:none}
       .st-notes-detail{min-height:0;white-space:pre-wrap;word-break:break-word;
-        font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        color:var(--st-text-primary)}
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-primary)}
       .st-notes .fang-split-detail-body{display:flex;flex-direction:column}
 `;
 
 // src/client/panel/composer.css.js
 var CSS_COMPOSER = `
       /* ---- the dock: the composer slot, its hairline, and the working state ---- */
-      .st-ai-dock{flex:none;display:flex;flex-direction:column;gap:var(--st-space-12,12px);min-width:0;position:relative;
+      .st-ai-dock{flex:none;display:flex;flex-direction:column;gap:var(--fang-space-12,12px);min-width:0;position:relative;
         /* The card's bottom edge clears the window by its own radius. It is the last row of a
            column that ends at the panel's bottom edge, and an element flush with an ancestor's
            edge has its outer edge \u2014 and with it the outer half of the rounded corner \u2014 painted
            UNDER that edge. A 28px corner therefore drew a thin line across its bottom, which read
            as a rule covering the box's lower edge rather than as a rounded card. Nested shapes are
            safe: their clipping ancestor is this card, not the window. */
-        margin:0 0 var(--st-space-4,4px);
-        padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-12,12px);border:none;
-        border-radius:var(--st-radius-panel,28px);
-        background:var(--dsw-specific-input-major,var(--st-surface-high));
+        margin:0 0 var(--fang-space-4,4px);
+        padding:var(--fang-space-16,16px) var(--fang-space-16,16px) var(--fang-space-12,12px);border:none;
+        border-radius:var(--fang-radius-panel,28px);
+        background:var(--dsw-specific-input-major,var(--fang-surface-high));
         box-shadow:var(--dsw-elevation-soft,0 0 0 .5px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.03),0 0 24px rgba(0,0,0,.03));
         /* Interface type by default, NOT the manuscript's.
            The dock is one card holding three unlike things: a question box, a reply, and a proposed
@@ -11903,9 +11355,9 @@ var CSS_COMPOSER = `
            The 16px in this card belongs to the INPUT and to a short passage, and to nothing else:
            the buttons, the cast list and the scan panel each set their own 13px, so they stay the
            size they were. */
-        font-family:inherit;font-size:var(--st-text-md);
-        line-height:var(--st-text-md-leading);
-        color:var(--st-text-primary);
+        font-family:inherit;font-size:var(--fang-font-size-md);
+        line-height:var(--fang-line-height-md);
+        color:var(--fang-ink-primary);
         /* Grows with its content. A fixed 320px cap cut a long answer short and made the writer
            scroll inside a box that looked like it had room \u2014 the dock is a region of the page, so
            it takes the height it needs and the page scrolls, not the answer. The ceiling exists
@@ -11915,9 +11367,9 @@ var CSS_COMPOSER = `
       /* The card's one coloured ornament, borrowed from the input-first tools: a hairline of the
          accent along the TOP edge only, fading out at both ends. It marks the box the writer
          types into without putting a border around it. */
-      .st-ai-dock::before{content:'';position:absolute;top:0;left:var(--st-space-24,24px);right:var(--st-space-24,24px);
-        height:var(--st-hairline);border-radius:var(--st-radius-pill,999px);corner-shape:round;
-        background:linear-gradient(90deg, transparent, var(--st-accent) 50%, transparent);
+      .st-ai-dock::before{content:'';position:absolute;top:0;left:var(--fang-space-24,24px);right:var(--fang-space-24,24px);
+        height:var(--fang-hairline);border-radius:var(--fang-radius-pill,999px);corner-shape:round;
+        background:linear-gradient(90deg, transparent, var(--fang-accent) 50%, transparent);
         opacity:.55;pointer-events:none}
       /* A fade, not a slide: it belongs to the page above it and should not look like it flew in. */
       @keyframes st-dock-in{from{opacity:0}to{opacity:1}}
@@ -11930,15 +11382,15 @@ var CSS_COMPOSER = `
          copy, and the kept result waiting to be re-opened \u2014 so the dock never truly disappears.
          The thinking copy sits ABOVE the line: the button stacks a copy row over the glow row. */
       .st-hairline{position:relative;display:flex;flex-direction:column;justify-content:flex-end;
-        gap:var(--st-space-2,2px);width:100%;
+        gap:var(--fang-space-2,2px);width:100%;
         min-height:var(--st-hairline-row-h,22px);padding:0;border:none;background:transparent;cursor:default;
-        font-family:inherit;color:var(--st-text-tertiary);outline:none;margin-top:var(--st-space-8,8px)}
+        font-family:inherit;color:var(--fang-ink-tertiary);outline:none;margin-top:var(--fang-space-8,8px)}
       /* Only a kept line is a button: it holds a result one click away. Idle is ambient. */
       .st-hairline[data-state="kept"]{cursor:pointer}
       /* Idle and kept are the same face of the dock at rest: same glow speed, same strength,
          same click. Only working is brighter \u2014 that is the one state that means "wait". */
-      .st-hairline:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);
-        border-radius:var(--st-radius-sm,8px)}
+      .st-hairline:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink);
+        border-radius:var(--fang-radius-sm,8px)}
       /* The line itself, at rest: a plain 1px rule in the border grey.
          It used to glow in every state \u2014 weaker when idle, held when a result waited, strongest
          while the model worked. That made the accent the panel's permanent furniture at the bottom
@@ -11962,9 +11414,9 @@ var CSS_COMPOSER = `
            both states and only the colour changes. */
         background:linear-gradient(to right,
           transparent 0%,
-          color-mix(in srgb, var(--dsw-alias-border-l3,var(--st-fallback-border-l3)) 40%, transparent) 22%,
-          var(--dsw-alias-border-l3,var(--st-fallback-border-l3)) 50%,
-          color-mix(in srgb, var(--dsw-alias-border-l3,var(--st-fallback-border-l3)) 40%, transparent) 78%,
+          color-mix(in srgb, var(--fang-border-edge) 40%, transparent) 22%,
+          var(--fang-border-edge) 50%,
+          color-mix(in srgb, var(--fang-border-edge) 40%, transparent) 78%,
           transparent 100%);
         /* No rounding and no shadow: the ends are already the fade, and a radius on a 1px line drew
            two darker dots where the gradient was leaving. */
@@ -11988,13 +11440,13 @@ var CSS_COMPOSER = `
         width:100%;
         background:linear-gradient(to right,
           transparent 0%,
-          color-mix(in srgb, var(--st-accent) 16%, transparent) 26%,
-          color-mix(in srgb, var(--st-accent) 62%, transparent) 50%,
-          color-mix(in srgb, var(--st-accent) 16%, transparent) 74%,
+          color-mix(in srgb, var(--fang-accent) 16%, transparent) 26%,
+          color-mix(in srgb, var(--fang-accent) 62%, transparent) 50%,
+          color-mix(in srgb, var(--fang-accent) 16%, transparent) 74%,
           transparent 100%);
-        filter:drop-shadow(0 0 4px color-mix(in srgb, var(--st-accent) 65%, transparent))
-          drop-shadow(0 0 12px color-mix(in srgb, var(--st-accent) 32%, transparent))
-          drop-shadow(0 0 30px color-mix(in srgb, var(--st-accent) 16%, transparent));
+        filter:drop-shadow(0 0 4px color-mix(in srgb, var(--fang-accent) 65%, transparent))
+          drop-shadow(0 0 12px color-mix(in srgb, var(--fang-accent) 32%, transparent))
+          drop-shadow(0 0 30px color-mix(in srgb, var(--fang-accent) 16%, transparent));
         animation:st-hairline-breathe 0.9s ease-in-out infinite}
       /* The breath: 0.9s, and only 18% of the range. Fast enough to read as alive at a glance and
          slow enough not to strobe; a wider sweep at this speed did look like a pulse, which pulls
@@ -12004,9 +11456,9 @@ var CSS_COMPOSER = `
          cannot push the line taller. While working the rotating beats render inside this row;
          the row is absent in every other state, so the line sits alone. */
       .st-hairline-copy{display:block;min-width:0;overflow:hidden;
-        text-overflow:ellipsis;white-space:nowrap;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
-      .st-hairline[data-state="working"] .st-hairline-copy{color:var(--st-text-secondary)}
+        text-overflow:ellipsis;white-space:nowrap;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
+      .st-hairline[data-state="working"] .st-hairline-copy{color:var(--fang-ink-secondary)}
       /* The thinking row inside the hairline must not impose the box's own spacing. */
       .st-hairline .st-ai-thinking{padding:0}
       /* The output area.
@@ -12034,7 +11486,7 @@ var CSS_COMPOSER = `
       .st-ai-dock[data-kind="cast"] .st-ai-dock-text{
         max-height:var(--st-dock-text-max-height,60vh);overflow:auto;
         scrollbar-width:thin;
-        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar)) transparent}
+        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
       /* A chat reply keeps the manuscript's type.
          Shrinking it to 13px made an answer look like a tooltip: the same model, in the same panel,
          suddenly writing in a smaller voice. What differs is the STRUCTURE \u2014 a reply has no
@@ -12048,21 +11500,21 @@ var CSS_COMPOSER = `
       .st-ai-dock[data-kind="chat"] .st-ai-dock-text{
         max-height:var(--st-dock-text-max-height,60vh);overflow:auto;
         /* Not the book's type: a reply is a remark, not a passage. */
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        color:var(--st-text-primary)}
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        color:var(--fang-ink-primary)}
       /* Once it does have to scroll, the shortest useful affordance: the text is clipped at the
          bottom edge, and the box says so instead of silently hiding half the answer. */
       .st-ai-dock[data-kind="chat"] .st-ai-dock-text{
         scrollbar-width:thin;
-        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar)) transparent}
+        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
       /* The question above its answer: quieter than the reply, because it is a prompt, not content. */
-      .st-ai-dock[data-kind="chat"] .st-ai-question{font-size:var(--st-text-sm);line-height:1.55;opacity:.8}
-      .st-ai-dock[data-kind="chat"]{gap:var(--st-space-8,8px);padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-12,12px)}
+      .st-ai-dock[data-kind="chat"] .st-ai-question{font-size:var(--fang-font-size-sm);line-height:1.55;opacity:.8}
+      .st-ai-dock[data-kind="chat"]{gap:var(--fang-space-8,8px);padding:var(--fang-space-16,16px) var(--fang-space-16,16px) var(--fang-space-12,12px)}
       /* While thinking there is no suggestion text and no buttons, so the shell is one row. */
-      .st-ai-dock-busy{gap:0;padding:var(--st-space-12,12px) var(--st-space-16,16px)}
+      .st-ai-dock-busy{gap:0;padding:var(--fang-space-12,12px) var(--fang-space-16,16px)}
       /* Positioned: it is the containing block the steer field is measured against, so the field can
          fill the room between the retry pill and the trailing button. */
-      .st-ai-dock-actions{position:relative;display:flex;align-items:center;gap:var(--st-space-4,4px);flex:none;flex-wrap:wrap;margin-top:var(--st-space-2,2px)}
+      .st-ai-dock-actions{position:relative;display:flex;align-items:center;gap:var(--fang-space-4,4px);flex:none;flex-wrap:wrap;margin-top:var(--fang-space-2,2px)}
       /* The status bar: one quiet line under the page. */
       /* Centred: the bar is a read-out, so a centred line under a centred page reads as part of
          the same column rather than as a toolbar with left-aligned controls. */
@@ -12075,95 +11527,95 @@ var CSS_COMPOSER = `
          trailing check rather than a filled row. Two panes, so the effort is one click away
          instead of at the bottom of a scroll. */
       .st-seat{position:relative;min-width:0}
-.st-seat-trigger{display:flex;align-items:center;gap:var(--st-space-4,4px);min-width:0;
-        max-width:min(360px,45cqw);height:var(--st-seg-h,28px);padding:0 var(--st-space-4,4px) 0 var(--st-space-8,8px);
-        border:none;border-radius:var(--st-radius-sm,8px);outline:none;background:transparent;
-        color:var(--st-text-secondary);font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        font-weight:var(--st-font-weight-normal);cursor:pointer;corner-shape:round;}
-      .st-seat-trigger:hover{background:var(--st-hover-fill)}
+.st-seat-trigger{display:flex;align-items:center;gap:var(--fang-space-4,4px);min-width:0;
+        max-width:min(360px,45cqw);height:var(--fang-segmented-height,28px);padding:0 var(--fang-space-4,4px) 0 var(--fang-space-8,8px);
+        border:none;border-radius:var(--fang-radius-sm,8px);outline:none;background:transparent;
+        color:var(--fang-ink-secondary);font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        font-weight:var(--fang-font-weight-normal);cursor:pointer;corner-shape:round;}
+      .st-seat-trigger:hover{background:var(--fang-hover-fill)}
       /* The panel has one accent, and the focus ring is part of it: the host's own rule falls back
          to a fixed business blue, which is the one colour here that would not follow a skin. */
       .st-seat-trigger:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       .st-seat-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       /* The effort gives up its room first, so the model name keeps its last pixel. */
       .st-seat-effort{flex-shrink:1000;min-width:0;overflow:hidden;text-overflow:ellipsis;
-        white-space:nowrap;color:var(--st-text-tertiary)}
+        white-space:nowrap;color:var(--fang-ink-tertiary)}
 /* Opens upward BY DEFAULT: the composer sits at the bottom of the page, and the host's card
          is placed from the trigger rect for the same reason. The side is decided at the click from
          the room the chip actually has (data-side, set in ComposerModelSeat) \u2014 in the settings
          drawer the same chip is near the top of a page, and a card that could only open one way
          was clipped by the page it opened into. */
-      .st-seat-menu{position:absolute;z-index:var(--st-layer-menu);right:0;bottom:calc(100% + 6px);
+      .st-seat-menu{position:absolute;z-index:var(--fang-layer-menu);right:0;bottom:calc(100% + 6px);
         display:flex;flex-direction:column;width:max-content;
         min-width:min(240px,calc(100vw - 32px));max-width:min(420px,calc(100vw - 32px));
-        max-height:min(360px,calc(100vh - 96px));overflow:hidden;padding:var(--st-space-4,4px);
-        border:none;border-radius:var(--st-radius-md,12px);background:var(--st-surface-high);
+        max-height:min(360px,calc(100vh - 96px));overflow:hidden;padding:var(--fang-space-4,4px);
+        border:none;border-radius:var(--fang-radius-md,12px);background:var(--fang-surface-high);
         box-shadow:var(--dsw-elevation-prominent,var(--dsw-shadow-lv2,0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.04)));
-        color:var(--st-text-primary);corner-shape:round;}
+        color:var(--fang-ink-primary);corner-shape:round;}
       .st-seat-menu[data-side="down"]{bottom:auto;top:calc(100% + 6px)}
       .st-seat-groups{min-height:0;overflow-y:auto}
 /* A root row: the name of the setting on the left, its current value on the right. */
-      .st-seat-cell{display:flex;align-items:center;gap:var(--st-space-8,8px);width:auto;min-width:100%;height:var(--st-row-height,34px);
-        padding:0 var(--st-space-8,8px);border:none;border-radius:var(--st-radius-md,12px);background:transparent;
-        color:var(--st-text-primary);font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+      .st-seat-cell{display:flex;align-items:center;gap:var(--fang-space-8,8px);width:auto;min-width:100%;height:var(--fang-row-height,34px);
+        padding:0 var(--fang-space-8,8px);border:none;border-radius:var(--fang-radius-md,12px);background:transparent;
+        color:var(--fang-ink-primary);font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         cursor:pointer;text-align:left;outline:none;corner-shape:round;}
-      .st-seat-cell:hover,.st-seat-cell:focus-visible{background:var(--st-hover-fill)}
+      .st-seat-cell:hover,.st-seat-cell:focus-visible{background:var(--fang-hover-fill)}
       .st-seat-cell-label{flex:0 0 auto;white-space:nowrap}
       .st-seat-cell-value{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;
-        white-space:nowrap;text-align:right;color:var(--st-text-tertiary)}
-.st-seat-option{display:flex;align-items:center;gap:var(--st-space-8,8px);width:auto;min-width:100%;
-        min-height:var(--st-row-height,34px);padding:var(--st-space-4,4px) var(--st-space-8,8px);border:none;border-radius:var(--st-radius-md,12px);
-        background:transparent;color:inherit;font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+        white-space:nowrap;text-align:right;color:var(--fang-ink-tertiary)}
+.st-seat-option{display:flex;align-items:center;gap:var(--fang-space-8,8px);width:auto;min-width:100%;
+        min-height:var(--fang-row-height,34px);padding:var(--fang-space-4,4px) var(--fang-space-8,8px);border:none;border-radius:var(--fang-radius-md,12px);
+        background:transparent;color:inherit;font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         text-align:left;cursor:pointer;outline:none;corner-shape:round;}
-      .st-seat-option:hover,.st-seat-option:focus-visible{background:var(--st-hover-fill)}
+      .st-seat-option:hover,.st-seat-option:focus-visible{background:var(--fang-hover-fill)}
       .st-seat-option-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       /* The marker is the trailing check, not a filled row: the host's menu does the same, and a
          filled row reads as "hovered" in a menu that also has hover. */
-      .st-seat-check{display:grid;place-items:center;flex:0 0 14px;color:var(--st-text-primary)}
-      .st-seat-group{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
-        padding:var(--st-space-8,8px) var(--st-space-8,8px) var(--st-space-2,2px)}
-      .st-seat-empty{padding:var(--st-space-8,8px);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-      .st-seat-back{display:flex;align-items:center;gap:var(--st-space-4,4px);width:auto;min-width:100%;height:var(--st-row-height-compact,26px);
-        padding:0 var(--st-space-8,8px);border:none;border-radius:var(--st-radius-md,12px);background:transparent;
-        color:var(--st-text-tertiary);font-family:inherit;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+      .st-seat-check{display:grid;place-items:center;flex:0 0 14px;color:var(--fang-ink-primary)}
+      .st-seat-group{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
+        padding:var(--fang-space-8,8px) var(--fang-space-8,8px) var(--fang-space-2,2px)}
+      .st-seat-empty{padding:var(--fang-space-8,8px);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary)}
+      .st-seat-back{display:flex;align-items:center;gap:var(--fang-space-4,4px);width:auto;min-width:100%;height:var(--fang-row-height-compact,26px);
+        padding:0 var(--fang-space-8,8px);border:none;border-radius:var(--fang-radius-md,12px);background:transparent;
+        color:var(--fang-ink-tertiary);font-family:inherit;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
         cursor:pointer;text-align:left;outline:none}
-      .st-seat-back:hover,.st-seat-back:focus-visible{background:var(--st-hover-fill);
-        color:var(--st-text-primary)}
-      .st-seat-back .fang-chevron-right{width:var(--st-space-12,12px);height:var(--st-space-12,12px);transform:rotate(180deg)}
-      .st-model-item-id{margin-left:auto;font-family:var(--st-font-mono);font-size:var(--st-text-sm);
-        color:var(--st-text-tertiary);overflow:hidden;text-overflow:ellipsis;
+      .st-seat-back:hover,.st-seat-back:focus-visible{background:var(--fang-hover-fill);
+        color:var(--fang-ink-primary)}
+      .st-seat-back .fang-chevron-right{width:var(--fang-space-12,12px);height:var(--fang-space-12,12px);transform:rotate(180deg)}
+      .st-model-item-id{margin-left:auto;font-family:var(--fang-font-mono);font-size:var(--fang-font-size-sm);
+        color:var(--fang-ink-tertiary);overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;max-width:55%}
       /* A proposed cast change: one line per entity, the verb first because that is the decision. */
 
       /* ---- the cast strip: who is in this chapter, and what they want ---- */
-      .st-cast{display:flex;flex-direction:column;gap:var(--st-space-8,8px);min-width:0;
+      .st-cast{display:flex;flex-direction:column;gap:var(--fang-space-8,8px);min-width:0;
         max-height:min(40vh,360px);overflow:auto;scrollbar-width:thin;
-        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar)) transparent}
-      .st-cast-row{display:flex;align-items:baseline;gap:var(--st-space-8,8px);min-width:0;
-        font-size:var(--st-text-md);line-height:var(--st-line-height-ui);color:var(--st-text-primary)}
-      .st-cast-tag{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:0 var(--st-space-8,8px);border-radius:var(--st-radius-pill,999px);corner-shape:round;
-        background:color-mix(in srgb, var(--dsw-static-green-500,var(--st-fallback-green)) 18%, transparent);
-        color:var(--st-text-primary)}
+        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
+      .st-cast-row{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);min-width:0;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);color:var(--fang-ink-primary)}
+      .st-cast-tag{flex:none;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);padding:0 var(--fang-space-8,8px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;
+        background:color-mix(in srgb, var(--dsw-static-green-500,#22c55e) 18%, transparent);
+        color:var(--fang-ink-primary)}
       /* An update changes what is already there, so it is marked with the accent rather than the
          green of something new. */
-      .st-cast-tag[data-verb="update"]{background:color-mix(in srgb, var(--st-accent) 18%, transparent);
-        color:var(--st-accent)}
-      .st-cast-target{flex:none;font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
-      .st-cast-name{min-width:0;font-weight:var(--st-font-weight-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-cast-detail{min-width:0;font-size:var(--st-text-sm);color:var(--st-text-tertiary);
+      .st-cast-tag[data-verb="update"]{background:color-mix(in srgb, var(--fang-accent) 18%, transparent);
+        color:var(--fang-accent)}
+      .st-cast-target{flex:none;font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-cast-name{min-width:0;font-weight:var(--fang-font-weight-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .st-cast-detail{min-width:0;font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary);
         overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
       /* ---- the working state ----
          The accent is the THEME's brand colour, not a colour of ours: on a red theme it is red,
-         on a green one green. --st-accent is the single place that decision is made, so nothing
+         on a green one green. --fang-accent is the single place that decision is made, so nothing
          else in this stylesheet has to know which theme is active.
          Nothing here invents a colour of its own: the working state uses the theme accent and a
          change of opacity, so it stays quiet on a page of prose. */
       /* One row: the dots, then the question and the state together. */
-      .st-ai-thinking{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:var(--st-space-8,8px);
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);color:var(--st-text-tertiary);overflow:hidden}
-      .st-ai-thinking-row{display:flex;align-items:center;justify-content:flex-start;gap:var(--st-space-4,4px);min-width:0;flex-wrap:nowrap}
+      .st-ai-thinking{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:var(--fang-space-8,8px);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);color:var(--fang-ink-tertiary);overflow:hidden}
+      .st-ai-thinking-row{display:flex;align-items:center;justify-content:flex-start;gap:var(--fang-space-4,4px);min-width:0;flex-wrap:nowrap}
       /* All the labels share one grid cell, so the row never changes width as the copy turns
          over; a changing width would make the dots slide sideways every two seconds. */
       .st-ai-thinking-labels{display:grid;min-width:0;justify-items:start;text-align:left}
@@ -12189,9 +11641,9 @@ var CSS_COMPOSER = `
          mark is a rotating arc, not three dots: dots read as a loading placeholder, an arc reads
          as something thinking. The 2px top nudge is optical: a 10px circle centered on a 20px
          line sits half a pixel high otherwise. */
-      .st-ai-thinking-mark{flex:none;width:var(--st-space-12,12px);height:var(--st-space-12,12px);margin:var(--st-space-2,2px) 0 0;
-        border:1.5px solid color-mix(in srgb, var(--st-accent) 40%, transparent);
-        border-top-color:var(--st-accent);border-radius:var(--st-radius-pill,999px);corner-shape:round;
+      .st-ai-thinking-mark{flex:none;width:var(--fang-space-12,12px);height:var(--fang-space-12,12px);margin:var(--fang-space-2,2px) 0 0;
+        border:1.5px solid color-mix(in srgb, var(--fang-accent) 40%, transparent);
+        border-top-color:var(--fang-accent);border-radius:var(--fang-radius-pill,999px);corner-shape:round;
         animation:st-think-spin 1s linear infinite}
       /* The row leads with the spinner and nothing else: no leading gap, no indent. The 4px gap
          keeps the copy reading as ONE line starting at the row's left edge, not as a badge beside
@@ -12206,7 +11658,7 @@ var CSS_COMPOSER = `
 
       /* ---- the composer: the field, the send button, and the model menu ---- */
       .st-chat-composer{display:flex;flex-direction:column;
-        gap:calc(var(--dsh-composer-stack-gap, var(--st-space-8,8px)) + var(--st-space-2,2px));
+        gap:calc(var(--dsh-composer-stack-gap, var(--fang-space-8,8px)) + var(--fang-space-2,2px));
         width:100%;min-width:0}
       /* The one field that is NOT a well: it sits inside the dock's own card, which already
          supplies the surface, so a second fill inside it would read as a box in a box. It keeps
@@ -12219,55 +11671,55 @@ var CSS_COMPOSER = `
          The height cap is the host's own variable so the two composers stop growing at the same
          point. */
       .st-chat-input{width:100%;min-width:0;resize:none;background:transparent;
-        border:none;outline:none;color:var(--st-text-primary);
+        border:none;outline:none;color:var(--fang-ink-primary);
         font-family:inherit;font-size:var(--st-font-ui,16px);
         line-height:var(--st-leading-ui,24px);
         max-height:var(--dsh-composer-text-max-height,336px);
         padding:0;margin:0;overflow:auto}
-      .st-chat-input::placeholder{color:var(--st-text-tertiary)}
+      .st-chat-input::placeholder{color:var(--fang-ink-tertiary)}
       /* No focus ring: the field is inside the dock's card, and a ring around it alone draws a box
          inside a box \u2014 at 2px it reads as exactly the border this field does not have. The caret
          and the dock's own surface mark where typing goes. */
       .st-chat-input:focus,.st-chat-input:focus-visible{box-shadow:none;outline:none}
       /* The control row under the input, laid out the way the host's composer lays out its own:
          the hint on the left, the model chip and the send button pushed to the right. */
-      .st-chat-row{display:flex;align-items:center;gap:var(--st-space-12,12px);min-width:0;flex-wrap:wrap}
-      .st-chat-trailing{display:flex;align-items:center;gap:var(--st-space-12,12px);margin-left:auto;flex:none}
+      .st-chat-row{display:flex;align-items:center;gap:var(--fang-space-12,12px);min-width:0;flex-wrap:wrap}
+      .st-chat-trailing{display:flex;align-items:center;gap:var(--fang-space-12,12px);margin-left:auto;flex:none}
       /* The menu opens upward by default: the composer's chip sits at the bottom of the page, so a
          downward menu would fall off the window. The settings page overrides this. */
-      .st-model-menu{position:absolute;bottom:calc(100% + 6px);right:0;z-index:var(--st-layer-menu);
+      .st-model-menu{position:absolute;bottom:calc(100% + 6px);right:0;z-index:var(--fang-layer-menu);
         min-width:var(--st-picker-min-w,220px);max-width:min(320px,80vw);max-height:min(52vh,360px);overflow:auto;
-        display:flex;flex-direction:column;padding:var(--st-space-8,8px);
-        border-radius:var(--st-radius-md,12px);border:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));
-        background:var(--st-surface-high);box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04))}
-      .st-model-group-name{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
-        padding:var(--st-space-8,8px) var(--st-space-8,8px) var(--st-space-2,2px)}
-.st-model-item{display:flex;align-items:center;gap:var(--st-space-8,8px);width:100%;text-align:left;
-        font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);padding:var(--st-space-4,4px) var(--st-space-8,8px);
-        border:none;border-radius:var(--st-radius-sm,8px);background:transparent;cursor:pointer;
-        color:var(--st-text-secondary);corner-shape:round;}
-      .st-model-item:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-model-item[data-current="true"]{color:var(--st-text-primary);font-weight:var(--st-font-weight-medium)}
+        display:flex;flex-direction:column;padding:var(--fang-space-8,8px);
+        border-radius:var(--fang-radius-md,12px);border:.5px solid var(--fang-border-edge);
+        background:var(--fang-surface-high);box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04))}
+      .st-model-group-name{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
+        padding:var(--fang-space-8,8px) var(--fang-space-8,8px) var(--fang-space-2,2px)}
+.st-model-item{display:flex;align-items:center;gap:var(--fang-space-8,8px);width:100%;text-align:left;
+        font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);padding:var(--fang-space-4,4px) var(--fang-space-8,8px);
+        border:none;border-radius:var(--fang-radius-sm,8px);background:transparent;cursor:pointer;
+        color:var(--fang-ink-secondary);corner-shape:round;}
+      .st-model-item:hover{background:var(--fang-hover-fill);color:var(--fang-ink-primary)}
+      .st-model-item[data-current="true"]{color:var(--fang-ink-primary);font-weight:var(--fang-font-weight-medium)}
       .st-model-item[data-current="true"]::after{content:'\u2713';margin-left:auto;
-        color:var(--st-accent);font-size:var(--st-text-sm)}
+        color:var(--fang-accent);font-size:var(--fang-font-size-sm)}
       .st-model-item-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-      .st-model-empty{padding:var(--st-space-8,8px);font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
+      .st-model-empty{padding:var(--fang-space-8,8px);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
       /* A count beside the history button, so an empty log does not invite a click. */
-      .st-count{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:0 var(--st-space-4,4px);border-radius:var(--st-radius-pill,999px);corner-shape:round;margin-left:var(--st-space-4,4px);
-        background:var(--st-hover-fill);color:var(--st-text-tertiary);
+      .st-count{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);padding:0 var(--fang-space-4,4px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;margin-left:var(--fang-space-4,4px);
+        background:var(--fang-hover-fill);color:var(--fang-ink-tertiary);
         font-variant-numeric:tabular-nums}
       /* The answers card: one block per exchange, question first, then what came back. */
 
       /* ---- answers: what was asked, and what came back ---- */
-      .st-answers{display:flex;flex-direction:column;gap:var(--st-space-16,16px)}
-      .st-answer{border-bottom:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));padding-bottom:var(--st-space-16,16px)}
+      .st-answers{display:flex;flex-direction:column;gap:var(--fang-space-16,16px)}
+      .st-answer{border-bottom:.5px solid var(--fang-border-edge);padding-bottom:var(--fang-space-16,16px)}
       .st-answer:last-child{border-bottom:none;padding-bottom:0}
-      .st-answer-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);margin-bottom:var(--st-space-8,8px);flex-wrap:wrap}
-      .st-answer-question{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
+      .st-answer-head{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);margin-bottom:var(--fang-space-8,8px);flex-wrap:wrap}
+      .st-answer-question{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
         min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:52%}
       .st-answer-body{white-space:pre-wrap;word-break:break-word;
         font-size:var(--st-font-size,16px);line-height:var(--st-line-height,1.9);
-        color:var(--st-text-primary)}
+        color:var(--fang-ink-primary)}
       /* The send key: the host's own circular key, filled with the panel accent.
          The host drew this control before we did, so it is copied rather than reinvented: a 34px
          square, a grid that centres the glyph, a 999px radius, and \u2014 the line we were missing \u2014
@@ -12278,7 +11730,7 @@ var CSS_COMPOSER = `
          host resets corner-shape to round, and this one has to do the same. Without it the button
          measures 34 by 34 with a 17px radius and still does not look round.
          Colour is the accent, like every other affirmative control here; --st-send is the one place
-         that decides it, and it points at --st-accent. */
+         that decides it, and it points at --fang-accent. */
       /* Every dimension is pinned, including the minimums and the flex basis.
          A height alone is not enough to keep a control square: a min-height from anywhere above it
          \u2014 a host stylesheet, a reset, a dialog template \u2014 silently stretches the box while the
@@ -12288,31 +11740,31 @@ var CSS_COMPOSER = `
       .st-chat-send{display:grid;place-items:center;padding:0;
         width:var(--st-send-size,34px);height:var(--st-send-size,34px);
         flex:none;aspect-ratio:1/1;
-        border:none;border-radius:var(--st-radius-pill,999px);corner-shape:round;cursor:pointer;
+        border:none;border-radius:var(--fang-radius-pill,999px);corner-shape:round;cursor:pointer;
         background:var(--st-send,#c3272b);
-        color:var(--st-on-accent,#fff);
+        color:var(--fang-on-accent,#fff);
         transition:background-color var(--ds-transition-duration-fast,.12s) var(--ds-ease-in-out,ease-in-out)}
       .st-chat-send:hover:not(:disabled){background:var(--st-send-hover,#c9352a)}
       .st-chat-send:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       .st-chat-send:disabled{opacity:.4;cursor:not-allowed}
       /* The question above the answer (and above the working state): the reply needs a subject, and
          once the composer has folded away this is the only record of what was asked. */
       /* The question above a finished answer: a record of what was asked, above the reply. No rule
          under it \u2014 the answer below is already a separate block, and a line there separated two
          things that belong together. */
-      .st-ai-question{font-size:var(--st-text-md);line-height:var(--st-line-height-ui);color:var(--st-text-tertiary);
+      .st-ai-question{font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);color:var(--fang-ink-tertiary);
         white-space:pre-wrap;word-break:break-word}
       /* While the model works the question is inline with the state, so it is one line:
          "\u8FD9\u91CC\u8BE5\u600E\u4E48\u6536\uFF1F \xB7 \u5728\u60F3\u4E0B\u4E00\u53E5". The question does not fade or rotate; the state does. */
-      .st-ai-thinking-ask{color:var(--st-text-secondary);min-width:0;
+      .st-ai-thinking-ask{color:var(--fang-ink-secondary);min-width:0;
         overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
       .st-ai-thinking-sep{opacity:.45;flex:none}
       /* The dock's own edge, one hairline in the accent, breathing slowly: it says "busy" from
          across the page without drawing a line over the text. */
       .st-ai-dock-busy{position:relative;overflow:hidden}
       .st-ai-dock-busy::before{content:'';position:absolute;top:0;left:0;right:0;height:var(--st-rule-h,1px);
-        background:var(--st-accent);opacity:.3;animation:st-breathe 2.6s ease-in-out infinite}
+        background:var(--fang-accent);opacity:.3;animation:st-breathe 2.6s ease-in-out infinite}
       @keyframes st-breathe{0%,100%{opacity:.18}50%{opacity:.5}}
       /* Motion is decoration here: with reduced motion the colour and the words still carry the
          state, and nothing moves. */
@@ -12326,91 +11778,91 @@ var CSS_COMPOSER = `
       }
 
       /* ---- the history drawer's pages: the answers, and the system event log ---- */
-      .st-answers-pages{display:flex;flex-direction:column;gap:var(--st-space-12,12px);min-height:0}
+      .st-answers-pages{display:flex;flex-direction:column;gap:var(--fang-space-12,12px);min-height:0}
       /* The page switcher is a control, not a full-width band. */
       .st-answers-pages>.fang-segmented{align-self:flex-start}
       /* One row per event: a fixed-width clock column, then the line. Failed calls carry the
          failure code the host reported \u2014 the UNKNOWN the writer could previously never see twice
          in context \u2014 and are marked in the error colour so a scan finds them. */
-      .st-event-log{display:flex;flex-direction:column;gap:var(--st-space-2,2px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        font-family:var(--st-font-mono)}
-      .st-event-toolbar{display:flex;gap:var(--st-space-8,8px);align-items:center}
+      .st-event-log{display:flex;flex-direction:column;gap:var(--fang-space-2,2px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        font-family:var(--fang-font-mono)}
+      .st-event-toolbar{display:flex;gap:var(--fang-space-8,8px);align-items:center}
       /* The type filter is a compact select, not a row of time chips: the option list can grow
          without widening the drawer, and it says what it filters in one word. */
       .st-event-filter{flex:none;width:auto;max-width:100%}
       /* Hug the current value instead of reserving a fixed block: "\u5168\u90E8\u7C7B\u578B" needs four glyphs,
          not a field as wide as the event table. */
       .st-event-filter .fang-dropdown-button{width:auto}
-      .st-event-filter:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-event-table{border-bottom:var(--st-hairline) solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
+      .st-event-filter:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
+      .st-event-table{border-bottom:var(--fang-hairline) solid var(--fang-border-edge)}
       .st-event-head{display:flex;align-items:center;min-width:0;user-select:none}
-      .st-event-th{position:relative;display:flex;align-items:center;padding:var(--st-space-2,2px) var(--st-space-8,8px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-secondary);
+      .st-event-th{position:relative;display:flex;align-items:center;padding:var(--fang-space-2,2px) var(--fang-space-8,8px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-secondary);
         overflow:hidden;white-space:nowrap}
       .st-event-resize{position:absolute;top:0;right:-3px;width:var(--st-event-resize-w);height:100%;cursor:col-resize}
-      .st-event-resize:hover{background:var(--st-focus-ink)}
-      .st-event-body{display:flex;flex-direction:column;gap:var(--st-space-2,2px);min-height:0;
-        font-family:var(--st-font-mono);max-height:var(--st-event-body-max-h);overflow:auto}
-      .st-event-row{display:flex;gap:var(--st-space-8,8px);align-items:baseline;min-width:0}
-      .st-event-row[data-ok="false"] .st-event-text{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
-      .st-event-time{flex:none;width:var(--st-event-time-w,var(--st-log-col-time));color:var(--st-text-tertiary)}
-      .st-event-name{flex:none;width:var(--st-event-name-w,var(--st-log-col-name));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--st-text-primary)}
-      .st-event-text{min-width:0;overflow-wrap:anywhere;color:var(--st-text-secondary)}
+      .st-event-resize:hover{background:var(--fang-focus-ink)}
+      .st-event-body{display:flex;flex-direction:column;gap:var(--fang-space-2,2px);min-height:0;
+        font-family:var(--fang-font-mono);max-height:var(--st-event-body-max-h);overflow:auto}
+      .st-event-row{display:flex;gap:var(--fang-space-8,8px);align-items:baseline;min-width:0}
+      .st-event-row[data-ok="false"] .st-event-text{color:var(--dsw-alias-state-error-primary,#ec1313)}
+      .st-event-time{flex:none;width:var(--st-event-time-w,var(--st-log-col-time));color:var(--fang-ink-tertiary)}
+      .st-event-name{flex:none;width:var(--st-event-name-w,var(--st-log-col-name));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--fang-ink-primary)}
+      .st-event-text{min-width:0;overflow-wrap:anywhere;color:var(--fang-ink-secondary)}
 `;
 
 // src/client/panel/scan.css.js
 var CSS_SCAN = `
       /* ---- the action row under a proposal, and a section scan ---- */
-      .st-dock-act{font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        padding:var(--st-space-4,4px) var(--st-space-12,12px);
-        border:none;border-radius:var(--st-radius-sm,8px);background:transparent;
-        color:var(--st-text-secondary);cursor:pointer;corner-shape:round;}
-      .st-dock-act:hover{background:var(--st-hover-fill);color:var(--st-text-primary)}
-      .st-dock-act:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink);outline:none}
-      .st-dock-act-primary{color:var(--st-accent);font-weight:var(--st-font-weight-medium)}
-      .st-dock-act-primary:hover{color:var(--st-accent)}
-      .st-dock-act-quiet{color:var(--st-text-tertiary);margin-left:auto}
+      .st-dock-act{font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        padding:var(--fang-space-4,4px) var(--fang-space-12,12px);
+        border:none;border-radius:var(--fang-radius-sm,8px);background:transparent;
+        color:var(--fang-ink-secondary);cursor:pointer;corner-shape:round;}
+      .st-dock-act:hover{background:var(--fang-hover-fill);color:var(--fang-ink-primary)}
+      .st-dock-act:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink);outline:none}
+      .st-dock-act-primary{color:var(--fang-accent);font-weight:var(--fang-font-weight-medium)}
+      .st-dock-act-primary:hover{color:var(--fang-accent)}
+      .st-dock-act-quiet{color:var(--fang-ink-tertiary);margin-left:auto}
 
       /* ---- a section scan: a copy-edit, or a grammar critique ----
          Interface type, not the manuscript's: these are notes ABOUT the text, and setting them in
          the same size and leading as the prose made a list of findings read like a chapter. The
          dock's shared surface, radius and elevation still apply \u2014 only the type changes. */
-      .st-ai-dock[data-kind="scan"]{gap:var(--st-space-12,12px);padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-12,12px);
-        font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-line-height-ui)}
-      .st-scan{display:flex;flex-direction:column;gap:var(--st-space-12,12px);min-width:0}
-      .st-scan-head{display:flex;align-items:center;gap:var(--st-space-8,8px);min-width:0}
-      .st-scan-title{font-size:var(--st-text-md);line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-medium);color:var(--st-text-primary)}
-      .st-scan-count{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
+      .st-ai-dock[data-kind="scan"]{gap:var(--fang-space-12,12px);padding:var(--fang-space-16,16px) var(--fang-space-16,16px) var(--fang-space-12,12px);
+        font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui)}
+      .st-scan{display:flex;flex-direction:column;gap:var(--fang-space-12,12px);min-width:0}
+      .st-scan-head{display:flex;align-items:center;gap:var(--fang-space-8,8px);min-width:0}
+      .st-scan-title{font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary)}
+      .st-scan-count{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
         font-variant-numeric:tabular-nums}
       /* The list scrolls, the header and the footer do not: a dozen findings would otherwise push
          the manuscript out of view, and the way to close a scan would be off the bottom of it. */
       .st-scan-list{display:flex;flex-direction:column;min-width:0;
         max-height:min(46vh,440px);overflow:auto;scrollbar-width:thin;
-        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,var(--st-fallback-scrollbar)) transparent}
+        scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
       /* Rules between rows, none above the first: the list is one block of related findings, and a
          box around each of them would read as a table of separate things. */
-      .st-scan-row{padding:var(--st-space-8,8px) 0;border-top:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3));min-width:0}
+      .st-scan-row{padding:var(--fang-space-8,8px) 0;border-top:.5px solid var(--fang-border-edge);min-width:0}
       .st-scan-row:first-child{border-top:none;padding-top:0}
       .st-scan-row:last-child{padding-bottom:0}
-      .st-scan-row-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);min-width:0;margin-bottom:var(--st-space-2,2px)}
+      .st-scan-row-head{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);min-width:0;margin-bottom:var(--fang-space-2,2px)}
       /* The kind of problem, as a quiet chip in the theme's own colour. */
-      .st-scan-tag{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:0 var(--st-space-8,8px);border-radius:var(--st-radius-pill,999px);corner-shape:round;
-        background:color-mix(in srgb, var(--st-accent) 14%, transparent);color:var(--st-accent)}
+      .st-scan-tag{flex:none;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);padding:0 var(--fang-space-8,8px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;
+        background:color-mix(in srgb, var(--fang-accent) 14%, transparent);color:var(--fang-accent)}
       /* Where it is. On one line: the quote can be a whole sentence and a wrapped quote buried the
          finding it was pointing at. The full text is still in the tooltip. */
-      .st-scan-what{color:var(--st-text-primary);white-space:pre-wrap;word-break:break-word}
+      .st-scan-what{color:var(--fang-ink-primary);white-space:pre-wrap;word-break:break-word}
       /* The correction: a different thing from the complaint, so a different colour and an arrow
          rather than a second sentence in the same tone. */
-      .st-scan-fix{margin-top:var(--st-space-2,2px);color:var(--st-text-secondary);
+      .st-scan-fix{margin-top:var(--fang-space-2,2px);color:var(--fang-ink-secondary);
         white-space:pre-wrap;word-break:break-word}
-      .st-scan-arrow{color:var(--st-accent);margin-right:var(--st-space-4,4px)}
-      .st-scan-empty{color:var(--st-text-tertiary)}
-      .st-scan-foot{display:flex;align-items:center;gap:var(--st-space-4,4px);flex:none}
+      .st-scan-arrow{color:var(--fang-accent);margin-right:var(--fang-space-4,4px)}
+      .st-scan-empty{color:var(--fang-ink-tertiary)}
+      .st-scan-foot{display:flex;align-items:center;gap:var(--fang-space-4,4px);flex:none}
       /* The critique's verdict: the overall judgement the points then back up. Prose, but set
          slightly quieter than the list, because the list is the actionable half. */
-      .st-critique-verdict{color:var(--st-text-secondary);white-space:pre-wrap;
-        word-break:break-word;padding:var(--st-space-2,2px) 0 var(--st-space-4,4px)}
+      .st-critique-verdict{color:var(--fang-ink-secondary);white-space:pre-wrap;
+        word-break:break-word;padding:var(--fang-space-2,2px) 0 var(--fang-space-4,4px)}
       /* The steer: a chevron-labelled toggle that opens a one-line input. Flat like every other
          control in the dock; the chevron rotates the way the session chip's does. */
       /* The steer: a chevron that opens a small popover ABOVE its row. Absolutely positioned, so
@@ -12421,13 +11873,13 @@ var CSS_SCAN = `
       /* Not positioned: the field it opens is laid out against the action row, so a containing
          block here would shrink it back to the chevron's own width. */
       .st-scan-steer{position:static;display:inline-flex;min-width:0}
-.st-scan-steer-toggle{display:inline-flex;align-items:center;gap:var(--st-space-2,2px);font-family:inherit;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);padding:var(--st-space-2,2px) var(--st-space-8,8px);border:none;border-radius:var(--st-radius-sm,8px);
-        background:transparent;color:var(--st-text-tertiary);cursor:pointer;white-space:nowrap;corner-shape:round;}
-      .st-scan-steer-toggle:hover{background:var(--st-hover-fill);
-        color:var(--st-text-primary)}
+.st-scan-steer-toggle{display:inline-flex;align-items:center;gap:var(--fang-space-2,2px);font-family:inherit;
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);padding:var(--fang-space-2,2px) var(--fang-space-8,8px);border:none;border-radius:var(--fang-radius-sm,8px);
+        background:transparent;color:var(--fang-ink-tertiary);cursor:pointer;white-space:nowrap;corner-shape:round;}
+      .st-scan-steer-toggle:hover{background:var(--fang-hover-fill);
+        color:var(--fang-ink-primary)}
       .st-scan-steer-toggle:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       /* A normal flex item in the row, right after the chevron \u2014 not a popover.
          A floating box has to be told where to sit and how wide to be, and both answers depend on a
          layout it cannot see; in the flow it takes the room the row has left over and the row's own
@@ -12435,8 +11887,8 @@ var CSS_SCAN = `
          Its vertical padding is the row's shared one, so the field is the height of the buttons
          beside it: a taller field would push the row open and shift everything above it. */
       .st-scan-steer-input{flex:1 1 auto;min-width:0;
-        padding-top:var(--st-space-4,4px);padding-bottom:var(--st-space-4,4px);
-        line-height:var(--st-text-md-leading)}
+        padding-top:var(--fang-space-4,4px);padding-bottom:var(--fang-space-4,4px);
+        line-height:var(--fang-line-height-md)}
 
 /* The retry group in the rewrite dock: button and chevron read as one control, so they sit
          in a flat pill with no seam between them.
@@ -12446,7 +11898,7 @@ var CSS_SCAN = `
          The group must not clip: the field it opens is a child of it, and overflow: hidden here would
          cut that field off. */
       .st-retry-group{display:inline-flex;align-items:center;gap:0;
-        border-radius:var(--st-radius-sm,8px);corner-shape:round;}
+        border-radius:var(--fang-radius-sm,8px);corner-shape:round;}
       /* When the steer field is open it is a CHILD of this group but must take part in the row's
          layout, not the group's. Contents makes the group generate no box: the retry button, the
          chevron and the field become siblings of \u653E\u5F03, and the row's flex layout hands the field the
@@ -12454,15 +11906,15 @@ var CSS_SCAN = `
       .st-retry-group:has(.st-scan-steer-input){display:contents}
 /* The half-rounding is on the ELEMENTS, not on the container, so it survives the container
          dissolving into display: contents. One rule each, no open/closed variants to keep in step. */
-      .st-retry-group .st-dock-act{border-radius:var(--st-radius-sm,8px) 0 0 var(--st-radius-sm,8px);corner-shape:round;}
+      .st-retry-group .st-dock-act{border-radius:var(--fang-radius-sm,8px) 0 0 var(--fang-radius-sm,8px);corner-shape:round;}
 /* The chevron carries the same type and the same vertical padding as \u91CD\u8BD5 beside it, which is
          what makes the pair one pill: at its own 12/18 metrics it stood 22px against the button's
          28px and read as a small tag stuck to a tall button. The metric comes from the shared row
          variable, so the two cannot drift apart again. */
-      .st-retry-group .st-scan-steer-toggle{border-radius:0 var(--st-radius-sm,8px) var(--st-radius-sm,8px) 0;
-        font-size:var(--st-text-md);
-        line-height:var(--st-text-md-leading);
-        padding:var(--st-space-4,4px) var(--st-space-8,8px);corner-shape:round;}
+      .st-retry-group .st-scan-steer-toggle{border-radius:0 var(--fang-radius-sm,8px) var(--fang-radius-sm,8px) 0;
+        font-size:var(--fang-font-size-md);
+        line-height:var(--fang-line-height-md);
+        padding:var(--fang-space-4,4px) var(--fang-space-8,8px);corner-shape:round;}
       /* The model page: one row per role, the chip on the right where the composer puts it. */
 `;
 
@@ -12470,17 +11922,17 @@ var CSS_SCAN = `
 var CSS_STATUS = `
       /* ---- the status bar: one read-out line, and the card it opens ---- */
       .st-statusbar{flex:0 0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);position:relative;
-        align-items:center;gap:var(--st-space-12,12px);
-        height:var(--st-statusbar-h,30px);padding:0 var(--st-space-16,16px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
-        border:none;background:var(--st-bg);
+        align-items:center;gap:var(--fang-space-12,12px);
+        height:var(--st-statusbar-h,30px);padding:0 var(--fang-space-16,16px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
+        border:none;background:var(--fang-bg);
         white-space:nowrap;overflow:visible}
       /* The read-out is one cell of the grid: it stays centred between the corner slot and an
          empty balancing column. */
       /* The row itself does NOT clip: a popup hangs inside it now, and clipping the row is what made
          the model card disappear. Only the two text items, which are the ones that can overflow,
          keep their ellipsis. */
-      .st-status-run{grid-column:2;display:flex;align-items:center;gap:var(--st-space-8,8px);min-width:0;overflow:visible}
+      .st-status-run{grid-column:2;display:flex;align-items:center;gap:var(--fang-space-8,8px);min-width:0;overflow:visible}
       .st-status-run .st-status-item,
       .st-status-run .st-status-name,
       .st-status-run .st-status-count{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -12493,23 +11945,23 @@ var CSS_STATUS = `
          flowing item would push it off centre every time a message appeared. */
       .st-status-notice{grid-column:1;justify-self:start;min-width:0;max-width:100%;
         overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
-      .st-status-notice[data-tone="error"]{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
-      .st-status-notice[data-tone="warn"]{color:var(--dsw-alias-state-warn-primary,var(--st-fallback-warn))}
-      .st-status-notice[data-tone="info"]{color:var(--st-text-tertiary)}
+      .st-status-notice[data-tone="error"]{color:var(--dsw-alias-state-error-primary,#ec1313)}
+      .st-status-notice[data-tone="warn"]{color:var(--dsw-alias-state-warn-primary,#f59e0b)}
+      .st-status-notice[data-tone="info"]{color:var(--fang-ink-tertiary)}
       .st-status-sep{opacity:.45}
       /* No spacer: with everything centred, the save state and the model sit in the same run as
          the counts instead of being pushed to opposite ends. */
       .st-status-spacer{display:none}
-      .st-status-key{color:var(--st-text-tertiary);margin-right:var(--st-space-4,4px)}
+      .st-status-key{color:var(--fang-ink-tertiary);margin-right:var(--fang-space-4,4px)}
       /* The model cell is a control now, so it looks like one without shouting: it inherits the
          read-out's type, gains a pointer, and shows a pressed state while its card is open. */
-      .st-status-model{border:none;background:none;padding:0 var(--st-space-4,4px);margin:0 -4px;font:inherit;
-        color:inherit;cursor:pointer;border-radius:var(--st-radius-xs,4px);corner-shape:round;text-align:left}
-      .st-status-model:hover{background:var(--st-hover-fill)}
-      .st-status-model[data-open="true"]{background:var(--st-selected-fill);
-        color:var(--st-text-primary)}
+      .st-status-model{border:none;background:none;padding:0 var(--fang-space-4,4px);margin:0 -4px;font:inherit;
+        color:inherit;cursor:pointer;border-radius:var(--fang-radius-xs,4px);corner-shape:round;text-align:left}
+      .st-status-model:hover{background:var(--fang-hover-fill)}
+      .st-status-model[data-open="true"]{background:var(--fang-selected-fill);
+        color:var(--fang-ink-primary)}
       .st-status-model:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       /* The button and its card, as one unit. Inline-flex so the box is exactly the button's own
          size \u2014 that is what makes left:50% below mean "half the button's width". Positioned, so it
          is the card's containing block, and explicitly NOT overflow: hidden, which would clip the
@@ -12524,49 +11976,49 @@ var CSS_STATUS = `
       /* The card exists to be READ, so it is sized to its content up to a generous cap. It was once
          capped against the bar's width, which on a narrow window squeezed the model names into
          "agnes /\u2026" \u2014 a detail card that hides the detail. */
-      .st-status-pop{position:absolute;z-index:var(--st-layer-status);
+      .st-status-pop{position:absolute;z-index:var(--fang-layer-status);
         left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);
         width:max-content;
         min-width:var(--st-status-menu-min-w,240px);max-width:min(360px,calc(100vw - 48px));
-        box-sizing:border-box;padding:var(--st-space-12,12px) var(--st-space-12,12px);
+        box-sizing:border-box;padding:var(--fang-space-12,12px) var(--fang-space-12,12px);
         /* The card must LOOK like a card. It used to take the theme's raised layer, which in the
            dark theme is a shade off the page it floats over: the text arrived with no visible
            edge, so the only way to judge where the card was is the last character of the longest
            line \u2014 which reads as "the card is not centred on its button" no matter where it sits.
            A surface this small needs a boundary, not a shadow, so it gets a fill of its own plus a
            hairline and a rim of light along the top edge. */
-        background:var(--st-surface-high);
-        color:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));
+        background:var(--fang-surface-high);
+        color:var(--dsw-alias-label-primary,#fff);
         border:.5px solid var(--dsw-alias-border-l3,#ffffff2e);
-        border-radius:var(--st-radius-md,12px);corner-shape:round;
+        border-radius:var(--fang-radius-md,12px);corner-shape:round;
         box-shadow:var(--dsw-shadow-lv3,0 8px 24px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04)),
           inset 0 1px 0 0 var(--dsw-alias-border-l2,#ffffff17);
-        display:flex;flex-direction:column;gap:var(--st-space-4,4px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
-      .st-status-pop-row{display:flex;gap:var(--st-space-8,8px);align-items:baseline;min-width:0}
-      .st-status-pop-role{flex:none;white-space:nowrap;color:var(--st-text-tertiary)}
+        display:flex;flex-direction:column;gap:var(--fang-space-4,4px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm)}
+      .st-status-pop-row{display:flex;gap:var(--fang-space-8,8px);align-items:baseline;min-width:0}
+      .st-status-pop-role{flex:none;white-space:nowrap;color:var(--fang-ink-tertiary)}
       /* Full name, wrapped if it must be. The ellipsis belongs to the BAR \u2014 a one-line read-out \u2014 not
          to the card that is opened specifically to show what the bar had to shorten. */
       .st-status-pop-model{min-width:0;white-space:normal;overflow-wrap:anywhere}
-      .st-status-pop-empty{color:var(--st-text-tertiary)}
+      .st-status-pop-empty{color:var(--fang-ink-tertiary)}
       /* The section name carries the weight in this pair; the position sits behind it as context,
          so a long title can still be read before the count. */
-      .st-status-name{color:var(--st-text-secondary);margin-right:var(--st-space-8,8px);
+      .st-status-name{color:var(--fang-ink-secondary);margin-right:var(--fang-space-8,8px);
         overflow:hidden;text-overflow:ellipsis;max-width:34ch;display:inline-block;vertical-align:bottom}
-      .st-status-count{color:var(--st-text-tertiary)}
+      .st-status-count{color:var(--fang-ink-tertiary)}
       /* The saved time is a read-out. Only a failure changes its colour: a timestamp that is a
          little stale is still a timestamp, and tinting it would turn information into an alarm. */
-      .st-status-item[data-tone="error"]{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
+      .st-status-item[data-tone="error"]{color:var(--dsw-alias-state-error-primary,#ec1313)}
       /* A write just landed: a wash behind the timestamp, fading out. The text does not change, so
          the reading stays truthful while the marker says "that was this instant". */
-      .st-status-flash{animation:st-status-flash 1.4s var(--ds-ease-in-out,ease-in-out) both;border-radius:var(--st-radius-xs,4px)}
+      .st-status-flash{animation:st-status-flash 1.4s var(--ds-ease-in-out,ease-in-out) both;border-radius:var(--fang-radius-xs,4px)}
       @keyframes st-status-flash{
-        0%{background:color-mix(in srgb, var(--st-accent) 34%, transparent);color:var(--st-text-primary)}
+        0%{background:color-mix(in srgb, var(--fang-accent) 34%, transparent);color:var(--fang-ink-primary)}
         100%{background:transparent}
       }
       @media (prefers-reduced-motion: reduce){
         /* No fade: the colour simply appears and goes, which still marks the moment. */
-        .st-status-flash{animation:none;background:color-mix(in srgb, var(--st-accent) 22%, transparent)}
+        .st-status-flash{animation:none;background:color-mix(in srgb, var(--fang-accent) 22%, transparent)}
       }
       /* The dock's buttons: readable at arm's length, still flat. */
 `;
@@ -12574,20 +12026,20 @@ var CSS_STATUS = `
 // src/client/panel/models.css.js
 var CSS_MODELS = `
       /* ---- models: the roles page, the two pickers, and the effort axis ---- */
-      .st-models{display:flex;flex-direction:column;gap:var(--st-space-16,16px);width:var(--st-settings-w,340px);max-width:100%}
-      .st-model-file{font-size:var(--st-text-sm);line-height:var(--st-line-height-ui);color:var(--st-text-tertiary);
-        font-family:var(--st-font-mono);overflow-wrap:anywhere;padding-top:var(--st-space-4,4px)}
-      .st-model-row{display:flex;flex-direction:column;gap:var(--st-space-8,8px);min-width:0;
-        padding-top:var(--st-space-12,12px);border-top:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
+      .st-models{display:flex;flex-direction:column;gap:var(--fang-space-16,16px);width:var(--st-settings-w,340px);max-width:100%}
+      .st-model-file{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-ui);color:var(--fang-ink-tertiary);
+        font-family:var(--fang-font-mono);overflow-wrap:anywhere;padding-top:var(--fang-space-4,4px)}
+      .st-model-row{display:flex;flex-direction:column;gap:var(--fang-space-8,8px);min-width:0;
+        padding-top:var(--fang-space-12,12px);border-top:.5px solid var(--fang-border-edge)}
       .st-model-row:first-of-type{border-top:none;padding-top:0}
-      .st-model-row-head{display:flex;align-items:center;gap:var(--st-space-8,8px);min-width:0}
-      .st-model-role{flex:none;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-medium);color:var(--st-text-primary)}
-      .st-model-follow-tag{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
+      .st-model-row-head{display:flex;align-items:center;gap:var(--fang-space-8,8px);min-width:0}
+      .st-model-role{flex:none;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary)}
+      .st-model-follow-tag{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
         overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-model-follow{margin-left:auto;font-size:var(--st-text-sm);padding:0 var(--st-space-8,8px)}
+      .st-model-follow{margin-left:auto;font-size:var(--fang-font-size-sm);padding:0 var(--fang-space-8,8px)}
       /* The confirmation is the accent, briefly: the row's own state tag already changed, and this
          only has to say that the change reached the host. */
-      .st-model-flash{margin-left:var(--st-space-8,8px);font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-accent);
+      .st-model-flash{margin-left:var(--fang-space-8,8px);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-accent);
         animation:st-flash-in .16s var(--ds-ease-in-out,ease-in-out) both}
       @keyframes st-flash-in{from{opacity:0;translate:0 2px}to{opacity:1;translate:0 0}}
       @media (prefers-reduced-motion: reduce){.st-model-flash{animation:none}}
@@ -12595,72 +12047,72 @@ var CSS_MODELS = `
          so it takes the width and says so: a name with a caret and no surface around it reads as
          a label, and the writer would not know it can be pressed. */
       .st-mselect{position:relative;min-width:0}
-.st-mselect-button{display:flex;align-items:center;gap:var(--st-space-8,8px);width:100%;min-width:0;
-        font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);padding:var(--st-space-4,4px) var(--st-space-12,12px);
-        border:none;border-radius:var(--st-radius-sm,8px);cursor:pointer;
-        background:var(--st-surface);color:var(--st-text-primary);corner-shape:round;}
-      .st-mselect-button:hover{background:var(--st-hover-fill)}
+.st-mselect-button{display:flex;align-items:center;gap:var(--fang-space-8,8px);width:100%;min-width:0;
+        font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);padding:var(--fang-space-4,4px) var(--fang-space-12,12px);
+        border:none;border-radius:var(--fang-radius-sm,8px);cursor:pointer;
+        background:var(--fang-surface);color:var(--fang-ink-primary);corner-shape:round;}
+      .st-mselect-button:hover{background:var(--fang-hover-fill)}
       .st-mselect-button:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       .st-mselect-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;
         white-space:nowrap;text-align:left}
-      .st-mselect-caret{flex:none;color:var(--st-text-tertiary)}
+      .st-mselect-caret{flex:none;color:var(--fang-ink-tertiary)}
       /* The menu opens over the row it belongs to, not inside it: a list inside a 340px column
          would be clipped by the drawer's own scroll. */
-      .st-mselect .st-model-menu{position:absolute;z-index:var(--st-layer-menu);top:calc(100% + 4px);left:0;right:0;
+      .st-mselect .st-model-menu{position:absolute;z-index:var(--fang-layer-menu);top:calc(100% + 4px);left:0;right:0;
         /* Reset the composer menu's bottom offset: with both top and bottom set the box is pinned
            to neither end and collapses to the height of its own padding. */
         bottom:auto;min-width:0;max-width:none;max-height:min(46vh,320px)}
       /* The effort axis: stops on one line, least to most. The line is the point \u2014 it says which
          way is more, which a dropdown cannot. */
-      .st-effort{position:relative;display:flex;align-items:flex-start;margin-top:var(--st-space-8,8px)}
+      .st-effort{position:relative;display:flex;align-items:flex-start;margin-top:var(--fang-space-8,8px)}
       .st-effort::before{content:'';position:absolute;left:10%;right:10%;top:var(--st-effort-tick,5px);height:var(--st-rule-h,1px);
-        background:var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
+        background:var(--fang-border-edge)}
       .st-effort-stop{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;
-        align-items:center;gap:var(--st-space-4,4px);padding:0;border:none;background:transparent;
+        align-items:center;gap:var(--fang-space-4,4px);padding:0;border:none;background:transparent;
         cursor:pointer;font-family:inherit}
       .st-effort-stop:focus-visible{outline:none}
       .st-effort-stop:focus-visible .st-effort-dot{
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-effort-dot{width:var(--st-mark-md,9px);height:var(--st-mark-md,9px);border-radius:var(--st-radius-pill,999px);corner-shape:round;flex:none;
-        background:var(--st-surface);box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4));
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
+      .st-effort-dot{width:var(--st-mark-md,9px);height:var(--st-mark-md,9px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;flex:none;
+        background:var(--fang-surface);box-shadow:inset 0 0 0 .5px var(--fang-border-strong);
         transition:background var(--ds-transition-duration-fast,.12s)}
-      .st-effort-stop[data-on="true"] .st-effort-dot{background:var(--st-accent);
-        box-shadow:0 0 0 3px color-mix(in srgb, var(--st-accent) 22%, transparent)}
-      .st-effort-name{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary);
+      .st-effort-stop[data-on="true"] .st-effort-dot{background:var(--fang-accent);
+        box-shadow:0 0 0 3px color-mix(in srgb, var(--fang-accent) 22%, transparent)}
+      .st-effort-name{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary);
         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-      .st-effort-stop[data-on="true"] .st-effort-name{color:var(--st-text-primary)}
+      .st-effort-stop[data-on="true"] .st-effort-name{color:var(--fang-ink-primary)}
       /* ---- custom providers ---- */
-      .st-custom-models{display:flex;flex-direction:column;gap:var(--st-space-8,8px);
-        padding-top:var(--st-space-12,12px);border-top:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
-      .st-custom-models-head{display:flex;align-items:center;gap:var(--st-space-8,8px)}
-      .st-custom-add{margin-left:auto;font-size:var(--st-text-sm)}
-      .st-custom-provider{display:flex;flex-direction:column;gap:var(--st-space-4,4px);
-        padding:var(--st-inset-sm) var(--st-inset-md);border-radius:var(--st-radius-sm,8px);
-        background:var(--st-surface-high)}
-      .st-custom-provider-main{display:flex;align-items:baseline;gap:var(--st-space-8,8px);min-width:0}
-      .st-custom-provider-name{font-size:var(--st-text-md);font-weight:var(--st-font-weight-medium);color:var(--st-text-primary)}
-      .st-custom-provider-kind{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-      .st-custom-provider-meta{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-custom-provider-actions{display:flex;align-items:center;gap:var(--st-space-4,4px)}
-      .st-custom-provider-actions .fang-btn{font-size:var(--st-text-sm);padding:0 var(--st-space-8,8px)}
-      .st-custom-model-list{display:flex;flex-wrap:wrap;gap:var(--st-space-4,4px);max-height:var(--st-model-list-max-h,160px);overflow:auto}
-      .st-custom-model-chip{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        padding:var(--st-space-2,2px) var(--st-space-8,8px);border-radius:var(--st-radius-pill,999px);
-        background:var(--st-hover-fill);color:var(--st-text-secondary)}
+      .st-custom-models{display:flex;flex-direction:column;gap:var(--fang-space-8,8px);
+        padding-top:var(--fang-space-12,12px);border-top:.5px solid var(--fang-border-edge)}
+      .st-custom-models-head{display:flex;align-items:center;gap:var(--fang-space-8,8px)}
+      .st-custom-add{margin-left:auto;font-size:var(--fang-font-size-sm)}
+      .st-custom-provider{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);
+        padding:var(--fang-padding-sm) var(--fang-padding-md);border-radius:var(--fang-radius-sm,8px);
+        background:var(--fang-surface-high)}
+      .st-custom-provider-main{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);min-width:0}
+      .st-custom-provider-name{font-size:var(--fang-font-size-md);font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary)}
+      .st-custom-provider-kind{flex:none;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary)}
+      .st-custom-provider-meta{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .st-custom-provider-actions{display:flex;align-items:center;gap:var(--fang-space-4,4px)}
+      .st-custom-provider-actions .fang-btn{font-size:var(--fang-font-size-sm);padding:0 var(--fang-space-8,8px)}
+      .st-custom-model-list{display:flex;flex-wrap:wrap;gap:var(--fang-space-4,4px);max-height:var(--st-model-list-max-h,160px);overflow:auto}
+      .st-custom-model-chip{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        padding:var(--fang-space-2,2px) var(--fang-space-8,8px);border-radius:var(--fang-radius-pill,999px);
+        background:var(--fang-hover-fill);color:var(--fang-ink-secondary)}
 `;
 
 // src/client/panel/settings.css.js
 var CSS_SETTINGS = `
       /* ---- settings: the preference page and its groups ---- */
-      .st-settings{display:flex;flex-direction:column;gap:var(--st-space-16,16px)}
-      .st-settings-group{display:flex;flex-direction:column;gap:var(--st-space-8,8px)}
-      .st-settings-group + .st-settings-group{padding-top:var(--st-space-16,16px);
-        border-top:.5px solid var(--dsw-alias-border-l3,var(--st-fallback-border-l3))}
-      .st-settings-title{font-size:var(--st-text-md);
-        line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-medium);
-        color:var(--st-text-primary)}
+      .st-settings{display:flex;flex-direction:column;gap:var(--fang-space-16,16px)}
+      .st-settings-group{display:flex;flex-direction:column;gap:var(--fang-space-8,8px)}
+      .st-settings-group + .st-settings-group{padding-top:var(--fang-space-16,16px);
+        border-top:.5px solid var(--fang-border-edge)}
+      .st-settings-title{font-size:var(--fang-font-size-md);
+        line-height:var(--fang-line-height-md);font-weight:var(--fang-font-weight-medium);
+        color:var(--fang-ink-primary)}
       /* The AI dock: the suggestion, the thinking state, and their buttons.
          It sits UNDER the page, the width of the measure, in normal flow. It used to be an
          absolutely positioned card pinned under the caret line, which meant it covered the very
@@ -12677,22 +12129,22 @@ var CSS_SETTINGS = `
          nearly match. Each token is read first with a fallback for a host that does not publish
          it. */
 
-      .st-library-picker{display:flex;align-items:center;gap:var(--st-space-8,8px);min-width:0}
-      .st-library-path{flex:1 1 auto;min-width:0;height:var(--st-row-height,32px);padding:0 var(--st-space-12,12px);
-        border:var(--st-hairline) solid var(--st-ink-edge);border-radius:var(--st-radius-sm,8px);
-        background:var(--st-surface);color:var(--st-text-primary);font-family:inherit;font-size:var(--st-text-md);
+      .st-library-picker{display:flex;align-items:center;gap:var(--fang-space-8,8px);min-width:0}
+      .st-library-path{flex:1 1 auto;min-width:0;height:var(--fang-row-height,32px);padding:0 var(--fang-space-12,12px);
+        border:var(--fang-hairline) solid var(--fang-ink-edge);border-radius:var(--fang-radius-sm,8px);
+        background:var(--fang-surface);color:var(--fang-ink-primary);font-family:inherit;font-size:var(--fang-font-size-md);
         text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
-      .st-library-path:disabled{cursor:default;color:var(--st-text-tertiary)}
+      .st-library-path:disabled{cursor:default;color:var(--fang-ink-tertiary)}
 `;
 
 // src/client/panel/context.css.js
 var CSS_CONTEXT = `
       .st-ctx-dialog-body{height:68vh;overflow:hidden}
       .st-ctx-dialog-body .fang-split{flex:1 1 auto;min-height:0;height:100%}
-      .st-ctx-bar{flex:none;display:flex;gap:var(--st-seg-gap);height:var(--st-seg-h);
+      .st-ctx-bar{flex:none;display:flex;gap:var(--st-seg-gap);height:var(--fang-segmented-height);
         margin:var(--st-board-inset-compact) var(--st-board-inset) 0}
-      .st-ctx-seg{flex:1 1 auto;min-width:0;padding:0 var(--st-space-4);border:0;cursor:pointer;
-        border-radius:var(--st-radius-xs);color:var(--st-on-accent);overflow:hidden}
+      .st-ctx-seg{flex:1 1 auto;min-width:0;padding:0 var(--fang-space-4);border:0;cursor:pointer;
+        border-radius:var(--fang-radius-xs);color:var(--fang-on-accent);overflow:hidden}
       .st-ctx-seg[data-tone="0"]{background:var(--st-seg-0)}
       .st-ctx-seg[data-tone="1"]{background:var(--st-seg-1)}
       .st-ctx-seg[data-tone="2"]{background:var(--st-seg-2)}
@@ -12701,44 +12153,44 @@ var CSS_CONTEXT = `
       .st-ctx-seg[data-tone="5"]{background:var(--st-seg-5)}
       .st-ctx-seg[data-tone="6"]{background:var(--st-seg-6)}
       .st-ctx-seg[data-tone="7"]{background:var(--st-seg-7)}
-      .st-ctx-seg[data-active="true"]{box-shadow:0 0 0 var(--st-space-2) var(--st-accent)}
-      .st-ctx-seg-label{display:block;font-size:var(--st-text-sm);line-height:var(--st-seg-h);
+      .st-ctx-seg[data-active="true"]{box-shadow:0 0 0 var(--fang-space-2) var(--fang-accent)}
+      .st-ctx-seg-label{display:block;font-size:var(--fang-font-size-sm);line-height:var(--fang-segmented-height);
         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .st-ctx-official{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;
-        gap:var(--st-space-8);padding:var(--st-board-inset)}
+        gap:var(--fang-space-8);padding:var(--st-board-inset)}
       .st-ctx-mine{flex:0 0 40%;min-height:0;overflow:auto;display:flex;flex-direction:column;
-        gap:var(--st-space-8);padding:var(--st-board-inset);
-        border-top:var(--st-hairline) solid var(--st-ink-hair)}
+        gap:var(--fang-space-8);padding:var(--st-board-inset);
+        border-top:var(--fang-hairline) solid var(--fang-ink-hair)}
 `;
 
 // src/client/panel/outline.css.js
 var CSS_OUTLINE = `
       /* ---- the outline: the chapter tree and its inline editors ---- */
-      .st-tree{display:flex;flex-direction:column;gap:var(--st-space-2,2px)}
-.st-node{display:flex;align-items:baseline;gap:var(--st-space-8,8px);padding:var(--st-space-4,4px) var(--st-space-8,8px) var(--st-space-4,4px) 0;border-radius:var(--st-radius-sm,8px);
-        cursor:pointer;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);color:var(--st-text-secondary);min-width:0;corner-shape:round;}
-      .st-node:hover{background:var(--st-hover-fill)}
-      .st-node[data-current="true"]{background:var(--st-selected-fill);color:var(--st-text-primary)}
-      .st-node[data-level="volume"]{color:var(--st-text-primary);font-weight:var(--st-font-weight-strong)}
-      .st-node[data-level="chapter"]{font-weight:var(--st-font-weight-medium);color:var(--st-text-primary)}
-      .st-node-caret{flex:none;width:var(--st-space-12,12px);font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
-      .st-node-dot{flex:none;width:var(--st-mark-sm,4px);height:var(--st-mark-sm,4px);border-radius:var(--st-radius-pill,999px);corner-shape:round;background:var(--dsw-alias-border-l4,var(--st-fallback-border-l4));margin-top:var(--st-space-8,8px)}
-      .st-node-input{flex:1 1 auto;min-width:0;font-size:var(--st-text-md);padding:var(--st-space-2,2px) var(--st-space-4,4px)}
+      .st-tree{display:flex;flex-direction:column;gap:var(--fang-space-2,2px)}
+.st-node{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);padding:var(--fang-space-4,4px) var(--fang-space-8,8px) var(--fang-space-4,4px) 0;border-radius:var(--fang-radius-sm,8px);
+        cursor:pointer;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);color:var(--fang-ink-secondary);min-width:0;corner-shape:round;}
+      .st-node:hover{background:var(--fang-hover-fill)}
+      .st-node[data-current="true"]{background:var(--fang-selected-fill);color:var(--fang-ink-primary)}
+      .st-node[data-level="volume"]{color:var(--fang-ink-primary);font-weight:var(--fang-font-weight-strong)}
+      .st-node[data-level="chapter"]{font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary)}
+      .st-node-caret{flex:none;width:var(--fang-space-12,12px);font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-node-dot{flex:none;width:var(--st-mark-sm,4px);height:var(--st-mark-sm,4px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;background:var(--fang-border-strong);margin-top:var(--fang-space-8,8px)}
+      .st-node-input{flex:1 1 auto;min-width:0;font-size:var(--fang-font-size-md);padding:var(--fang-space-2,2px) var(--fang-space-4,4px)}
       /* The two actions appear together on hover: they belong to the same row and hiding one of
          them made the other look like the row's only option. They override the button height
          down to the compact row, so the pill system does not inflate the tree. */
-      .st-node-remove,.st-node-rename{--st-btn-h:var(--st-btn-h-sm,26px);opacity:0;flex:none;padding:0 var(--st-space-4,4px);line-height:var(--st-text-sm-leading)}
+      .st-node-remove,.st-node-rename{--fang-btn-height:var(--fang-btn-height-sm,26px);opacity:0;flex:none;padding:0 var(--fang-space-4,4px);line-height:var(--fang-line-height-sm)}
       .st-node:hover .st-node-remove,.st-node:hover .st-node-rename,
       .st-node:focus-within .st-node-remove,.st-node:focus-within .st-node-rename{opacity:1}
-      .st-node-rename:hover{color:var(--st-accent) !important}
-      .st-node-remove:hover{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error)) !important}
+      .st-node-rename:hover{color:var(--fang-accent) !important}
+      .st-node-remove:hover{color:var(--dsw-alias-state-error-primary,#ec1313) !important}
 /* The name is part of a clickable row, so it takes the hand too. It used to say "text",
          which made the row read as a line of prose you could put a caret in \u2014 the row selects a
          chapter, it does not edit one. Double-click still renames, and the caret appears in the
          input that opens for it, which is where a text cursor belongs. */
       .st-node-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-        cursor:pointer;border-radius:var(--st-radius-xs,4px);corner-shape:round;}
-      .st-node:hover .st-node-name{color:var(--st-text-primary)}
+        cursor:pointer;border-radius:var(--fang-radius-xs,4px);corner-shape:round;}
+      .st-node:hover .st-node-name{color:var(--fang-ink-primary)}
 
       /* The mosaic sheet: a card that drops from the panel's top edge, the way a reference panel
          unfolds downward. It stops above the dock \u2014 the composer is the one region of the page
@@ -12769,7 +12221,7 @@ var CSS_RAIL = `
          scrolled, and it puts the menu's first row at the card's midpoint \u2014 a place the eye can
          find without hunting.
          The tree still scrolls inside its share: a long book does not make the card taller. */
-      .st-rail-body .st-scroll{flex:0 1 50%;min-height:0}
+      .st-rail-body .fang-scroll{flex:0 1 50%;min-height:0}
       /* The menu's own block: the remaining half, top-aligned. Not stretched to fill \u2014 a
          list that spreads its rows to the bottom edge would look like a settings form; the blank
          space under the last row is what says the list has ended.
@@ -12779,7 +12231,7 @@ var CSS_RAIL = `
          line. The extra inset is what makes it a menu in the card rather than a continuation of
          the list. */
       .st-rail-menu{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;
-        padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-16,16px)}
+        padding:var(--fang-space-16,16px) var(--fang-space-16,16px) var(--fang-space-16,16px)}
 
       /* ---- the function list ----
          Set to the host sidebar's own panel list, because that is what this is: a vertical menu of
@@ -12790,38 +12242,38 @@ var CSS_RAIL = `
          The group has no heading. It is not one subject \u2014 the shelf is navigation, save writes the
          file, export leaves the panel, about is a read-out \u2014 and a label that names only the first
          of those would be worse than none. */
-      .st-rail-tools{display:flex;flex-direction:column;gap:var(--st-space-4,4px);min-width:0}
+      .st-rail-tools{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);min-width:0}
 
 /* One destination per line. Full width, 36 tall, at reading size \u2014 the same row the host
          uses for its own panels, so the menu reads as a sibling of the sidebar rather than as a
          strip of small print appended to a tree. */
-      .st-rail-tool{display:flex;align-items:center;gap:var(--st-space-8,8px);
+      .st-rail-tool{display:flex;align-items:center;gap:var(--fang-space-8,8px);
         width:100%;min-width:0;min-height:var(--st-row-height-lg,36px);
-        padding:var(--st-space-8,8px);box-sizing:border-box;
-        border:none;border-radius:var(--st-radius-md,12px);background:transparent;cursor:pointer;
-        font-family:inherit;font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        font-weight:var(--st-font-weight-normal);color:var(--st-text-primary);text-align:left;corner-shape:round;}
-      .st-rail-tool:hover:not(:disabled){background:var(--st-hover-fill)}
-      .st-rail-tool:active:not(:disabled){background:var(--st-active-fill)}
+        padding:var(--fang-space-8,8px);box-sizing:border-box;
+        border:none;border-radius:var(--fang-radius-md,12px);background:transparent;cursor:pointer;
+        font-family:inherit;font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        font-weight:var(--fang-font-weight-normal);color:var(--fang-ink-primary);text-align:left;corner-shape:round;}
+      .st-rail-tool:hover:not(:disabled){background:var(--fang-hover-fill)}
+      .st-rail-tool:active:not(:disabled){background:var(--fang-active-fill)}
       /* Focus is an INSET ring, matching the host's panel rows: an outer ring on a full-width row
          would draw over the column's edge instead of around the row. */
-      .st-rail-tool:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--st-focus-ink);
+      .st-rail-tool:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--fang-focus-ink);
         outline-offset:-2px}
       /* A destination that needs the book is disabled without one, and says so by looking like it.
          The ink drops, not the whole row's opacity: a faded glyph reads as a smudge. */
-      .st-rail-tool:disabled{cursor:not-allowed;color:var(--st-text-tertiary)}
+      .st-rail-tool:disabled{cursor:not-allowed;color:var(--fang-ink-tertiary)}
       .st-rail-tool:disabled .st-rail-tool-icon{opacity:var(--st-fade-quiet)}
       /* The glyph gets a fixed box so four labels share one left edge \u2014 the alignment comes from
          the slot being measured, not from four icons happening to be about as wide. */
       .st-rail-tool-icon{flex:none;display:inline-flex;align-items:center;justify-content:center;
         width:var(--st-icon-menu,18px);height:var(--st-icon-menu,18px);
-        color:var(--st-text-secondary)}
+        color:var(--fang-ink-secondary)}
       .st-rail-tool:hover:not(:disabled) .st-rail-tool-icon,
-      .st-rail-tool:focus-visible .st-rail-tool-icon{color:var(--st-text-primary)}
+      .st-rail-tool:focus-visible .st-rail-tool-icon{color:var(--fang-ink-primary)}
       /* The label is what shortens when the column is narrow; the glyph is what identifies the row. */
       .st-rail-tool-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-      .st-about-link{color:var(--st-accent);text-decoration:none;overflow-wrap:anywhere}
+      .st-about-link{color:var(--fang-accent);text-decoration:none;overflow-wrap:anywhere}
       .st-about-link:hover{text-decoration:underline}
 `;
 
@@ -12831,77 +12283,77 @@ var CSS_BOARD = `
       /* No dimming layer: the board is a panel over the page, not a modal. The backdrop stays
          because it is the sheet's positioning context, but it paints nothing and passes clicks
          through, so the composer below stays visible and typeable. */
-      .st-mosaic-backdrop{position:absolute;inset:var(--st-titlebar-height,68px) 0 0 0;z-index:var(--st-layer-mosaic);
+      .st-mosaic-backdrop{position:absolute;inset:var(--fang-titlebar-height,68px) 0 0 0;z-index:var(--st-layer-mosaic);
         display:flex;align-items:flex-start;justify-content:center;
         padding-bottom:var(--st-mosaic-dock-clearance);
         pointer-events:auto;
-        animation:st-mosaic-scrim-in var(--st-motion-open,180ms) ease both}
+        animation:st-mosaic-scrim-in var(--fang-duration-open,180ms) ease both}
       @keyframes st-mosaic-scrim-in{from{opacity:0}to{opacity:1}}
       /* A raised surface, not a coloured rectangle: a hairline edge, a layered shadow, and a
          one-pixel inner highlight along the top. It takes its own clicks back \u2014 the layer
          around it passes everything through. */
       .st-mosaic-sheet{pointer-events:auto;
         width:calc(100% - var(--st-overlay-inset));height:100%;flex:none;min-height:0;
-        background:var(--st-surface);
-        border:.5px solid var(--st-ink-edge);
-        border-radius:var(--st-radius-lg,16px);corner-shape:round;
+        background:var(--fang-surface);
+        border:.5px solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-lg,16px);corner-shape:round;
         display:flex;overflow:hidden;position:relative;
-        box-shadow:inset 0 1px 0 color-mix(in srgb, var(--st-highlight,#fff) 10%, transparent),
+        box-shadow:inset 0 1px 0 color-mix(in srgb, var(--fang-highlight,#fff) 10%, transparent),
                    0 2px 6px rgba(0,0,0,.14),
                    0 16px 40px rgba(0,0,0,.28),
                    0 40px 80px rgba(0,0,0,.22);
-        animation:st-mosaic-in var(--st-motion-open,180ms) var(--ds-ease-in-out,ease-in-out) both}
+        animation:st-mosaic-in var(--fang-duration-open,180ms) var(--ds-ease-in-out,ease-in-out) both}
       /* A drop, not a slide: the card unfolds downward, and folds back up the same way. */
       @keyframes st-mosaic-in{from{transform:translateY(-16px);opacity:0}to{transform:none;opacity:1}}
-      .st-closing.st-mosaic-backdrop{animation:st-mosaic-scrim-out var(--st-motion-close,140ms) ease both}
+      .st-closing.st-mosaic-backdrop{animation:st-mosaic-scrim-out var(--fang-duration-close,140ms) ease both}
       @keyframes st-mosaic-scrim-out{from{opacity:1}to{opacity:0}}
-      .st-closing .st-mosaic-sheet{animation:st-mosaic-out var(--st-motion-close,140ms) var(--ds-ease-in-out,ease-in-out) both}
+      .st-closing .st-mosaic-sheet{animation:st-mosaic-out var(--fang-duration-close,140ms) var(--ds-ease-in-out,ease-in-out) both}
       @keyframes st-mosaic-out{from{transform:none;opacity:1}to{transform:translateY(-16px);opacity:0}}
       /* The bookmarks are a rail a step BELOW the page beside it: the content reads as the
          surface and the rail as its spine. */
 
       /* ---- the board's pages: bands, canvas, and the card drawn on it ---- */
-      .st-mosaic-tabs{display:flex;flex-direction:column;gap:var(--st-space-8,8px);padding:var(--st-space-12,12px) var(--st-space-8,8px);
-        border-left:.5px solid var(--st-ink-edge);
-        background:var(--st-ink-whisper)}
+      .st-mosaic-tabs{display:flex;flex-direction:column;gap:var(--fang-space-8,8px);padding:var(--fang-space-12,12px) var(--fang-space-8,8px);
+        border-left:.5px solid var(--fang-ink-edge);
+        background:var(--fang-ink-whisper)}
       /* The vertical text is padded evenly on both sides: letter-spacing adds one slot after
          the last glyph, and the negative inline margin pulls it back out, so the selected pill
          sits centred. */
-      .st-mosaic-tab{border:none;background:transparent;padding:var(--st-space-12,12px) 0;cursor:pointer;
-        border-radius:var(--st-radius-sm,8px);corner-shape:round;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+      .st-mosaic-tab{border:none;background:transparent;padding:var(--fang-space-12,12px) 0;cursor:pointer;
+        border-radius:var(--fang-radius-sm,8px);corner-shape:round;
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
         writing-mode:vertical-rl;letter-spacing:var(--st-tab-tracking);margin-inline:var(--st-tab-tracking-pull);
         text-align:center;box-sizing:border-box;
-        color:var(--st-text-tertiary)}
-      .st-mosaic-tab:hover{background:var(--st-hover-fill)}
-      .st-mosaic-tab:active{background:var(--st-active-fill)}
+        color:var(--fang-ink-tertiary)}
+      .st-mosaic-tab:hover{background:var(--fang-hover-fill)}
+      .st-mosaic-tab:active{background:var(--fang-active-fill)}
       /* The selected bookmark: a brighter FILL and weight, no coloured ring \u2014 selection is a
          brightness step, not an accent, so the board's colour stays reserved for the wires and
          the actions that need it. */
-      .st-mosaic-tab[data-active="true"]{background:var(--st-selected-fill);
-        color:var(--st-text-primary);font-weight:var(--st-font-weight-strong)}
+      .st-mosaic-tab[data-active="true"]{background:var(--fang-selected-fill);
+        color:var(--fang-ink-primary);font-weight:var(--fang-font-weight-strong)}
       .st-mosaic-body{flex:1;min-width:0;overflow:hidden;padding:var(--st-board-inset);display:flex;flex-direction:column}
       /* Every page is three bands: a title, ONE non-growing row of controls, then the content.
          The operation area is the same height on every bookmark \u2014 layout is decided once. Only
          a non-board page's content scrolls; the canvas page hands its height to the board. */
       .st-mosaic-band{display:flex;flex-direction:column;gap:var(--st-board-gap);flex:1 1 auto;min-height:0}
-      .st-mosaic-band-heading{margin:0;font-weight:var(--st-font-weight-strong);
-        font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        color:var(--st-text-primary)}
+      .st-mosaic-band-heading{margin:0;font-weight:var(--fang-font-weight-strong);
+        font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        color:var(--fang-ink-primary)}
       /* The title row: name on the left, tools at the trailing edge of the same line. One
          non-wrapping flex row, so a long title truncates instead of pushing the buttons down. */
-      .st-mosaic-band-head{display:flex;align-items:center;gap:var(--st-space-12,12px);flex-wrap:nowrap;min-width:0}
+      .st-mosaic-band-head{display:flex;align-items:center;gap:var(--fang-space-12,12px);flex-wrap:nowrap;min-width:0}
       .st-mosaic-band-head .st-mosaic-band-heading{flex:0 1 auto;min-width:0;
         overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-mosaic-band-tools{display:flex;gap:var(--st-space-8,8px);align-items:center;margin-left:auto;flex:none}
+      .st-mosaic-band-tools{display:flex;gap:var(--fang-space-8,8px);align-items:center;margin-left:auto;flex:none}
       /* Inside the title row the header carries no outer margin of its own \u2014 in a one-line row
          it just pushes the buttons off centre. */
       .st-mosaic-band-tools .st-mosaic-head{margin:0;flex-direction:row;align-items:center}
-      .st-mosaic-band-tools .st-mosaic-check-row{gap:var(--st-space-4,4px)}
+      .st-mosaic-band-tools .st-mosaic-check-row{gap:var(--fang-space-4,4px)}
       .st-mosaic-band-content{display:flex;flex-direction:column;gap:var(--st-board-gap);min-width:0;flex:1 1 auto;min-height:0;overflow:auto}
       /* The relations board fills the page exactly: canvas grows, foot row keeps its height. */
       .st-mosaic-board{display:flex;flex-direction:column;gap:0;flex:1 1 auto;min-height:0}
-      .st-mosaic-board .st-mosaic-focus{flex:none;margin:var(--st-space-8,8px) 0 0;padding:var(--st-space-12,12px) 0 0}
+      .st-mosaic-board .st-mosaic-focus{flex:none;margin:var(--fang-space-8,8px) 0 0;padding:var(--fang-space-12,12px) 0 0}
       .st-mosaic-band-content:has(> .st-mosaic-board){overflow:hidden;padding-bottom:0}
       /* A split page (\u6982\u89C8 / \u63D0\u6848 / \u6D41\u6D3E) owns its own scrolling columns; letting the outer band
          scroll as well produced two scrollbars and a detail pane that could be scrolled away. */
@@ -12913,38 +12365,38 @@ var CSS_BOARD = `
       /* The two selectors are the board's FOOT, above a hairline. No frame of their own \u2014 the
          panel's fields are borderless with a fill, and a box around a filled select is a box in
          a box. */
-      .st-mosaic-focus{display:flex;flex-wrap:wrap;gap:var(--st-space-12,12px);align-items:center;
+      .st-mosaic-focus{display:flex;flex-wrap:wrap;gap:var(--fang-space-12,12px);align-items:center;
         margin:var(--st-board-inset) 0 0;padding:var(--st-board-inset) 0 0;border-top:none}
-      .st-mosaic-focus-label{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
+      .st-mosaic-focus-label{flex:none;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
       /* One picker: a framed field holding a button, and a list anchored to that field. The
          field is the positioning context, so the list opens UPWARD from it \u2014 the OS would open
          a native select upward over the control at the foot of a sheet; this direction is ours. */
-      .st-mosaic-pick{position:relative;display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0;
-        padding:var(--st-inset-xs) var(--st-inset-sm);border:1px solid var(--dsw-alias-border-l4,var(--st-fallback-border-l4));
-        border-radius:var(--st-radius-sm,8px);corner-shape:round;background:var(--st-surface-high)}
-      .st-mosaic-pick:focus-within{border-color:var(--st-accent)}
-      .st-mosaic-pick-button{display:flex;align-items:center;gap:var(--st-space-4,4px);max-width:var(--st-picker-min-w,220px);min-width:0;
-        padding:var(--st-space-2,2px) var(--st-space-4,4px);border:none;border-radius:var(--st-radius-xs,4px);corner-shape:round;background:transparent;
-        color:var(--st-text-primary);font-family:inherit;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+      .st-mosaic-pick{position:relative;display:flex;gap:var(--fang-space-8,8px);align-items:center;min-width:0;
+        padding:var(--fang-padding-xs) var(--fang-padding-sm);border:1px solid var(--fang-border-strong);
+        border-radius:var(--fang-radius-sm,8px);corner-shape:round;background:var(--fang-surface-high)}
+      .st-mosaic-pick:focus-within{border-color:var(--fang-accent)}
+      .st-mosaic-pick-button{display:flex;align-items:center;gap:var(--fang-space-4,4px);max-width:var(--st-picker-min-w,220px);min-width:0;
+        padding:var(--fang-space-2,2px) var(--fang-space-4,4px);border:none;border-radius:var(--fang-radius-xs,4px);corner-shape:round;background:transparent;
+        color:var(--fang-ink-primary);font-family:inherit;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         cursor:pointer;text-align:left;outline:none}
-      .st-mosaic-pick-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+      .st-mosaic-pick-button:focus-visible{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       .st-mosaic-pick-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-mosaic-pick-list{position:absolute;z-index:var(--st-layer-menu);bottom:calc(100% + 4px);left:0;
+      .st-mosaic-pick-list{position:absolute;z-index:var(--fang-layer-menu);bottom:calc(100% + 4px);left:0;
         display:flex;flex-direction:column;min-width:100%;max-width:min(320px,calc(100vw - 48px));
-        max-height:min(46vh,320px);overflow:auto;padding:var(--st-space-4,4px);
-        border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface-high);
+        max-height:min(46vh,320px);overflow:auto;padding:var(--fang-space-4,4px);
+        border-radius:var(--fang-radius-md,12px);corner-shape:round;background:var(--fang-surface-high);
         box-shadow:var(--dsw-elevation-prominent,0 0 0 .5px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.12));
         scrollbar-width:thin}
-      .st-mosaic-pick-option{display:flex;align-items:center;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);border:none;
-        border-radius:var(--st-radius-sm,8px);corner-shape:round;background:transparent;
-        color:var(--st-text-primary);font-family:inherit;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+      .st-mosaic-pick-option{display:flex;align-items:center;width:100%;padding:var(--fang-space-8,8px) var(--fang-space-12,12px);border:none;
+        border-radius:var(--fang-radius-sm,8px);corner-shape:round;background:transparent;
+        color:var(--fang-ink-primary);font-family:inherit;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         cursor:pointer;text-align:left;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-mosaic-pick-option:hover{background:var(--st-hover-fill)}
-      .st-mosaic-pick-option[aria-checked="true"]{color:var(--st-text-primary);font-weight:var(--st-font-weight-strong);
-        background:var(--st-selected-fill)}
+      .st-mosaic-pick-option:hover{background:var(--fang-hover-fill)}
+      .st-mosaic-pick-option[aria-checked="true"]{color:var(--fang-ink-primary);font-weight:var(--fang-font-weight-strong);
+        background:var(--fang-selected-fill)}
       .st-mosaic-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
       /* The visible line reads the card border's own token \u2014 the same colour as the boxes it
          joins, in whichever theme is loaded. The border token is invisible on a dark theme, so
@@ -12955,12 +12407,12 @@ var CSS_BOARD = `
          the adjacent-sibling combinator \u2014 the two lines are SIBLINGS, hit first, and a <line>
          cannot have children for a descendant combinator to find. */
       .st-mosaic-edge-hit{stroke:transparent;stroke-width:var(--st-edge-hit-w);pointer-events:stroke;cursor:pointer}
-      .st-mosaic-edge-hit:hover + .st-mosaic-edge:not(.st-mosaic-edge-picked){stroke:var(--dsw-alias-label-primary,var(--st-fallback-ink-contrast));stroke-opacity:1}
+      .st-mosaic-edge-hit:hover + .st-mosaic-edge:not(.st-mosaic-edge-picked){stroke:var(--dsw-alias-label-primary,#fff);stroke-opacity:1}
       .st-mosaic-edge-picked{stroke:var(--st-thread-selected);stroke-width:var(--st-thread-picked-w);stroke-opacity:1}
       .st-mosaic-edge-arrow{fill:var(--st-thread-idle);pointer-events:none}
       .st-mosaic-edge-arrow-picked{fill:var(--st-thread-selected)}
-      .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--st-font-family);font-size:var(--st-thread-label-size);
-        font-weight:var(--st-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
+      .st-mosaic-edge-label{fill:var(--st-thread-ink);font-family:var(--fang-font-family);font-size:var(--st-thread-label-size);
+        font-weight:var(--fang-font-weight-medium);paint-order:stroke;stroke:var(--st-board-wall);
         stroke-width:var(--st-thread-halo-w);stroke-linejoin:round;pointer-events:none;user-select:none}
       /* A card is a RAISED object on the board \u2014 its own shadow is what separates it from the
          wall behind it. The height is set, not grown from content: the wires are drawn from the
@@ -12981,14 +12433,14 @@ var CSS_CARDS = `
       .st-mosaic-card{position:absolute;box-sizing:border-box;
         width:var(--st-card-w,120px);height:var(--st-card-h,168px);
         padding:0;overflow:hidden;
-        border:1px solid var(--dsw-alias-border-l2,var(--st-fallback-border-l2));border-radius:var(--st-radius-md,12px);
-        background:var(--st-surface);cursor:grab;user-select:none;touch-action:none;
+        border:1px solid var(--fang-border-hair);border-radius:var(--fang-radius-md,12px);
+        background:var(--fang-surface);cursor:grab;user-select:none;touch-action:none;
         box-shadow:var(--dsw-shadow-lv2,0 1px 2px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.06));
         transition:box-shadow .12s ease}
       /* The picture: the card's whole box, cropped to fill it. No frame of its own \u2014 the card's
          own border is the only edge, which is why nothing here draws a second one. */
       .st-mosaic-card-photo{position:absolute;inset:0;overflow:hidden;
-        display:grid;place-items:center;background:var(--st-surface)}
+        display:grid;place-items:center;background:var(--fang-surface)}
       .st-mosaic-card-photo img{width:100%;height:100%;object-fit:cover;display:block}
       /* The initial is centred in the picture's VISIBLE half, not in the card.
          The picture fills the whole card and the caption covers the lower half, so centring the
@@ -13000,9 +12452,9 @@ var CSS_CARDS = `
          open upper half \u2014 and it is large enough to read as a deliberate face-holder rather than
          as a stray character in a corner. The old upward offset belonged to the translucent
          scrim era and has nothing to push away from now. */
-      .st-mosaic-card-photo .st-mosaic-card-initial{user-select:none;font-weight:var(--st-font-weight-strong);
-        font-size:calc(var(--st-text-xl,20px) * 2);line-height:1;
-        color:var(--st-ink-faint)}
+      .st-mosaic-card-photo .st-mosaic-card-initial{user-select:none;font-weight:var(--fang-font-weight-strong);
+        font-size:calc(var(--fang-font-size-xl,20px) * 2);line-height:1;
+        color:var(--fang-ink-faint)}
       /* The seam between the picture and the caption exists only when there IS a picture: on a
          plain card it is a line across an empty surface, cutting the card into two slabs. */
       /* The caption over the lower half of the picture, anchored to the BOTTOM edge. It covers
@@ -13020,18 +12472,18 @@ var CSS_CARDS = `
          the band grows for that one card alone. */
       .st-mosaic-card-caption{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;
         display:flex;flex-direction:column;justify-content:flex-end;gap:0;
-        min-width:0;padding:var(--st-inset-xs) var(--st-inset-sm);
+        min-width:0;padding:var(--fang-padding-xs) var(--fang-padding-sm);
         /* OPAQUE, on the writer's instruction: the old scrim was a translucent black ramp that
            let the photograph ghost through under the text. The band is the card's own surface
            now; the hairline along its top edge \u2014 drawn only when a photograph is above it \u2014 is
            the boundary the ramp used to draw. */
-        background:var(--st-surface)}
+        background:var(--fang-surface)}
       .st-mosaic-card:not(.st-mosaic-card-plain) .st-mosaic-card-caption{
-        box-shadow:inset 0 var(--st-hairline) 0 var(--dsw-alias-border-l2,var(--st-fallback-border-l2))}
+        box-shadow:inset 0 var(--fang-hairline) 0 var(--fang-border-hair)}
       /* The \u22EF menu, in the card's top-right corner. It fades in with the card's hover on a wall
          where cards are the content, and stays out of the picture until then: a permanent glyph on
          every card in a grid of pictures is furniture. */
-      .st-card-menu{position:absolute;top:var(--st-inset-sm);right:var(--st-inset-sm);
+      .st-card-menu{position:absolute;top:var(--fang-padding-sm);right:var(--fang-padding-sm);
         z-index:var(--st-mosaic-z-card-menu);display:flex;flex-direction:column;align-items:flex-end}
       /* No fill and no ring until it is used: a dark pill behind the dots darkened the corner of
          every card and competed with the picture, so the three dots ARE the control.
@@ -13040,17 +12492,17 @@ var CSS_CARDS = `
          picture is a placeholder. Quiet ink reads on both the empty field and a real image. */
       .st-card-menu-trigger{display:inline-flex;align-items:center;justify-content:center;
         width:var(--st-icon-menu-hit,20px);height:var(--st-icon-menu-hit,20px);padding:0;
-        border:none;border-radius:var(--st-radius-pill,999px);corner-shape:round;
+        border:none;border-radius:var(--fang-radius-pill,999px);corner-shape:round;
         background:transparent;cursor:pointer;
-        color:var(--st-text-tertiary);
+        color:var(--fang-ink-tertiary);
         opacity:0;transition:opacity var(--ds-transition-duration-fast,.12s) var(--ds-ease-in-out,ease-in-out)}
       /* The three dots, stacked. Drawn as dots rather than as a glyph so they are identical in size
          and spacing on every card: a vertical ellipsis character spaces itself by the font.
          One pixel each \u2014 a menu affordance is a mark, not a button's worth of ink. */
       .st-card-menu-dots{display:flex;flex-direction:column;align-items:center;
-        gap:var(--st-space-2,2px)}
+        gap:var(--fang-space-2,2px)}
       .st-card-menu-dots>i{display:block;width:var(--st-icon-menu-dot,2px);height:var(--st-icon-menu-dot,2px);
-        border-radius:var(--st-radius-pill,999px);corner-shape:round;background:currentColor}
+        border-radius:var(--fang-radius-pill,999px);corner-shape:round;background:currentColor}
       .st-mosaic-page-card:hover .st-card-menu-trigger,
       .st-mosaic-card:hover .st-card-menu-trigger,
       .st-card-menu-trigger:focus-visible,
@@ -13058,24 +12510,24 @@ var CSS_CARDS = `
       /* Hover brightens the DOTS, never the box: a fill appearing under the pointer is the same
          darkening the trigger was freed from, just later. */
       .st-card-menu-trigger:hover{opacity:1}
-      .st-card-menu-trigger:hover{color:var(--st-text-primary)}
+      .st-card-menu-trigger:hover{color:var(--fang-ink-primary)}
       .st-card-menu-trigger:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       /* The list opens to the LEFT of the corner so a card at the grid's right edge does not push
          its own menu off the wall. */
       .st-card-menu-list{position:absolute;top:calc(100% + 4px);right:0;z-index:var(--st-mosaic-z-card-menu-list);
-        display:flex;flex-direction:column;min-width:var(--st-menu-min-w,120px);padding:var(--st-space-8,8px);
-        border-radius:var(--st-radius-md,12px);corner-shape:round;background:var(--st-surface-high);
+        display:flex;flex-direction:column;min-width:var(--st-menu-min-w,120px);padding:var(--fang-space-8,8px);
+        border-radius:var(--fang-radius-md,12px);corner-shape:round;background:var(--fang-surface-high);
         box-shadow:0 4px 16px rgba(0,0,0,.28)}
       /* Menu rows are TALL \u2014 generous vertical padding is what reads as airy; the type stays at
          the working step. */
-      .st-card-menu-item{display:block;width:100%;padding:var(--st-space-8,8px) var(--st-space-12,12px);
-        border:none;border-radius:var(--st-radius-sm,8px);corner-shape:round;background:transparent;text-align:left;
-        font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        color:var(--st-text-primary);cursor:pointer}
-      .st-card-menu-item:hover{background:var(--st-hover-fill)}
-      .st-card-menu-item.fang-danger{color:var(--dsw-alias-state-error-primary,var(--st-fallback-error))}
-      .st-card-menu-item.fang-danger:hover{background:var(--dsw-alias-state-error-primary,var(--st-fallback-error));color:#fff}
+      .st-card-menu-item{display:block;width:100%;padding:var(--fang-space-8,8px) var(--fang-space-12,12px);
+        border:none;border-radius:var(--fang-radius-sm,8px);corner-shape:round;background:transparent;text-align:left;
+        font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        color:var(--fang-ink-primary);cursor:pointer}
+      .st-card-menu-item:hover{background:var(--fang-hover-fill)}
+      .st-card-menu-item.fang-danger{color:var(--dsw-alias-state-error-primary,#ec1313)}
+      .st-card-menu-item.fang-danger:hover{background:var(--dsw-alias-state-error-primary,#ec1313);color:#fff}
       .st-mosaic-card:hover{box-shadow:var(--dsw-shadow-lv3,0 2px 4px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.1))}
       .st-mosaic-card:active{cursor:grabbing}
       /* Both lines sit on the scrim, so both are chosen for a dark backing rather than for the
@@ -13083,8 +12535,8 @@ var CSS_CARDS = `
          the working step, not the title step \u2014 at the title step a two-line caption took most
          of the band and squeezed the picture \u2014 and the weight still separates it from the line
          under it. */
-      .st-mosaic-card-name{display:block;font-weight:var(--st-font-weight-strong);
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
+      .st-mosaic-card-name{display:block;font-weight:var(--fang-font-weight-strong);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
         color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       /* The introduction, clamped to two lines. A writer's description can be a paragraph; the
          band is a fixed half of the card, so the text is what has to give. Two lines is enough for
@@ -13094,12 +12546,12 @@ var CSS_CARDS = `
          card covered the photograph and made the board read as text. Reading the intro is a
          deliberate look at ONE card, which is exactly what a hover is. */
       .st-mosaic-card-intro{display:none;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-        overflow:hidden;margin-top:var(--st-space-2,2px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+        overflow:hidden;margin-top:var(--fang-space-2,2px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
         color:color-mix(in srgb, #fff 66%, transparent)}
       .st-mosaic-card:hover .st-mosaic-card-intro{display:-webkit-box}
       .st-mosaic-card-sub{display:block;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
         color:color-mix(in srgb, #fff 76%, transparent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       /* The detail popover floats over the canvas's near corner: reading one card or one edge
          should not displace the others, and a \u2715 plus an empty-canvas click both put it away.
@@ -13108,7 +12560,7 @@ var CSS_CARDS = `
       /* ---- the gallery: cards laid out as a page of objects, not as a map ---- */
       .st-mosaic-gallery{display:grid;gap:var(--st-board-gap);align-items:start;
         grid-template-columns:repeat(auto-fill,var(--st-gallery-w,184px));
-        padding:var(--st-space-2) 0 var(--st-board-gap)}
+        padding:var(--fang-space-2) 0 var(--st-board-gap)}
       /* Every dimension is pinned, and the height is a contract: a card with a two-line summary
          and a card with none are the same size, so a row of them is a grid rather than a jagged
          stack. Content that overflows is clipped here and read in full in the detail popover.
@@ -13127,28 +12579,28 @@ var CSS_CARDS = `
         cursor:pointer;user-select:none;
         margin:0;padding:0;overflow:hidden;
         display:flex;flex-direction:column;flex:none;min-width:0;max-width:none;
-        border:1px solid var(--st-ink-edge);
-        border-radius:var(--st-radius-lg,16px);corner-shape:round;
-        background:var(--st-surface);
-        box-shadow:var(--st-card-shadow);
-        transition:var(--st-card-motion)}
+        border:1px solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-lg,16px);corner-shape:round;
+        background:var(--fang-surface);
+        box-shadow:var(--fang-card-shadow);
+        transition:var(--fang-card-motion)}
       /* Hover lifts it a little and deepens the shadow: the card reads as pickable without moving
          far enough to disturb the row. The new-book tile is in this list because it is a cell of
          the same grid; it is not a gallery card, so its own class supplies the cursor and the
          transition, and only the appearance is shared. */
       .st-mosaic-page-card:hover,.st-book-add:hover{transform:translateY(-2px);
-        border-color:var(--st-ink-edge);
-        box-shadow:var(--st-card-shadow-lift)}
+        border-color:var(--fang-ink-edge);
+        box-shadow:var(--fang-card-shadow-lift)}
       /* The new-book tile while its own dialog is open: the accent edge and the lifted position,
          the pair the board's selected card uses to say "this one". Written AFTER the hover rule
          because it is the same specificity \u2014 above it, hovering the open tile would repaint the
          accent edge back to plain ink. The ring is an outline, not a box-shadow, so it does not
          fight the hover shadow for the same property. */
       .st-book-add[aria-expanded="true"]{transform:translateY(-2px);
-        border-color:var(--st-accent);
-        outline:var(--dsw-focus-ring-width,2px) solid color-mix(in srgb, var(--st-accent) 45%, transparent);
+        border-color:var(--fang-accent);
+        outline:var(--dsw-focus-ring-width,2px) solid color-mix(in srgb, var(--fang-accent) 45%, transparent);
         outline-offset:0;
-        color:var(--st-text-primary)}
+        color:var(--fang-ink-primary)}
 
       /* ---- the portrait band inside a card, and the page a card opens ---- */
       /* The picture's half, FIXED at 62% of the card, and neither half may grow or shrink: the
@@ -13163,12 +12615,12 @@ var CSS_CARDS = `
          frame reads as a window rather than a blank panel. */
       .st-mosaic-portrait{position:relative;flex:0 0 62%;min-height:0;
         display:flex;flex-direction:column;gap:0;
-        border-bottom:.5px solid var(--st-ink-hair);
+        border-bottom:.5px solid var(--fang-ink-hair);
         background:
           linear-gradient(180deg,
-            var(--st-ink-whisper),
+            var(--fang-ink-whisper),
             transparent 60%),
-          var(--st-surface-high)}
+          var(--fang-surface-high)}
       /* The frame FILLS its half. A percentage here as well applied the 62% twice \u2014 the picture
          ended up at 38% of the card and the name row took the rest of the picture's box. */
       .st-mosaic-portrait-frame{flex:1 1 auto;width:100%;display:block;overflow:hidden;min-height:0}
@@ -13176,22 +12628,22 @@ var CSS_CARDS = `
       /* The placeholder initial sits in a coin of its own: it reads as "a picture goes here" rather
          than as stray text, and it is quiet enough that a real image will clearly replace it. */
       .st-mosaic-portrait-initial{user-select:none;
-        width:var(--st-hit-target,44px);height:var(--st-hit-target,44px);border-radius:var(--st-radius-pill,999px);corner-shape:round;
+        width:var(--fang-hit-target,44px);height:var(--fang-hit-target,44px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;
         display:grid;place-items:center;
-        font-size:var(--st-text-lg);line-height:1;font-weight:var(--st-font-weight-strong);
-        color:var(--st-ink-faint);
-        background:color-mix(in srgb, var(--st-surface) 70%, transparent);
+        font-size:var(--fang-font-size-lg);line-height:1;font-weight:var(--fang-font-weight-strong);
+        color:var(--fang-ink-faint);
+        background:color-mix(in srgb, var(--fang-surface) 70%, transparent);
         box-shadow:
-          inset 0 0 0 .5px var(--st-ink-edge),
-          0 1px 2px var(--st-ink-hair)}
+          inset 0 0 0 .5px var(--fang-ink-edge),
+          0 1px 2px var(--fang-ink-hair)}
       /* The caption line: the name, then the role beside it. The name carries the weight and the
          ink; the role is set quiet and set off by a small dot, so one line says who this is AND
          what they are without needing two rows. It is the text half's first line, not a band of
          its own \u2014 the half's height is what is fixed, not this row's. */
-      .st-mosaic-portrait-hint{flex:none;padding:var(--st-inset-sm) var(--st-inset-md) 0;
+      .st-mosaic-portrait-hint{flex:none;padding:var(--fang-padding-sm) var(--fang-padding-md) 0;
         display:flex;align-items:baseline;justify-content:flex-start;
-        gap:var(--st-space-8,8px);flex-wrap:nowrap;box-sizing:border-box;min-width:0;
-        font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);font-weight:var(--st-font-weight-strong);
+        gap:var(--fang-space-8,8px);flex-wrap:nowrap;box-sizing:border-box;min-width:0;
+        font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);font-weight:var(--fang-font-weight-strong);
         overflow:hidden;white-space:nowrap}
       /* Text shrinks to an ellipsis; the GAP between the two parts does not. The name gives way
          first (it is the longer field and the one with a fallback \u2014 the picture already shows its
@@ -13199,16 +12651,16 @@ var CSS_CARDS = `
          a long line from squeezing the space between name and role down to nothing, which is what
          made two crowded words look like one run-on label. */
       .st-mosaic-portrait-name{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;
-        white-space:nowrap;font-weight:var(--st-font-weight-strong);color:var(--st-text-primary);
-        font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading)}
+        white-space:nowrap;font-weight:var(--fang-font-weight-strong);color:var(--fang-ink-primary);
+        font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg)}
       /* The subtitle, one step down from the title it sits beside. It inherited the title's size
          before, so a card read as two names of equal weight with a dot between them. */
       .st-mosaic-portrait-role{min-width:0;flex:0 1 auto;max-width:52%;overflow:hidden;text-overflow:ellipsis;
-        white-space:nowrap;color:var(--st-text-tertiary);
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);font-weight:var(--st-font-weight-normal)}
+        white-space:nowrap;color:var(--fang-ink-tertiary);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);font-weight:var(--fang-font-weight-normal)}
       .st-mosaic-portrait-hint>*{flex-shrink:0}
       .st-mosaic-portrait-hint>.st-mosaic-portrait-name{flex-shrink:1}
-      .st-mosaic-portrait-role::before{content:'\xB7';margin-right:var(--st-space-8,8px);opacity:var(--st-fade-quiet)}
+      .st-mosaic-portrait-role::before{content:'\xB7';margin-right:var(--fang-space-8,8px);opacity:var(--st-fade-quiet)}
       /* The description sits UNDER the picture, which is the reading order a card implies. */
       /* The description area takes exactly what is left after the picture and its caption, and
          clips: the card's outer height is the contract, so the body is the part that gives. */
@@ -13234,17 +12686,17 @@ var CSS_CARDS = `
       .st-mosaic-card-text{flex:0 0 38%;min-height:0;overflow:hidden;
         display:flex;flex-direction:column;min-width:0}
       .st-mosaic-card-body{flex:1 1 auto;min-height:0;overflow:hidden;
-        display:flex;flex-direction:column;gap:var(--st-space-2,2px);
-        padding:var(--st-inset-xs) var(--st-inset-md) var(--st-inset-sm);min-width:0}
+        display:flex;flex-direction:column;gap:var(--fang-space-2,2px);
+        padding:var(--fang-padding-xs) var(--fang-padding-md) var(--fang-padding-sm);min-width:0}
       /* Every text line in the card is one line: a name, a role, a holder. The summary is the one
          block allowed several, and it is capped so it cannot push the card taller. */
       .st-mosaic-card-body h4,.st-mosaic-card-body p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0}
       .st-mosaic-card-body .st-mosaic-card-summary{white-space:normal;display:-webkit-box;
         -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-      .st-mosaic-chips{margin-top:var(--st-inset-xs)}
+      .st-mosaic-chips{margin-top:var(--fang-padding-xs)}
       .st-mosaic-empty{margin:0;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
       /* The review flow on the relations page: a header row above the canvas holds the check and
          ask entries; the fetched proposal renders as one card per change below it. Each card
          keeps its edit fields, verdict buttons and evidence quote in one column; the bookmark
@@ -13253,17 +12705,17 @@ var CSS_CARDS = `
       /* The relations wall treats a card as a PHOTOGRAPH, not a framed tile: no inner border,
          a raised paper shadow, a small stable tilt, and a metal pin at its top centre. The
          gallery keeps its framed object treatment; only the canvas gets this one. */
-      .st-mosaic-canvas .st-mosaic-card-pinned{border:1px solid var(--st-ink-edge);background:var(--st-surface);
-        border-radius:var(--st-radius-sm,8px);
+      .st-mosaic-canvas .st-mosaic-card-pinned{border:1px solid var(--fang-ink-edge);background:var(--fang-surface);
+        border-radius:var(--fang-radius-sm,8px);
         box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px rgba(0,0,0,.28),0 18px 38px rgba(0,0,0,.2);
         transform:rotate(var(--st-card-tilt,0deg))}
       .st-mosaic-canvas .st-mosaic-card-pinned:hover{box-shadow:0 2px 4px rgba(0,0,0,.36),0 12px 24px rgba(0,0,0,.34),0 24px 48px rgba(0,0,0,.24)}
-      .st-mosaic-canvas .st-mosaic-card-pinned.st-mosaic-card-plain{background:var(--st-surface)}
-      .st-mosaic-canvas .st-mosaic-card-pinned .st-mosaic-card-photo{border-radius:var(--st-radius-sm,8px)}
+      .st-mosaic-canvas .st-mosaic-card-pinned.st-mosaic-card-plain{background:var(--fang-surface)}
+      .st-mosaic-canvas .st-mosaic-card-pinned .st-mosaic-card-photo{border-radius:var(--fang-radius-sm,8px)}
       .st-mosaic-card-pin{display:none}
       .st-mosaic-card-pinned .st-mosaic-card-pin{display:block;position:absolute;z-index:var(--st-mosaic-z-card-pin);
         left:50%;top:var(--st-card-pin-y,12px);width:var(--st-pin-size);height:var(--st-pin-size);
-        transform:translate(-50%,-50%);border-radius:var(--st-radius-pill);corner-shape:round;
+        transform:translate(-50%,-50%);border-radius:var(--fang-radius-pill);corner-shape:round;
         background:var(--st-pin-metal);box-shadow:var(--st-pin-shadow);pointer-events:none}
 `;
 
@@ -13273,119 +12725,119 @@ var CSS_ENTITY = `
       .st-mosaic-detail{position:absolute;right:var(--st-board-inset);top:var(--st-board-inset);
         width:var(--st-detail-w);max-height:calc(100% - var(--st-board-inset) * 2);overflow:auto;
         display:flex;flex-direction:column;gap:var(--st-board-gap);
-        border:var(--st-hairline) solid var(--st-ink-edge);border-radius:var(--st-radius-lg,16px);corner-shape:round;
-        background:var(--st-surface);padding:var(--st-board-inset);z-index:var(--st-mosaic-z-detail);
-        box-shadow:var(--st-card-shadow-lift)}
+        border:var(--fang-hairline) solid var(--fang-ink-edge);border-radius:var(--fang-radius-lg,16px);corner-shape:round;
+        background:var(--fang-surface);padding:var(--st-board-inset);z-index:var(--st-mosaic-z-detail);
+        box-shadow:var(--fang-card-shadow-lift)}
       /* The head is a media row: picture on the left, the editable identity on the right. */
       .st-mosaic-detail-head{display:flex;align-items:flex-start;gap:var(--st-board-gap);min-width:0}
-      .st-mosaic-detail-identity{display:flex;flex-direction:column;gap:var(--st-inset-sm);
+      .st-mosaic-detail-identity{display:flex;flex-direction:column;gap:var(--fang-padding-sm);
         flex:1 1 auto;min-width:0}
       /* The portrait keeps the board card's own shape, so a picture and its card read as one
          system rather than as two different crops of the same subject. */
       .st-mosaic-detail-portrait{position:relative;flex:none;
         width:var(--st-detail-portrait);aspect-ratio:var(--st-card-aspect,5 / 7);
-        border-radius:var(--st-radius-md,12px);corner-shape:round;overflow:hidden}
+        border-radius:var(--fang-radius-md,12px);corner-shape:round;overflow:hidden}
       .st-mosaic-detail-frame{width:100%;height:100%;overflow:hidden;
-        border-radius:var(--st-radius-md,12px);corner-shape:round;
+        border-radius:var(--fang-radius-md,12px);corner-shape:round;
         display:grid;place-items:center;
-        background:var(--st-surface-high);
-        box-shadow:inset 0 0 0 var(--st-hairline) var(--st-ink-edge)}
+        background:var(--fang-surface-high);
+        box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-ink-edge)}
       .st-mosaic-detail-frame img{width:100%;height:100%;object-fit:cover;display:block}
-      .st-mosaic-detail-initial{user-select:none;font-weight:var(--st-font-weight-strong);
-        font-size:var(--st-text-lg);line-height:1;
-        color:var(--st-ink-faint)}
+      .st-mosaic-detail-initial{user-select:none;font-weight:var(--fang-font-weight-strong);
+        font-size:var(--fang-font-size-lg);line-height:1;
+        color:var(--fang-ink-faint)}
       /* The picture button sits on the portrait's corner at the portrait's own scale: the glyph
          identifies it, so it reads as part of the card rather than as a button glued to it. */
-      .st-mosaic-detail-generate{position:absolute;right:var(--st-inset-xs);bottom:var(--st-inset-xs);
+      .st-mosaic-detail-generate{position:absolute;right:var(--fang-padding-xs);bottom:var(--fang-padding-xs);
         width:var(--st-generate-size);height:var(--st-generate-size);
         display:grid;place-items:center;padding:0;border:none;cursor:pointer;
-        border-radius:var(--st-radius-pill,999px);corner-shape:round;
-        background:var(--st-accent);
-        color:var(--st-on-accent,#fff);
+        border-radius:var(--fang-radius-pill,999px);corner-shape:round;
+        background:var(--fang-accent);
+        color:var(--fang-on-accent,#fff);
         box-shadow:var(--dsw-shadow-lv2,0 4px 12px rgba(0,0,0,.02),0 2px 8px rgba(0,0,0,.04));
         transition:transform .12s var(--ds-ease-in-out,ease-in-out),opacity .12s}
       .st-mosaic-detail-generate:hover:not(:disabled){transform:scale(1.08)}
       .st-mosaic-detail-generate:disabled{cursor:progress;opacity:.75}
       .st-mosaic-detail-generate:focus-visible{outline:none;
-        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
+        box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
       /* Spinning while the model works: the one motion here, and the only signal that a click
          that takes seconds is still alive. */
       .st-mosaic-detail-generate[data-busy="true"] svg{animation:st-think-spin 1s linear infinite}
-      .st-mosaic-detail-title{font-weight:var(--st-font-weight-strong);flex:1;min-width:0;
-        font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        color:var(--st-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .st-mosaic-detail-close{flex:none;padding:0 var(--st-inset-xs)}
+      .st-mosaic-detail-title{font-weight:var(--fang-font-weight-strong);flex:1;min-width:0;
+        font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        color:var(--fang-ink-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .st-mosaic-detail-close{flex:none;padding:0 var(--fang-padding-xs)}
       /* A section is a label over its content, never a two-column form: the label is a caption,
          and the field under it is the width of the panel. */
-      .st-mosaic-detail-section{display:flex;flex-direction:column;gap:var(--st-inset-xs);min-width:0}
-      .st-mosaic-detail-label{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary);margin:0;
-        display:flex;align-items:center;gap:var(--st-inset-sm)}
+      .st-mosaic-detail-section{display:flex;flex-direction:column;gap:var(--fang-padding-xs);min-width:0}
+      .st-mosaic-detail-label{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary);margin:0;
+        display:flex;align-items:center;gap:var(--fang-padding-sm)}
       /* The editable fields in the panel: one rule, so the name, the role and the summary are the
          same control. Three different looks made it impossible to tell what could be typed in. */
       .st-mosaic-field{width:100%;box-sizing:border-box;font-family:inherit;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        padding:var(--st-inset-xs) var(--st-inset-sm);
-        border:1px solid var(--dsw-alias-border-l2,var(--st-fallback-border-l2));border-radius:var(--st-radius-sm,8px);
-        background:var(--st-surface);color:var(--st-text-primary);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        padding:var(--fang-padding-xs) var(--fang-padding-sm);
+        border:1px solid var(--fang-border-hair);border-radius:var(--fang-radius-sm,8px);
+        background:var(--fang-surface);color:var(--fang-ink-primary);
         outline:none;resize:none}
-      .st-mosaic-field:focus{border-color:var(--st-accent)}
+      .st-mosaic-field:focus{border-color:var(--fang-accent)}
       /* The name is the panel's title, so it is set at title size and weight \u2014 but it is still an
          input, and it looks like one on focus so the writer can tell it can be changed. */
-      .st-mosaic-field-title{font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        font-weight:var(--st-font-weight-strong);padding:var(--st-inset-xs) var(--st-inset-sm)}
+      .st-mosaic-field-title{font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        font-weight:var(--fang-font-weight-strong);padding:var(--fang-padding-xs) var(--fang-padding-sm)}
       /* The textareas grow with their content up to a ceiling: a fixed rows count showed three
          lines of a summary that might be one or fifteen. */
-      .st-mosaic-field-area{min-height:calc(var(--st-row-height-compact,26px) * 2);max-height:var(--st-detail-area-max);
+      .st-mosaic-field-area{min-height:calc(var(--fang-row-height-compact,26px) * 2);max-height:var(--st-detail-area-max);
         scrollbar-width:thin;resize:none}
       /* Chips and the field that adds one, as one wrapped row: the plus belongs at the end of the
          list it extends, not on a line of its own below it. */
-      .st-mosaic-chip-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--st-inset-xs)}
+      .st-mosaic-chip-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--fang-padding-xs)}
       .st-mosaic-chip-row .st-mosaic-chip{margin:0}
       /* A generation that failed says so where the button was pressed. */
-      .st-mosaic-detail-error{margin:0;padding:var(--st-inset-sm);
-        border-radius:var(--st-radius-sm,8px);
-        background:color-mix(in srgb, var(--dsw-alias-state-error-primary,var(--st-fallback-error)) 10%, transparent);
-        color:var(--dsw-alias-state-error-primary,var(--st-fallback-error));
-        font-size:var(--st-text-sm);line-height:1.55;
+      .st-mosaic-detail-error{margin:0;padding:var(--fang-padding-sm);
+        border-radius:var(--fang-radius-sm,8px);
+        background:color-mix(in srgb, var(--dsw-alias-state-error-primary,#ec1313) 10%, transparent);
+        color:var(--dsw-alias-state-error-primary,#ec1313);
+        font-size:var(--fang-font-size-sm);line-height:1.55;
         overflow-wrap:anywhere}
-      .st-mosaic-detail-row{display:flex;gap:var(--st-inset-sm);align-items:baseline;flex-wrap:wrap;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary)}
-      .st-mosaic-detail-field-label{flex:none;width:var(--st-fact-label-w-compact);font-size:var(--st-text-sm);
-        line-height:var(--st-text-sm-leading);color:var(--st-text-tertiary)}
-      .st-mosaic-detail-field-value{flex:1 1 auto;min-width:0;font-size:var(--st-text-sm);
-        line-height:var(--st-text-sm-leading);color:var(--st-text-primary);
+      .st-mosaic-detail-row{display:flex;gap:var(--fang-padding-sm);align-items:baseline;flex-wrap:wrap;
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary)}
+      .st-mosaic-detail-field-label{flex:none;width:var(--st-fact-label-w-compact);font-size:var(--fang-font-size-sm);
+        line-height:var(--fang-line-height-sm);color:var(--fang-ink-tertiary)}
+      .st-mosaic-detail-field-value{flex:1 1 auto;min-width:0;font-size:var(--fang-font-size-sm);
+        line-height:var(--fang-line-height-sm);color:var(--fang-ink-primary);
         white-space:pre-wrap;word-break:break-word}
-      .st-mosaic-detail-note{margin:0;font-size:var(--st-text-sm);line-height:var(--st-line-height-ui);
-        color:var(--st-text-secondary);white-space:pre-wrap;word-break:break-word}
-      .st-mosaic-detail-holder{font-weight:var(--st-font-weight-medium);color:var(--st-text-primary)}
+      .st-mosaic-detail-note{margin:0;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-secondary);white-space:pre-wrap;word-break:break-word}
+      .st-mosaic-detail-holder{font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary)}
       .st-mosaic-detail-kind{flex:none}
-      .st-mosaic-badge{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        padding:0 var(--st-inset-sm);border-radius:var(--st-radius-pill,999px);corner-shape:round;border:var(--st-hairline) solid var(--dsw-alias-border-l4,var(--st-fallback-border-l4));
-        color:var(--st-text-tertiary)}
-      .st-mosaic-chip{display:inline-block;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        padding:0 var(--st-inset-sm);border-radius:var(--st-radius-pill,999px);corner-shape:round;margin:0 var(--st-inset-xs) var(--st-inset-xs) 0;
-        background:var(--st-hover-fill);color:var(--st-text-tertiary)}
+      .st-mosaic-badge{flex:none;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        padding:0 var(--fang-padding-sm);border-radius:var(--fang-radius-pill,999px);corner-shape:round;border:var(--fang-hairline) solid var(--fang-border-strong);
+        color:var(--fang-ink-tertiary)}
+      .st-mosaic-chip{display:inline-block;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        padding:0 var(--fang-padding-sm);border-radius:var(--fang-radius-pill,999px);corner-shape:round;margin:0 var(--fang-padding-xs) var(--fang-padding-xs) 0;
+        background:var(--fang-hover-fill);color:var(--fang-ink-tertiary)}
       /* The static pages: one plain card per entity on the world, cast and item pages. */
-      .st-mosaic-page-card h4{margin:0 0 var(--st-inset-xs);
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        color:var(--st-text-primary)}
+      .st-mosaic-page-card h4{margin:0 0 var(--fang-padding-xs);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        color:var(--fang-ink-primary)}
       .st-mosaic-page-card p{margin:0;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary)}
-      .st-mosaic-page-holder{font-weight:var(--st-font-weight-medium);color:var(--st-text-primary);margin:0 0 var(--st-inset-xs)}
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary)}
+      .st-mosaic-page-holder{font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary);margin:0 0 var(--fang-padding-xs)}
 
       /* ---- the entity page: a left-side page, rounded on its open edge ---- */
       /* It stays a left-side panel, flush against the board's left edge: the board is the map you
          came from, and a page that floats away from the edge reads as a separate window. Only the
          right edge is rounded, the way a drawer is rounded on its inner side. */
-      .st-mosaic-page{position:absolute;inset:0 auto 0 0;width:min(var(--st-w-compact),86%);z-index:var(--st-mosaic-z-page);
+      .st-mosaic-page{position:absolute;inset:0 auto 0 0;width:min(var(--fang-width-compact),86%);z-index:var(--st-mosaic-z-page);
         display:flex;flex-direction:column;min-height:0;
-        background:var(--st-surface);
-        border-right:var(--st-hairline) solid var(--st-ink-edge);
-        border-radius:0 var(--st-radius-lg,16px) var(--st-radius-lg,16px) 0;corner-shape:round;
-        box-shadow:var(--st-panel-shadow-right);
+        background:var(--fang-surface);
+        border-right:var(--fang-hairline) solid var(--fang-ink-edge);
+        border-radius:0 var(--fang-radius-lg,16px) var(--fang-radius-lg,16px) 0;corner-shape:round;
+        box-shadow:var(--fang-panel-shadow-right);
         overflow:hidden;
         animation:st-mosaic-page-in .18s var(--ds-ease-out,ease-out) both}
       /* Slide in from off the left edge and settle: the movement says the page is a layer over the
@@ -13406,12 +12858,12 @@ var CSS_ENTITY = `
       }
       /* The head takes the same inset as the body, so the title and the first row start on one
          vertical line instead of the title sitting a few pixels further out. */
-      .st-mosaic-page-head{display:flex;align-items:center;gap:var(--st-inset-sm);
+      .st-mosaic-page-head{display:flex;align-items:center;gap:var(--fang-padding-sm);
         padding:var(--st-board-inset-compact) var(--st-board-inset);flex:none;
-        border-bottom:var(--st-hairline) solid var(--st-ink-hair)}
+        border-bottom:var(--fang-hairline) solid var(--fang-ink-hair)}
       .st-mosaic-page-title{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-        font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        font-weight:var(--st-font-weight-strong);color:var(--st-text-primary)}
+        font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        font-weight:var(--fang-font-weight-strong);color:var(--fang-ink-primary)}
       .st-mosaic-page-head .st-mosaic-field{flex:1 1 auto;min-width:0;width:auto}
       .st-mosaic-page-scroll{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--st-board-inset);
         display:flex;flex-direction:column;gap:var(--st-board-gap)}
@@ -13422,160 +12874,161 @@ var CSS_ENTITY = `
       .st-mosaic-page-image .st-mosaic-detail-portrait{
         width:100%;height:auto}
       .st-mosaic-page-image .st-mosaic-detail-frame{height:100%}
-      .st-mosaic-page-image .st-mosaic-detail-initial{font-size:var(--st-text-xl)}
-      .st-mosaic-page-facts{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--st-inset-sm)}
+      .st-mosaic-page-image .st-mosaic-detail-initial{font-size:var(--fang-font-size-xl)}
+      .st-mosaic-page-facts{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--fang-padding-sm)}
       /* The brief facts beside the portrait are label-and-value on ONE line: a column of stacked
          labels would be as tall as the picture and read as a form. Only the prose fields below
          get the stacked label-over-value treatment. */
       .st-mosaic-page-facts .st-mosaic-page-row{display:flex;flex-direction:row;align-items:baseline;
-        gap:var(--st-inset-sm);min-width:0}
+        gap:var(--fang-padding-sm);min-width:0}
       .st-mosaic-page-facts .st-mosaic-page-label{flex:none;width:auto;min-width:var(--st-fact-label-w-compact);
         white-space:nowrap}
       .st-mosaic-page-facts .st-mosaic-page-value{flex:1 1 auto;min-width:0}
       .st-mosaic-page-facts .st-mosaic-field{flex:1 1 auto;width:auto;min-width:0}
       /* Every field is a label over its value, and the value WRAPS: this is the place the writer
          reads the full text, so it must not be clipped the way a card is. */
-      .st-mosaic-page-row{display:flex;flex-direction:column;gap:var(--st-inset-xs);min-width:0}
-      .st-mosaic-page-label{flex:none;font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
+      .st-mosaic-page-row{display:flex;flex-direction:column;gap:var(--fang-padding-xs);min-width:0}
+      .st-mosaic-page-label{flex:none;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
       .st-mosaic-page-value{flex:1 1 auto;min-width:0;word-break:break-word;white-space:pre-wrap;
-        font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        color:var(--st-text-primary)}
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-primary)}
       /* An empty field keeps its line height: without this the label would sit alone on a zero-
          height row, which reads as a broken table rather than as a fact waiting to be filled. */
-      .st-mosaic-page-value:empty{display:block;min-height:var(--st-text-md-leading)}
+      .st-mosaic-page-value:empty{display:block;min-height:var(--fang-line-height-md)}
       /* The long-form half: one section per field, separated by a hairline, so the page has a
          reading rhythm instead of an undifferentiated stack of rows. The summary band above keeps
          its rows tight because they are identity, not prose. */
       .st-mosaic-page-body{display:flex;flex-direction:column;gap:0;min-width:0;
-        border-top:var(--st-hairline) solid var(--st-ink-hair)}
+        border-top:var(--fang-hairline) solid var(--fang-ink-hair)}
       .st-mosaic-page-body>.st-mosaic-page-row{padding:var(--st-board-inset-compact) 0;
-        border-bottom:var(--st-hairline) solid var(--st-ink-hair)}
+        border-bottom:var(--fang-hairline) solid var(--fang-ink-hair)}
       .st-mosaic-page-body>.st-mosaic-page-row:last-child{border-bottom:none;padding-bottom:0}
-      .st-mosaic-page-edges{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--st-inset-xs)}
+      .st-mosaic-page-edges{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--fang-padding-xs)}
       /* One edge is a run of TEXT, not a row of boxes: name, kind and note flow inline and wrap
          naturally, so a long note continues at the same rhythm instead of breaking into pieces. */
-      .st-mosaic-page-edge{font-size:var(--st-text-md);line-height:var(--st-line-height-ui);min-width:0}
-      .st-mosaic-page-edge-other{font-weight:var(--st-font-weight-medium);color:var(--st-text-primary);
-        margin-right:var(--st-inset-sm)}
-      .st-mosaic-page-edge-kind{color:var(--st-text-secondary);
-        margin-right:var(--st-inset-sm)}
-      .st-mosaic-page-edge-note{color:var(--st-text-tertiary)}
+      .st-mosaic-page-edge{font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);min-width:0}
+      .st-mosaic-page-edge-other{font-weight:var(--fang-font-weight-medium);color:var(--fang-ink-primary);
+        margin-right:var(--fang-padding-sm)}
+      .st-mosaic-page-edge-kind{color:var(--fang-ink-secondary);
+        margin-right:var(--fang-padding-sm)}
+      .st-mosaic-page-edge-note{color:var(--fang-ink-tertiary)}
 
-      .st-mosaic-detail-direction-section{gap:var(--st-inset-xs)}
-      .st-mosaic-detail-direction{display:flex;align-items:center;gap:var(--st-space-8,8px);flex-wrap:wrap;
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);color:var(--st-text-primary)}
-      .st-mosaic-detail-party{display:inline-flex;align-items:baseline;gap:var(--st-space-4,4px);min-width:0}
-      .st-mosaic-detail-party-label{font-size:var(--st-text-sm);color:var(--st-text-tertiary)}
-      .st-mosaic-detail-direction-arrow{color:var(--st-thread);font-weight:var(--st-font-weight-strong)}
+      .st-mosaic-detail-direction-section{gap:var(--fang-padding-xs)}
+      .st-mosaic-detail-direction{display:flex;align-items:center;gap:var(--fang-space-8,8px);flex-wrap:wrap;
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);color:var(--fang-ink-primary)}
+      .st-mosaic-detail-party{display:inline-flex;align-items:baseline;gap:var(--fang-space-4,4px);min-width:0}
+      .st-mosaic-detail-party-label{font-size:var(--fang-font-size-sm);color:var(--fang-ink-tertiary)}
+      .st-mosaic-detail-direction-arrow{color:var(--st-thread);font-weight:var(--fang-font-weight-strong)}
 `;
 
 // src/client/mosaic/review.css.js
 var CSS_REVIEW = `
       /* ---- the review page: what the model proposes, and how a proposal is decided ---- */
-      .st-mosaic-head{display:flex;flex-direction:column;gap:var(--st-space-8,8px);margin:0 0 var(--st-space-12,12px)}
+      .st-mosaic-head{display:flex;flex-direction:column;gap:var(--fang-space-8,8px);margin:0 0 var(--fang-space-12,12px)}
       /* The two AI entries read as CHIPS, not as bare text buttons: a hairline edge groups them
          as actions on the page, the way suggestion chips sit under an input in design tools. */
-      .st-mosaic-check-row .fang-btn{box-shadow:inset 0 0 0 .5px var(--dsw-alias-border-l4,var(--st-fallback-border-l4))}
-      .st-mosaic-check-row{display:flex;gap:var(--st-space-8,8px);align-items:center;min-width:0}
+      .st-mosaic-check-row .fang-btn{box-shadow:inset 0 0 0 .5px var(--fang-border-strong)}
+      .st-mosaic-check-row{display:flex;gap:var(--fang-space-8,8px);align-items:center;min-width:0}
       /* The result of a \u68B3\u7406/\u68C0\u67E5 that produced no review cards: a quiet panel rather than a
          status-bar flash the writer can miss after a long wait. */
-      .st-mosaic-notice{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary);
-        padding:var(--st-space-12,12px) var(--st-space-12,12px);
-        border:var(--st-hairline,.5px) solid var(--st-ink-edge);
-        border-radius:var(--st-radius-sm,8px);background:var(--st-surface)}
-      .st-mosaic-proposal-wrap{margin:0 0 var(--st-space-12,12px)}
-      .st-mosaic-proposal-title{margin:0 0 var(--st-space-8,8px);font-weight:var(--st-font-weight-strong);
-        font-size:var(--st-text-md);line-height:var(--st-text-md-leading);
-        color:var(--st-text-primary)}
-      .st-mosaic-proposal-evidence{margin:0 0 var(--st-space-8,8px);padding:var(--st-space-8,8px) var(--st-space-8,8px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary);
-        background:var(--st-hover-fill);border-radius:var(--st-radius-sm,8px)}
-      .st-mosaic-proposal-op{font-weight:var(--st-font-weight-strong);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-primary)}
-      .st-mosaic-proposal-detail{margin:var(--st-space-2,2px) 0 var(--st-space-4,4px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary);word-break:break-word}
+      .st-mosaic-notice{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary);
+        padding:var(--fang-space-12,12px) var(--fang-space-12,12px);
+        border:var(--fang-hairline,.5px) solid var(--fang-ink-edge);
+        border-radius:var(--fang-radius-sm,8px);background:var(--fang-surface)}
+      .st-mosaic-proposal-wrap{margin:0 0 var(--fang-space-12,12px)}
+      .st-mosaic-proposal-title{margin:0 0 var(--fang-space-8,8px);font-weight:var(--fang-font-weight-strong);
+        font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-md);
+        color:var(--fang-ink-primary)}
+      .st-mosaic-proposal-evidence{margin:0 0 var(--fang-space-8,8px);padding:var(--fang-space-8,8px) var(--fang-space-8,8px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary);
+        background:var(--fang-hover-fill);border-radius:var(--fang-radius-sm,8px)}
+      .st-mosaic-proposal-op{font-weight:var(--fang-font-weight-strong);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-primary)}
+      .st-mosaic-proposal-detail{margin:var(--fang-space-2,2px) 0 var(--fang-space-4,4px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary);word-break:break-word}
       /* The proposals page and the snapshot page are the same shared list at different contents. */
-      .st-mosaic-proposals-empty{padding:var(--st-space-16,16px) 0;text-align:center;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
-      .st-mosaic-proposal-head{display:flex;align-items:baseline;gap:var(--st-space-8,8px);
-        margin:0 0 var(--st-space-2,2px);min-width:0}
-      .st-mosaic-proposal-meta{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary);word-break:break-word}
+      .st-mosaic-proposals-empty{padding:var(--fang-space-16,16px) 0;text-align:center;
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
+      .st-mosaic-proposal-head{display:flex;align-items:baseline;gap:var(--fang-space-8,8px);
+        margin:0 0 var(--fang-space-2,2px);min-width:0}
+      .st-mosaic-proposal-meta{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary);word-break:break-word}
       .st-mosaic-proposal-count{flex:1 1 auto;min-width:0;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
       .st-mosaic-proposal-status{flex:0 0 auto;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
-      .st-mosaic-proposal-status[data-status="accepted"]{color:var(--st-accent)}
-      .st-mosaic-proposal-changes{margin:0 0 var(--st-space-8,8px);padding-left:var(--st-space-16,16px);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-secondary);word-break:break-word}
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
+      .st-mosaic-proposal-status[data-status="accepted"]{color:var(--fang-accent)}
+      .st-mosaic-proposal-changes{margin:0 0 var(--fang-space-8,8px);padding-left:var(--fang-space-16,16px);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-secondary);word-break:break-word}
       .st-mosaic-proposal[data-status="rejected"]{opacity:var(--st-fade-dim)}
-      .st-mosaic-fields{display:flex;gap:var(--st-space-8,8px);margin:var(--st-space-4,4px) 0}
+      .st-mosaic-fields{display:flex;gap:var(--fang-space-8,8px);margin:var(--fang-space-4,4px) 0}
       .st-mosaic-name{flex:1;min-width:0;box-sizing:border-box;
-        border:1px solid var(--dsw-alias-border-l4,var(--st-fallback-border-l4));border-radius:var(--st-radius-sm,8px);
-        background:var(--st-surface-high);padding:var(--st-space-2,2px) var(--st-space-8,8px);font-family:inherit;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-primary)}
-      .st-mosaic-quote{margin:var(--st-space-4,4px) 0 0;
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
-      .st-mosaic-proposal-actions{display:flex;gap:var(--st-space-8,8px);margin-top:var(--st-space-8,8px)}
-      .st-mosaic-apply-row{display:flex;gap:var(--st-space-8,8px);align-items:center;margin:var(--st-space-4,4px) 0 var(--st-space-12,12px)}
+        border:1px solid var(--fang-border-strong);border-radius:var(--fang-radius-sm,8px);
+        background:var(--fang-surface-high);padding:var(--fang-space-2,2px) var(--fang-space-8,8px);font-family:inherit;
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-primary)}
+      .st-mosaic-quote{margin:var(--fang-space-4,4px) 0 0;
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
+      .st-mosaic-proposal-actions{display:flex;gap:var(--fang-space-8,8px);margin-top:var(--fang-space-8,8px)}
+      .st-mosaic-apply-row{display:flex;gap:var(--fang-space-8,8px);align-items:center;margin:var(--fang-space-4,4px) 0 var(--fang-space-12,12px)}
       .st-mosaic-chip-toggle{cursor:pointer}
-      .st-mosaic-status-add{flex:1;min-width:var(--st-review-chip-min-w,60px);padding:var(--st-space-2,2px) var(--st-space-8,8px);border:1px solid var(--dsw-alias-border-l2,var(--st-fallback-border-l2));border-radius:var(--st-radius-pill,999px);corner-shape:round;background:var(--st-surface);color:var(--st-text-primary);font-size:var(--st-text-md)}
-      .st-mosaic-tab-badge{display:inline-block;margin-left:var(--st-space-4,4px);padding:0 var(--st-space-4,4px);border-radius:var(--st-radius-pill,999px);corner-shape:round;
-        background:var(--st-accent);color:var(--st-on-accent,#fff);
-        font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading)}
+      .st-mosaic-status-add{flex:1;min-width:var(--st-review-chip-min-w,60px);padding:var(--fang-space-2,2px) var(--fang-space-8,8px);border:1px solid var(--fang-border-hair);border-radius:var(--fang-radius-pill,999px);corner-shape:round;background:var(--fang-surface);color:var(--fang-ink-primary);font-size:var(--fang-font-size-md)}
+      .st-mosaic-tab-badge{display:inline-block;margin-left:var(--fang-space-4,4px);padding:0 var(--fang-space-4,4px);border-radius:var(--fang-radius-pill,999px);corner-shape:round;
+        background:var(--fang-accent);color:var(--fang-on-accent,#fff);
+        font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm)}
       /* Snapshots: the same list as the chapter column and the proposal page, with a restore
          button at the trailing end of each row. */
-      .st-mosaic-version-row{flex-direction:row;align-items:center;gap:var(--st-space-12,12px)}
-      .st-mosaic-version-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--st-space-2,2px)}
+      .st-mosaic-version-row{flex-direction:row;align-items:center;gap:var(--fang-space-12,12px)}
+      .st-mosaic-version-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--fang-space-2,2px)}
 `;
 
 // src/client/mosaic/overview.css.js
 var CSS_OVERVIEW = `
       .st-overview{display:flex;flex-direction:column;gap:var(--st-board-gap);flex:1 1 auto;min-height:0}
-      .st-overview-actions{display:flex;align-items:center;gap:var(--st-inset-md);min-width:0}
-      .st-overview-field{display:flex;flex-direction:column;gap:var(--st-inset-sm);min-height:0}
-      .st-overview-label{font-size:var(--st-text-sm);line-height:var(--st-text-sm-leading);
-        color:var(--st-text-tertiary)}
+      .st-overview-actions{display:flex;align-items:center;gap:var(--fang-padding-md);min-width:0}
+      .st-overview-field{display:flex;flex-direction:column;gap:var(--fang-padding-sm);min-height:0}
+      .st-overview-label{font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
+        color:var(--fang-ink-tertiary)}
       /* The one editable field on the page: a quiet fill, like every other field in the panel.
          Fixed height: the writer edits a line of summary, and a resizable box changed the
          reading pane's layout under the text every time the handle moved. */
       .st-overview-summary{width:100%;box-sizing:border-box;height:var(--st-overview-summary-h,96px);
-        overflow:auto;resize:none;padding:var(--st-space-8,8px) var(--st-space-8,8px);border:none;
-        border-radius:var(--st-radius-sm,8px);background:var(--st-surface-high);
-        color:var(--st-text-primary);
-        font-family:inherit;font-size:var(--st-text-md);line-height:var(--st-line-height-ui);outline:none}
-      .st-overview-summary:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--st-focus-ink)}
-      .st-overview-text{margin:0;font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        color:var(--st-text-primary);white-space:pre-wrap;word-break:break-word}
-      .st-overview-body{font-size:var(--st-text-md);line-height:var(--st-line-height-ui);
-        color:var(--st-text-secondary);
+        overflow:auto;resize:none;padding:var(--fang-space-8,8px) var(--fang-space-8,8px);border:none;
+        border-radius:var(--fang-radius-sm,8px);background:var(--fang-surface-high);
+        color:var(--fang-ink-primary);
+        font-family:inherit;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);outline:none}
+      .st-overview-summary:focus{box-shadow:0 0 0 var(--dsw-focus-ring-width,2px) var(--fang-focus-ink)}
+      .st-overview-text{margin:0;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-primary);white-space:pre-wrap;word-break:break-word}
+      .st-overview-body{font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-secondary);
         white-space:pre-wrap;word-break:break-word}
       /* The whole-book summary belongs to the page, not to a chapter: it sits under the split,
          above the audits, behind a hairline. */
 
       /* \u6D41\u6D3E uses the shared split: the list is navigation, the pane is the prompt. */
-      .st-writing-style-actions{display:flex;align-items:center;gap:var(--st-space-8,8px);flex-wrap:wrap;align-self:flex-start}
+      .st-writing-style-actions{display:flex;align-items:center;gap:var(--fang-space-8,8px);flex-wrap:wrap;align-self:flex-start}
       .st-writing-style-generate{align-self:flex-start;flex:none}
-      .st-writing-style-prompt{margin:0;font-size:var(--st-text-sm);line-height:var(--st-line-height-ui);
-        color:var(--st-text-secondary);
+      .st-writing-style-prompt{margin:0;font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-ui);
+        color:var(--fang-ink-secondary);
         white-space:pre-wrap;word-break:break-word}
       .st-overview-global{flex:none;padding-top:var(--st-board-gap);
-        border-top:var(--st-hairline,.5px) solid var(--st-ink-hair)}
+        border-top:var(--fang-hairline,.5px) solid var(--fang-ink-hair)}
 `;
 
 // src/client/styles.js
 var CSS = `${FANG_CSS}
+${CSS_BRIDGE}
 ${CSS_SHARED}
 ${CSS_CORE}
 ${CSS_LIBRARY}
@@ -13623,7 +13076,7 @@ var StoryPanelBoundary = class extends React.Component {
     const error = this.state.error;
     return h(
       "div",
-      { className: "st-shell" },
+      { className: "fang-shell" },
       h(
         "div",
         { className: "st-warn" },
@@ -13956,10 +13409,10 @@ function StoryPanelBody(props) {
     // for both meant a long book pushed the row off the bottom of the panel.
     h(
       "div",
-      { className: "st-scroll" },
+      { className: "fang-scroll" },
       h(
         "div",
-        { className: "fang-row st-gap-under-row" },
+        { className: "fang-row fang-gap-under-row" },
         h("button", { type: "button", className: "fang-btn fang-btn-primary", onClick: addUnderSelection }, t("action.addUnder"))
       ),
       h(TreeNav, {
@@ -14048,20 +13501,20 @@ function StoryPanelBody(props) {
     return h(ModelsPage, { t, api: api2, onChange: refreshModels, onNotice: noticeRow });
   };
   const middle = () => {
-    if (library === void 0) return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
-    if (state.status === "loading") return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
+    if (library === void 0) return h("div", { className: "fang-scroll fang-muted" }, t("label.loading"));
+    if (state.status === "loading") return h("div", { className: "fang-scroll fang-muted" }, t("label.loading"));
     if (state.status === "error") return h("div", { className: "st-warn" }, state.error);
-    if (!book) return h("div", { className: "st-scroll fang-muted" }, t("label.loading"));
+    if (!book) return h("div", { className: "fang-scroll fang-muted" }, t("label.loading"));
     if (!chapter) {
       return h(
         "div",
-        { className: "st-mid-body" },
-        h("div", { className: "st-scroll fang-muted" }, t("label.emptyChapters"))
+        { className: "fang-main-body" },
+        h("div", { className: "fang-scroll fang-muted" }, t("label.emptyChapters"))
       );
     }
     return h(
       "div",
-      { className: "st-mid-body" },
+      { className: "fang-main-body" },
       h(ChapterEditor, {
         t,
         chapter,
@@ -14151,12 +13604,12 @@ function StoryPanelBody(props) {
     );
   };
   if (library === void 0) {
-    return h("div", { className: "st-shell" }, h("div", { className: "st-scroll fang-muted" }, t("label.loading")));
+    return h("div", { className: "fang-shell" }, h("div", { className: "fang-scroll fang-muted" }, t("label.loading")));
   }
   if (startOpen || bookFolder === void 0 && (!startSeen || books.length === 0)) {
     return h(
       "div",
-      { className: "st-shell", ref: shellRef },
+      { className: "fang-shell", ref: shellRef },
       h(WelcomePage, {
         t,
         api: api2,
@@ -14184,7 +13637,7 @@ function StoryPanelBody(props) {
   if (bookFolder === void 0) {
     return h(
       "div",
-      { className: "st-shell", ref: shellRef },
+      { className: "fang-shell", ref: shellRef },
       h(BookLibrary, {
         t,
         api: api2,
@@ -14227,11 +13680,11 @@ function StoryPanelBody(props) {
   }
   return h(
     "div",
-    { className: "st-shell", ref: shellRef },
+    { className: "fang-shell", ref: shellRef },
     h(
       "div",
       {
-        className: "st-titlebar",
+        className: "fang-titlebar",
         // Empty space in the title row puts the board away.
         //
         // The board owns the page while it is open, and the row above it is the one strip that
@@ -14251,7 +13704,7 @@ function StoryPanelBody(props) {
       },
       h("button", {
         type: "button",
-        className: "fang-btn fang-btn-ghost st-rail-toggle",
+        className: "fang-btn fang-btn-ghost fang-rail-toggle",
         title: railHidden ? t("action.showRail") : t("action.hideRail"),
         "aria-label": railHidden ? t("action.showRail") : t("action.hideRail"),
         "aria-expanded": railHidden ? "false" : "true",
@@ -14264,7 +13717,7 @@ function StoryPanelBody(props) {
       // as its last row; the caret beside it invited a click that opened a list over the page the
       // writer was reading. The title of a page is a heading — switching books is the shelf's job,
       // and the shelf is one press away in the outline's own menu.
-      h("h1", { className: "st-title" }, book?.title || t("panel")),
+      h("h1", { className: "fang-title" }, book?.title || t("panel")),
       // The board button sits against the title, not with the preference drawers at the far end.
       // It acts on the book the title names — the same subject — while 模型 and 排版 are the
       // panel's own settings; putting all three together made a writer read the row as
@@ -14330,20 +13783,20 @@ function StoryPanelBody(props) {
     ),
     h(
       "div",
-      { className: "st-root" },
+      { className: "fang-root" },
       // No side chat: the book's conversation is a real dsh Session behind 去完整对话, so a
       // second, cut-down chat beside the manuscript was a worse copy of the same idea.
       // The outline is an OVERLAY on the page rather than a column beside it: it slides in
       // from the left edge, over the text, and closing it gives the manuscript its width back.
       h(
         "div",
-        { className: "st-col st-mid" },
+        { className: "fang-col fang-main" },
         middle(),
         // The click-away layer stays over the PAGE and nothing else. Inside the rail's own layer it
         // would span the status bar and the composer too, so a click in the question box would
         // dismiss the outline instead of typing — and the box is exactly where the writer's hand
         // goes next.
-        railMotion.mounted ? h("div", { className: "st-rail-scrim", onClick: () => setRailHidden(true), role: "presentation" }) : null
+        railMotion.mounted ? h("div", { className: "fang-rail-scrim", onClick: () => setRailHidden(true), role: "presentation" }) : null
       )
     ),
     // The status bar is the bottom edge of the PANEL, not of the writing column: it spans the
@@ -14386,14 +13839,14 @@ function StoryPanelBody(props) {
     h(
       "div",
       {
-        className: `st-rail-layer${railMotion.closing ? " st-closing" : ""}`
+        className: `fang-rail-layer${railMotion.closing ? " fang-closing" : ""}`
       },
       // The rail node always exists and carries its own collapsed class: the exit animation needs
       // the node for its duration, and the state is readable from the class whether or not a
       // browser is animating it.
       h(
         "div",
-        { className: `st-rail${railHidden ? " st-rail-collapsed" : ""}` },
+        { className: `fang-rail${railHidden ? " fang-rail-collapsed" : ""}` },
         railMotion.mounted ? leftPane() : null
       )
     ),

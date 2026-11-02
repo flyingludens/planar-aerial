@@ -409,7 +409,7 @@ export function usePersisted(key, decode, encode, forced) {
  * one-frame disappearance: the entrance was animated and the exit was not, so every overlay
  * left with a blink while it arrived with a slide.
  *
- * The duration is read from the stylesheet's own token, not repeated here: `--st-motion-close`
+ * The duration is read from the stylesheet's own token, not repeated here: `--fang-duration-close`
  * is the single place the exit speed is decided, and a timer with its own number would drift
  * from the animation it is timing.
  */

@@ -403,7 +403,7 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
   // across a restart, and `book` is null for that whole window. Reading through it took the
   // entire panel down with a TypeError.
   if (book === null || book === undefined) {
-    return h('div', { className: 'st-scroll fang-muted' }, t('label.loading'))
+    return h('div', { className: 'fang-scroll fang-muted' }, t('label.loading'))
   }
   const chapters = book.chapters ?? []
   const selected = chapters.find((chapter) => chapter.id === pickedId) ?? chapters[0]
@@ -478,7 +478,7 @@ export function OverviewPage({ t, book, bookFolder, api, onAdoptWritten, onNotic
       book.overview.global
         ? h('p', { className: 'st-overview-text' }, book.overview.global.text)
         : h('p', { className: 'st-overview-text fang-muted' }, t('mosaic.overviewEmpty'))),
-    h('div', { className: 'fang-row st-gap-over-section' },
+    h('div', { className: 'fang-row fang-gap-over-section' },
       h('button', { type: 'button', className: 'fang-btn fang-btn-primary', onClick: runManuscript }, t('action.manuscript')),
       h('button', { type: 'button', className: 'fang-btn', onClick: runConsistency }, t('action.consistency'))),
     dialog === 'manuscript' ? h(Dialog, {

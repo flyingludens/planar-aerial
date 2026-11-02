@@ -13,9 +13,13 @@
  *    tagged template that failed at runtime instead.
  *  - **The indentation inside is content, not formatting.** Reindenting the code around this
  *    file must not touch these lines.
+ *
+ * Order: the library's sheet first, then the bridge that maps the host theme onto the
+ * library's tokens, then everything project-side. The bridge must come after FANG_CSS —
+ * it overrides the library's dark-theme defaults with the host's variables.
  */
 import { FANG_CSS } from 'fang-style'
-import { CSS_SHARED } from './shared/styles.js'
+import { CSS_BRIDGE, CSS_SHARED } from './shared/styles.js'
 import { CSS_CORE } from './panel/core.css.js'
 import { CSS_LIBRARY } from './panel/library.css.js'
 import { CSS_WELCOME } from './panel/welcome.css.js'
@@ -49,6 +53,7 @@ import { CSS_OVERVIEW } from './mosaic/overview.css.js'
  * file, which is the whole reason the sheet is no longer one block.
  */
 export const CSS = `${FANG_CSS}
+${CSS_BRIDGE}
 ${CSS_SHARED}
 ${CSS_CORE}
 ${CSS_LIBRARY}

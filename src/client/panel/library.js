@@ -112,7 +112,7 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
   },
     // The head row IS the titlebar (same class): one recipe for the divider, the padding and
     // the leading clearance, so the shelf title sits on the same line the book title occupies.
-    h('div', { className: 'st-titlebar st-library-head' },
+    h('div', { className: 'fang-titlebar st-library-head' },
       // Back to the book that was open. Only offered when there is one: on a first visit the
       // library IS the panel, and a back arrow pointing nowhere would be a dead control.
       typeof onBack === 'function' && backTitle
@@ -185,7 +185,7 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
         h('span', null, t('action.newBook'))),
       // One inline editor at a time: a rename in place reads better than a modal over a shelf.
       renaming === null ? null : h('div', { className: 'st-book-card st-book-new st-book-form' },
-        h('div', { className: 'fang-muted st-gap-under-hint' }, t('label.renameBookHint')),
+        h('div', { className: 'fang-muted fang-gap-under-hint' }, t('label.renameBookHint')),
         h('input', {
           className: 'st-input', autoFocus: true, value: draftTitle,
           onChange: (e) => setDraftTitle(e.target.value),
@@ -194,7 +194,7 @@ export function BookLibrary({ t, api, books, workspaces, workspaceSnapshot, onOp
             if (e.key === 'Escape') { setRenaming(null) }
           },
         }),
-        h('div', { className: 'fang-row st-gap-over-row' },
+        h('div', { className: 'fang-row fang-gap-over-row' },
           h('button', { type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy || draftTitle.trim() === '', onClick: commitRename }, t('action.rename')),
           h('button', { type: 'button', className: 'fang-btn', onClick: () => setRenaming(null) }, t('action.cancel'))))),
     // Creating a book asks in a modal too. The shelf is a grid of cards; a card that turns into

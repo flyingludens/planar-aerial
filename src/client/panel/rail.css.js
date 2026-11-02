@@ -17,7 +17,7 @@ export const CSS_RAIL = `
          scrolled, and it puts the menu's first row at the card's midpoint — a place the eye can
          find without hunting.
          The tree still scrolls inside its share: a long book does not make the card taller. */
-      .st-rail-body .st-scroll{flex:0 1 50%;min-height:0}
+      .st-rail-body .fang-scroll{flex:0 1 50%;min-height:0}
       /* The menu's own block: the remaining half, top-aligned. Not stretched to fill — a
          list that spreads its rows to the bottom edge would look like a settings form; the blank
          space under the last row is what says the list has ended.
@@ -27,7 +27,7 @@ export const CSS_RAIL = `
          line. The extra inset is what makes it a menu in the card rather than a continuation of
          the list. */
       .st-rail-menu{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;
-        padding:var(--st-space-16,16px) var(--st-space-16,16px) var(--st-space-16,16px)}
+        padding:var(--fang-space-16,16px) var(--fang-space-16,16px) var(--fang-space-16,16px)}
 
       /* ---- the function list ----
          Set to the host sidebar's own panel list, because that is what this is: a vertical menu of
@@ -38,37 +38,37 @@ export const CSS_RAIL = `
          The group has no heading. It is not one subject — the shelf is navigation, save writes the
          file, export leaves the panel, about is a read-out — and a label that names only the first
          of those would be worse than none. */
-      .st-rail-tools{display:flex;flex-direction:column;gap:var(--st-space-4,4px);min-width:0}
+      .st-rail-tools{display:flex;flex-direction:column;gap:var(--fang-space-4,4px);min-width:0}
 
 /* One destination per line. Full width, 36 tall, at reading size — the same row the host
          uses for its own panels, so the menu reads as a sibling of the sidebar rather than as a
          strip of small print appended to a tree. */
-      .st-rail-tool{display:flex;align-items:center;gap:var(--st-space-8,8px);
+      .st-rail-tool{display:flex;align-items:center;gap:var(--fang-space-8,8px);
         width:100%;min-width:0;min-height:var(--st-row-height-lg,36px);
-        padding:var(--st-space-8,8px);box-sizing:border-box;
-        border:none;border-radius:var(--st-radius-md,12px);background:transparent;cursor:pointer;
-        font-family:inherit;font-size:var(--st-text-lg);line-height:var(--st-text-lg-leading);
-        font-weight:var(--st-font-weight-normal);color:var(--st-text-primary);text-align:left;corner-shape:round;}
-      .st-rail-tool:hover:not(:disabled){background:var(--st-hover-fill)}
-      .st-rail-tool:active:not(:disabled){background:var(--st-active-fill)}
+        padding:var(--fang-space-8,8px);box-sizing:border-box;
+        border:none;border-radius:var(--fang-radius-md,12px);background:transparent;cursor:pointer;
+        font-family:inherit;font-size:var(--fang-font-size-lg);line-height:var(--fang-line-height-lg);
+        font-weight:var(--fang-font-weight-normal);color:var(--fang-ink-primary);text-align:left;corner-shape:round;}
+      .st-rail-tool:hover:not(:disabled){background:var(--fang-hover-fill)}
+      .st-rail-tool:active:not(:disabled){background:var(--fang-active-fill)}
       /* Focus is an INSET ring, matching the host's panel rows: an outer ring on a full-width row
          would draw over the column's edge instead of around the row. */
-      .st-rail-tool:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--st-focus-ink);
+      .st-rail-tool:focus-visible{outline:var(--dsw-focus-ring-width,2px) solid var(--fang-focus-ink);
         outline-offset:-2px}
       /* A destination that needs the book is disabled without one, and says so by looking like it.
          The ink drops, not the whole row's opacity: a faded glyph reads as a smudge. */
-      .st-rail-tool:disabled{cursor:not-allowed;color:var(--st-text-tertiary)}
+      .st-rail-tool:disabled{cursor:not-allowed;color:var(--fang-ink-tertiary)}
       .st-rail-tool:disabled .st-rail-tool-icon{opacity:var(--st-fade-quiet)}
       /* The glyph gets a fixed box so four labels share one left edge — the alignment comes from
          the slot being measured, not from four icons happening to be about as wide. */
       .st-rail-tool-icon{flex:none;display:inline-flex;align-items:center;justify-content:center;
         width:var(--st-icon-menu,18px);height:var(--st-icon-menu,18px);
-        color:var(--st-text-secondary)}
+        color:var(--fang-ink-secondary)}
       .st-rail-tool:hover:not(:disabled) .st-rail-tool-icon,
-      .st-rail-tool:focus-visible .st-rail-tool-icon{color:var(--st-text-primary)}
+      .st-rail-tool:focus-visible .st-rail-tool-icon{color:var(--fang-ink-primary)}
       /* The label is what shortens when the column is narrow; the glyph is what identifies the row. */
       .st-rail-tool-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-      .st-about-link{color:var(--st-accent);text-decoration:none;overflow-wrap:anywhere}
+      .st-about-link{color:var(--fang-accent);text-decoration:none;overflow-wrap:anywhere}
       .st-about-link:hover{text-decoration:underline}
 `

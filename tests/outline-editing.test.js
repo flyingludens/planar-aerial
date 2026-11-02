@@ -88,7 +88,7 @@ async function mountDesk(book, options = {}) {
     mounted = await rerender(plugin.__components.StoryPanel, props)
   }
   // The outline starts folded, so the directory has to be opened the way a writer opens it.
-  const toggle = findByClass(mounted.tree, 'st-rail-toggle')
+  const toggle = findByClass(mounted.tree, 'fang-rail-toggle')
   if (toggle !== undefined) {
     toggle.props.onClick()
     mounted = await rerender(plugin.__components.StoryPanel, props)

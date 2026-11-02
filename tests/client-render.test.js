@@ -28,6 +28,19 @@ function readCssSources() {
       if (to > from) bodies.push(text.slice(from, to))
     }
   }
+  // The generic scale lives in the fang-style library now, so its token table is part of
+  // the sheet these audits read: without it the scale itself would look empty while every
+  // rule still reads it.
+  const lib = fileURLToPath(new URL('../node_modules/fang-style/src', import.meta.url))
+  for (const name of readdirSync(lib)) {
+    if (!name.endsWith('.css.js')) continue
+    const text = readFileSync(join(lib, name), 'utf8')
+    const open = text.search(/(?:const|var|let)\s+(?:CSS|FANG)[A-Z_]*\s*=\s*`/)
+    if (open < 0) continue
+    const from = text.indexOf('`', open) + 1
+    const to = text.indexOf('`', from)
+    if (to > from) bodies.push(text.slice(from, to))
+  }
   return bodies.join('\n')
 }
 import { loadClientLogic } from './helpers/load-client.mjs'
@@ -736,12 +749,12 @@ test('the outline is folded on entry and there is no side chat', async () => {
   // The manuscript is the page. The directory is a tool, and the book's real conversation is a
   // dsh Session behind 去完整对话 rather than a second chat beside the text.
   const { tree } = await mountPanel({ api: apiFor(), open: '我的书' })
-  assert.ok(findByClass(tree, 'st-rail-collapsed'), 'the directory starts collapsed')
+  assert.ok(findByClass(tree, 'fang-rail-collapsed'), 'the directory starts collapsed')
   // The rail holds the outline and nothing else. Asserting that a retired class is absent would
   // pass even if the feature came back under a different name; asserting what IS there does not.
   // It starts collapsed, so the tree is not rendered yet — the collapsed marker is what proves the
   // rail exists at all.
-  assert.ok(findByClass(tree, 'st-rail-collapsed'), 'the outline is mounted, folded')
+  assert.ok(findByClass(tree, 'fang-rail-collapsed'), 'the outline is mounted, folded')
   assert.equal(findByClass(tree, 'st-tree'), undefined, 'and renders no rows until it is opened')
   assert.equal(findByClass(tree, 'st-ai-dock'), undefined, 'the dock is not inside the rail')
 })
@@ -967,7 +980,7 @@ test('the library offers a way back to the book it was opened from', async () =>
     // Go to the library through the outline's shelf button — the title is a plain heading now,
     // so this is the route the panel actually offers. The outline starts CLOSED, so it has to be
     // opened first; each rerender answers a fresh mount object.
-    findByClass(mounted.tree, 'st-rail-toggle').props.onClick()
+    findByClass(mounted.tree, 'fang-rail-toggle').props.onClick()
     await mounted.rerender()
     findByTestId((await mounted.rerender()).tree, 'rail-shelf').props.onClick()
     const shelf = (await mounted.rerender()).tree
@@ -1039,7 +1052,7 @@ test('the new-book tile is marked while its own dialog is open', async () => {
   assert.ok(selected > -1, 'the tile has a selected rule')
   assert.ok(selected > hover, 'and it is written after the hover rule it has to override')
   const rule = /\.st-book-add\[aria-expanded="true"\]\{([^}]*)\}/.exec(css)?.[1] ?? ''
-  assert.ok(/border-color:var\(--st-accent\)/.test(rule), 'the accent edge, visible on both themes')
+  assert.ok(/border-color:var\(--fang-accent\)/.test(rule), 'the accent edge, visible on both themes')
   assert.ok(/outline:/.test(rule), 'and a ring on its own channel, so the hover shadow survives')
   assert.ok(!/box-shadow/.test(rule), 'the ring must not compete with the hover shadow')
 })
@@ -1049,7 +1062,7 @@ test('the book title is a heading, not a menu', async () => {
   // caret beside the name invited a press that covered the page the writer was reading, and the
   // shelf is already one press away in the outline. A page's title is its name.
   const mounted = await mountPanel({ api: apiFor(), open: '我的书' })
-  const title = findByClass(mounted.tree, 'st-title')
+  const title = findByClass(mounted.tree, 'fang-title')
   assert.ok(title, 'the title is on screen')
   assert.equal(title.type, 'h1', 'and it is a heading')
   assert.equal(title.props.onClick, undefined, 'with nothing behind it')
@@ -1108,13 +1121,13 @@ test('the panel comes in from the right edge, rounded like the outline', () => {
   assert.ok(/@media \(max-width: 640px\)/.test(css), 'a narrow window takes the whole width')
 
   // The backdrop starts below the title row, so the title bar stays readable and clickable.
-  assert.ok(/inset:var\(--fang-titlebar-height\) 0 0 0/.test(backdrop),
+  assert.ok(/inset:var\(--fang-titlebar-height(,68px)?\) 0 0 0/.test(backdrop),
     'the drawer does not cover the title bar')
 
   // The shell's own bar takes its top air and page gutter as margins: the shelf head gets the
   // same two insets from its scroll container, and a border paints on the element's own box, so
   // margins are the only way both dividers end up with one geometry.
-  assert.ok(/\.st-shell>\.st-titlebar\{margin-top:var\(--st-space-8,8px\);margin-left:var\(--st-shelf-gutter\);margin-right:var\(--st-shelf-gutter\)\}/.test(css),
+  assert.ok(/\.fang-shell>\.fang-titlebar\{margin-top:var\(--fang-space-8\);margin-left:var\(--fang-frame-gutter\);margin-right:var\(--fang-frame-gutter\)\}/.test(css),
     'the main titlebar shares the shelf head\'s page insets')
 })
 
@@ -1319,7 +1332,7 @@ test('every text field in the panel shares one borderless rule', () => {
     .exec(css)?.[1] ?? ''
   assert.ok(shared !== '', 'the shared rule covers every text field')
   assert.ok(/border:none/.test(shared), 'no stroke')
-  assert.ok(/background:var\(--st-surface[,)]/.test(shared), 'a quiet surface fill instead')
+  assert.ok(/background:var\(--fang-surface[,)]/.test(shared), 'a quiet surface fill instead')
   assert.ok(/box-shadow|:focus/.test(css), 'and focus is still shown')
 
   // No field may re-introduce a border of its own after the shared rule. The only allowed
@@ -1347,13 +1360,13 @@ test('the panel has its own four-step type scale, and every rule reads it', () =
   assert.deepEqual(hardLeadings, [], `no hard-coded leadings may remain, saw: ${hardLeadings.join(', ')}`)
 
   // The scale is exactly four steps. A fifth would be a size somebody added for one screen.
-  const steps = new Set([...sheet.matchAll(/--st-text-(sm|md|lg|xl):/g)].map((m) => m[1]))
+  const steps = new Set([...sheet.matchAll(/--fang-font-size-(sm|md|lg|xl):/g)].map((m) => m[1]))
   assert.deepEqual([...steps].sort(), ['lg', 'md', 'sm', 'xl'],
     'the scale has four steps: sm, md, lg, xl')
 
   // Every rule that sets type names a step of THIS scale — never the host's ramp, and never a
   // number of its own.
-  const used = new Set([...sheet.matchAll(/font-size:var\(--st-text-([a-z]+)\)/g)].map((m) => m[1]))
+  const used = new Set([...sheet.matchAll(/font-size:var\(--fang-font-size-([a-z]+)\)/g)].map((m) => m[1]))
   assert.deepEqual([...used].filter((step) => !steps.has(step)), [], 'no rule names a step the scale does not define')
   assert.ok(used.size === 4, `all four steps are in use, saw: ${[...used].sort().join(', ')}`)
 
@@ -1364,7 +1377,7 @@ test('the panel has its own four-step type scale, and every rule reads it', () =
 
   // A size and its leading are one decision. Every rule that sets both takes them from the SAME
   // step, so they cannot drift into two tiers.
-  const pairs = [...sheet.matchAll(/font-size:var\(--st-text-([a-z]+)\);line-height:var\(--st-text-([a-z]+)-leading\)/g)]
+  const pairs = [...sheet.matchAll(/font-size:var\(--fang-font-size-([a-z]+)\);line-height:var\(--fang-line-height-(sm|md|lg|xl)\)/g)]
   assert.ok(pairs.length > 20, 'the panel still sets type on many rules')
   for (const [, sizeStep, leadingStep] of pairs) {
     assert.equal(leadingStep, sizeStep, `size and leading must share one step, saw ${sizeStep} / ${leadingStep}`)
@@ -1384,8 +1397,8 @@ test('the dock line is a plain rule at rest, and only lights up while working', 
   assert.ok(/background:linear-gradient\(to right/.test(base), 'the line is a horizontal gradient')
   assert.ok(/transparent 0%/.test(base) && /transparent 100%/.test(base),
     'and both ends are fully transparent')
-  assert.ok(/--dsw-alias-border-l3/.test(base), 'at rest the middle is the border grey')
-  assert.ok(!/--st-accent/.test(base), 'and the accent appears in no part of the resting line')
+  assert.ok(/--fang-border-edge/.test(base), 'at rest the middle is the border grey')
+  assert.ok(!/--fang-accent/.test(base), 'and the accent appears in no part of the resting line')
   assert.ok(/box-shadow:none/.test(base), 'it casts no light at rest')
   assert.ok(!/animation:/.test(base), 'and it does not breathe')
   // Short at rest: it takes a third of the row, so it reads as a mark at the centre of the page.
@@ -1395,7 +1408,7 @@ test('the dock line is a plain rule at rest, and only lights up while working', 
   const working = /\.st-hairline\[data-state="working"\] \.st-hairline-glow\{([^}]*)\}/.exec(css)?.[1] ?? ''
   assert.ok(working !== '', 'working has its own rule')
   assert.ok(/width:100%/.test(working), 'working stretches the line across the page')
-  assert.ok(/--st-accent/.test(working), 'it lights in the accent')
+  assert.ok(/--fang-accent/.test(working), 'it lights in the accent')
   assert.ok(/background:linear-gradient\(to right/.test(working), 'keeping the faded ends')
   assert.ok(/animation:st-hairline-breathe/.test(working), 'and it breathes')
 
@@ -1424,7 +1437,7 @@ test('the board and the outline are never open together', async () => {
   assert.equal(isBoardOpen(tree), true, 'the board opens')
 
   // Opening the outline puts the board away.
-  findByClass(tree, 'st-rail-toggle').props.onClick()
+  findByClass(tree, 'fang-rail-toggle').props.onClick()
   tree = (await settleClick(mounted)).tree
   assert.equal(isRailOpen(tree), true, 'the outline opens')
   assert.equal(isBoardOpen(tree), false, 'and the board goes with it')
@@ -1448,7 +1461,7 @@ test('the mosaic sheet geometry: drops from the top, fixed height, clears the do
   // of the inset: carved out of the inset, the strip below the board belonged to the editor.
   // The layer paints nothing but catches the press outside the sheet, which is how the board
   // dismisses now — the same click-away every other main-surface panel uses.
-  assert.ok(/inset:var\(--st-titlebar-height,68px\) 0 0 0/.test(backdrop),
+  assert.ok(/inset:var\(--fang-titlebar-height(,68px)?\) 0 0 0/.test(backdrop),
     'the layer spans the panel down to the bottom edge')
   assert.ok(/pointer-events:auto/.test(backdrop),
     'and catches the press outside the sheet, so the board dismisses like every other panel')
@@ -1600,7 +1613,7 @@ test('empty space in the title row puts the board away, a control in it does not
   const opened = (await mounted.rerender()).tree
   assert.ok(findByClass(opened, 'st-mosaic-sheet'), 'the board is up')
 
-  const bar = findByClass(opened, 'st-titlebar')
+  const bar = findByClass(opened, 'fang-titlebar')
   assert.ok(typeof bar.props.onMouseDown === 'function', 'the title row handles a press')
   // A press that lands on the row itself, with no control under it.
   bar.props.onMouseDown({ target: { closest: () => null } })
@@ -1612,7 +1625,7 @@ test('empty space in the title row puts the board away, a control in it does not
   const reopened = (await mounted.rerender()).tree
   assert.ok(findByClass(reopened, 'st-mosaic-sheet'), 'the board is up again')
   const button = { closest: () => ({ tag: 'BUTTON' }) }
-  findByClass(reopened, 'st-titlebar').props.onMouseDown({ target: button })
+  findByClass(reopened, 'fang-titlebar').props.onMouseDown({ target: button })
   const afterControl = (await mounted.rerender()).tree
   assert.ok(findByClass(afterControl, 'st-mosaic-sheet'), 'a press on a control leaves the board alone')
 })
@@ -2515,7 +2528,7 @@ test('loading another book clears a pending proposal but leaves the board open',
   // Switch books the way the panel now offers: back to the shelf, then open the other one. The
   // title used to be a menu of the other books; it is a heading again, so the shelf is the route.
   tree = (await rerender()).tree
-  findByClass(tree, 'st-rail-toggle').props.onClick()
+  findByClass(tree, 'fang-rail-toggle').props.onClick()
   tree = (await rerender()).tree
   findByTestId(tree, 'rail-shelf').props.onClick()
   // The shelf reads its list through a route, so reaching it takes more than one pass: the first

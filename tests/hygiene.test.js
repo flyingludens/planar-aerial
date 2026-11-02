@@ -36,21 +36,32 @@ const source = readFileSync(join(here, '..', 'client.js'), 'utf8')
  * in styles.js only decides the order.
  */
 const CSS_DIRS = ['shared', 'panel', 'mosaic']
+// The generic scale lives in the fang-style library: its token table is part of the sheet
+// these checks read, and the project tokens' var() chains now run through it.
+const FANG_DIR = join(here, '..', 'node_modules', 'fang-style', 'src')
 const cssFiles = CSS_DIRS
   .flatMap((dir) => readdirSync(join(here, '..', 'src', 'client', dir))
     .filter((name) => name.endsWith('.css.js'))
     .map((name) => join(here, '..', 'src', 'client', dir, name)))
   .concat(join(here, '..', 'src', 'client', 'styles.js'))  // the aggregator: order only, plus its header
   .concat(join(here, '..', 'src', 'client', 'shared', 'styles.js'))
+  .concat(readdirSync(FANG_DIR)
+    .filter((name) => name.endsWith('.css.js'))
+    .map((name) => join(FANG_DIR, name)))
 
-/** One module's template-string body, between its opening and closing backtick. */
+/** One module's template-string bodies, for every CSS_* export it declares. */
 const cssBodyOf = (path) => {
   const text = readFileSync(path, 'utf8')
-  const at = text.search(/(?:const|var|let)\s+CSS[A-Z_]*\s*=\s*`/)
-  if (at < 0) return ''
-  const open = text.indexOf('`', at) + 1
-  const close = text.indexOf('`', open)
-  return close < 0 ? '' : text.slice(open, close)
+  const bodies = []
+  const re = /(?:const|var|let)\s+(?:CSS|FANG)[A-Z_]*\s*=\s*`/g
+  let match
+  while ((match = re.exec(text)) !== null) {
+    const open = text.indexOf('`', match.index) + 1
+    const close = text.indexOf('`', open)
+    if (close < 0) break
+    bodies.push(text.slice(open, close))
+  }
+  return bodies.join('\n')
 }
 const css = cssFiles.map(cssBodyOf).join('\n')
 
@@ -225,7 +236,7 @@ test('a class is not given two rules unless the second is a deliberate override'
   // Some duplicates ARE deliberate: a reduced-motion override, or a state variant that adds one
   // property. Those are listed here, with the reason, so a new accidental one fails.
   const deliberate = new Set([
-    'st-scroll', 'st-mid', 'st-root', 'st-shell', 'st-desk', 'st-editor-wrap',
+    'st-desk', 'st-editor-wrap',
     'st-dock-slot', 'st-status-flash', 'st-ai-dock-busy', 'st-ai-dock', 'st-ai-thinking-label',
     // The detail drawer's slide-in has a reduced-motion twin: the same class, a fade instead of a
     // translation, so the only difference between the two rules is the animation it names.
@@ -234,6 +245,23 @@ test('a class is not given two rules unless the second is a deliberate override'
     // the dock's MEASURED height, and the base rule can only carry a written fallback for the
     // browsers that cannot read a container size.
     'st-mosaic-backdrop',
+    // The shell carries three TOKEN tables, not painted rules: the library's scale, the host
+    // bridge that maps dsh variables onto it, and the project's own business tokens. Three
+    // declarations of custom properties by design.
+    'fang-shell',
+    // The library owns the scroll box; the project adds the scrollbar skin in core.css.js.
+    'fang-scroll',
+    // The xl size is a compound variant of the same button, not a second control.
+    'fang-btn',
+    // The project re-declares the backdrop's dim so the scrim reads the host theme's base
+    // colour; see the note where library.css.js declares it.
+    'fang-backdrop',
+    // The library re-declares the drawer inside a narrow-viewport media query: below 640px
+    // the panel takes the full width and drops the inner radius.
+    'fang-drawer',
+    // The project adds one property each to the frame's root and main column (a positioning
+    // context, and the main column's inline padding) on top of the library's rules.
+    'fang-root', 'fang-main',
   ])
   const bare = css.replace(/\/\*[\s\S]*?\*\//g, '')
   const selectors = [...bare.matchAll(/(?:^|\n)\s*\.([a-z0-9-]+)\{/g)].map((match) => match[1])
@@ -255,15 +283,15 @@ test('text on a filled control uses the foreground token, never the brand colour
   // that only paints a shape — an indicator dot, a progress bar — carries no text and is not
   // checked: it sets no colour at all, which is what the `color:` filter below selects for.
   // The contrasting ink is either DSH's label-primary-foreground or the panel's own
-  // --st-on-accent: in the theme the panel actually runs on the host alias resolves to a DARK
+  // --fang-on-accent: in the theme the panel actually runs on the host alias resolves to a DARK
   // ink (the tooltip incident proved it), so on the dark vermilion fill the panel carries a
   // constant-white ink of its own rather than trusting the alias.
-  const filled = [...css.matchAll(/\{([^{}]*background:var\(--(?:st-accent|dsw-alias-button-primary-fill)[^{}]*\})/g)]
+  const filled = [...css.matchAll(/\{([^{}]*background:var\(--(?:fang-accent|st-accent|dsw-alias-button-primary-fill)[^{}]*\})/g)]
     .map((match) => match[1])
     .filter((rule) => /(^|;)\s*color:/.test(rule))
   assert.ok(filled.length > 0, 'there are filled controls to check')
   for (const rule of filled) {
-    assert.ok(/color:var\(--(?:dsw-alias-label-primary-foreground|st-on-accent)/.test(rule),
+    assert.ok(/color:var\(--(?:dsw-alias-label-primary-foreground|fang-on-accent|st-on-accent)/.test(rule),
       `a filled control must set a contrasting label colour, saw: ${rule.slice(0, 90)}`)
   }
 })
@@ -271,7 +299,7 @@ test('text on a filled control uses the foreground token, never the brand colour
 test('every host token reference survives a missing theme', () => {
   // A var() with no fallback makes its whole declaration invalid when the token is absent, and
   // "no theme" is a supported state: the panel then renders browser-default controls. The panel's
-  // own variables are exempt — they are declared on `.st-shell` with their own literal fallback.
+  // own variables are exempt — they are declared on .fang-shell (library tokens and the project bridge) with their own literal fallback.
   const bare = [...css.matchAll(/var\(\s*(--[a-z0-9-]+)\s*\)/g)].map((match) => match[1])
   const hostTokens = bare.filter((token) => token.startsWith('--dsw-') || token.startsWith('--ds-'))
   assert.deepEqual(hostTokens, [],
@@ -318,7 +346,7 @@ test('every host token reference survives a missing theme', () => {
     seen.add(token)
     const value = valueOf(token)
     if (value === null) return true
-    const refs = [...value.matchAll(/var\((--st-[a-z0-9-]+)/g)].map((match) => match[1])
+    const refs = [...value.matchAll(/var\((--(?:st|fang)-[a-z0-9-]+)/g)].map((match) => match[1])
     // Blank the FALLBACK part of each var() as well as the reference: a literal written inside
     // var(--token, 140ms) is exactly the fallback this test is about, so it has to count. The
     // previous version removed whole var() calls, which deleted their fallbacks with them.
@@ -345,16 +373,17 @@ test('the send button is a true circle in vermilion, not a themed primary fill',
   assert.ok(rule !== '', 'the send button has a rule')
   assert.ok(rule.includes('background:var(--st-send'), 'filled with the panel vermilion')
   assert.ok(!rule.includes('dsw-alias-button-primary-fill'), 'not the theme primary fill')
-  assert.ok(/border-radius:var\(--st-radius-round|border-radius:var\(--st-radius-pill/.test(rule),
+  assert.ok(/border-radius:var\(--fang-radius-pill/.test(rule),
     'a full radius, so it is round at any size')
   assert.ok(/corner-shape:round/.test(rule), 'and not the theme squircle')
   assert.ok(/aspect-ratio:1\/1/.test(rule), 'with a locked square aspect')
   assert.ok(/width:var\(--st-send-size,34px\)/.test(rule) && /height:var\(--st-send-size,34px\)/.test(rule),
     'and equal sides, from the one token that sizes it')
 
-  // The colour itself, declared once, with a literal so a missing theme still gets vermilion.
-  assert.ok(/--st-send:\s*(var\([^)]*#[0-9a-f]{6}|#[0-9a-f]{6})/i.test(css),
-    'the vermilion is declared with a literal fallback')
+  // The colour itself, declared once. The literal vermilion lives on the library's accent
+  // token now, and the send key reads it — one chain, ending in a real value either way.
+  assert.ok(/--st-send:\s*var\(--fang-accent[,)]/.test(css), 'the send key reads the accent')
+  assert.ok(/--fang-accent:#c3272b/.test(css), 'and the accent itself is a literal in the sheet')
 })
 
 test('every circle and pill opts out of the theme squircle', () => {
@@ -532,7 +561,7 @@ test('popups come from the shared Dialog/Drawer, never a hand-rolled backdrop', 
       if (!entry.name.endsWith('.js') || entry.name.endsWith('.css.js')) continue
       const rel = full.slice(root.length + 1)
       if (grandfathered.has(rel)) continue
-      if (/fang-backdrop|st-backdrop|st-sheet-backdrop/.test(readFileSync(full, 'utf8'))) offenders.push(rel)
+      if (/fang-backdrop/.test(readFileSync(full, 'utf8'))) offenders.push(rel)
     }
   }
   walk(root)

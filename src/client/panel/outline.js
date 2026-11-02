@@ -418,7 +418,7 @@ export function ChapterEditor(props) {
     const ours = (event) => {
       const target = event?.target
       if (target === null || target === undefined) return true
-      if (typeof target.closest === 'function' && target.closest('.st-shell') !== null) return true
+      if (typeof target.closest === 'function' && target.closest('.fang-shell') !== null) return true
       // `body`/`html` means "no element has focus", not "some other panel has it". A real focus
       // elsewhere always has a target that is an element in that other panel.
       const tag = String(target.tagName ?? '').toUpperCase()

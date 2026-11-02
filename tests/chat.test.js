@@ -398,11 +398,11 @@ test('the chord is heard wherever focus happens to be', () => {
   // predicate over the event target, so it can be pinned here.
   const ours = (target) => {
     if (target === null || target === undefined) return true
-    if (typeof target.closest === 'function' && target.closest('.st-shell') !== null) return true
+    if (typeof target.closest === 'function' && target.closest('.fang-shell') !== null) return true
     const tag = String(target.tagName ?? '').toUpperCase()
     return tag === 'BODY' || tag === 'HTML'
   }
-  const inside = { tagName: 'TEXTAREA', closest: (sel) => (sel === '.st-shell' ? {} : null) }
+  const inside = { tagName: 'TEXTAREA', closest: (sel) => (sel === '.fang-shell' ? {} : null) }
   const body = { tagName: 'BODY', closest: () => null }
   const html = { tagName: 'HTML', closest: () => null }
   const elsewhere = { tagName: 'INPUT', closest: () => null }
@@ -789,9 +789,9 @@ test('the find field follows the shared borderless input rule', () => {
   const shared = /\.st-input,\.st-find-input,[^{]*\{([^}]*)\}/.exec(css)?.[1] ?? ''
   assert.ok(shared !== '', 'the shared field rule exists')
   assert.ok(/border:none/.test(shared), 'no stroke: the fill says "this is a field"')
-  assert.ok(/background:var\(--st-surface[,)]/.test(shared), 'a quiet surface fill instead')
-  assert.ok(/border-radius:var\(--st-radius-sm[,)]/.test(shared), 'still rounded')
-  assert.ok(/font-size:var\(--st-text-md\)/.test(shared),
+  assert.ok(/background:var\(--fang-surface[,)]/.test(shared), 'a quiet surface fill instead')
+  assert.ok(/border-radius:var\(--fang-radius-sm[,)]/.test(shared), 'still rounded')
+  assert.ok(/font-size:var\(--fang-font-size-md\)/.test(shared),
     'and it takes its type from the panel scale, not a number of its own')
 
   const own = /\.st-find-input\{([^}]*)\}/.exec(css)?.[1] ?? ''
