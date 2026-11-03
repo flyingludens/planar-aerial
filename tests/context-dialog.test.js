@@ -17,7 +17,7 @@ const DATA = {
 
 /** The context page bound to a recording stub api. */
 async function mountContext(calls) {
-  const { plugin, render } = loadClientForRender()
+  const { plugin, render, rerender: rerenderSame } = loadClientForRender()
   const api = {
     context: async () => DATA,
     addContextVersion: async (bookId, scene, part, text) => {
@@ -33,20 +33,27 @@ async function mountContext(calls) {
     t: (key) => key, api, bookFolder: 'f1', bookId: 'b1', chapterId: 'c1',
     onClose: () => {}, onNotice: () => {},
   }
-  const rerender = () => render(plugin.__components.ContextPage, props)
-  // mount, then one pass on the SAME hook tables: the load effect's promise resolves inside the
-  // mount drive's settle, and its setData only lands on the tables a rerender keeps.
+  // Re-render on the SAME hook tables, which is what an event handler's setState does. Calling
+  // `render` here would remount the page with a fresh table and show the loading state forever.
+  const rerender = () => rerenderSame(plugin.__components.ContextPage, props)
   await render(plugin.__components.ContextPage, props)
   const loaded = await rerender()
   return { mounted: loaded, rerender }
 }
 
-test.skip('新建副本：弹窗里的保存走到 addContextVersion，而不是无声无息', { skip: 'render harness 的异步挂载限制：组件的 useEffect 数据落地后，harness 的重渲染仍读到旧槽位（mount 后的 rerender 显示 loading）。待 harness 修复后启用——在那之前此流程由 Electron 实机验证。' }, async () => {
+test('新建副本：弹窗里的保存走到 addContextVersion，而不是无声无息', async () => {
   const calls = []
   const { mounted, rerender } = await mountContext(calls)
 
+  // 副本按分段保存：系统提示词的副本进 prompts.json，书本部分的副本进版本表。这条测的是
+  // 书本部分，所以先切到 bookMeta 分段——停在默认的系统提示词上会走到 addPromptDoc。
+  const segment = findByText(mounted.tree, 'context.part.bookMeta')
+  assert.ok(segment !== undefined, '构成条应有 bookMeta 分段')
+  segment.props.onClick()
+  const switched = await rerender()
+
   // 区头的「新建副本」打开弹窗（此时 dialog 的确认键尚未出现）。
-  const open = findByText(mounted.tree, 'context.newCopy')
+  const open = findByText(switched.tree, 'context.newCopy')
   assert.ok(open !== undefined, 'mine 区头应有新建按钮')
   open.props.onClick()
   const opened = await rerender()
