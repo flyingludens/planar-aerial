@@ -80,6 +80,53 @@ test('the board normalizer keeps the first of two cards with the same id', () =>
   assert.notEqual(board.entities[0].id, board.entities[1].id)
 })
 
+test('a passive relation is read as its active direction', () => {
+  // The relationship prompt already asks the model for active voice and to swap a passive
+  // sentence's endpoints. The normalizer enforces the same rule on read, so an edge stored in
+  // the object angle does not draw a reversed arrow on the board.
+  const board = normalizeMosaic({
+    entities: [
+      { id: 'a', kind: 'character', name: '甲' },
+      { id: 'b', kind: 'character', name: '乙' },
+    ],
+    edges: [{ id: 'e1', from: 'a', to: 'b', truth: { kind: '被调查', note: '' }, beliefs: [] }],
+  })
+  assert.equal(board.edges[0].truth.kind, '调查')
+  assert.equal(board.edges[0].from, 'b', 'the passive subject becomes the object, the holder the actor')
+  assert.equal(board.edges[0].to, 'a')
+})
+
+test('an active relation keeps the direction it was written in', () => {
+  const board = normalizeMosaic({
+    entities: [
+      { id: 'a', kind: 'character', name: '甲' },
+      { id: 'b', kind: 'character', name: '乙' },
+    ],
+    edges: [{ id: 'e1', from: 'a', to: 'b', truth: { kind: '调查', note: '' }, beliefs: [] }],
+  })
+  assert.equal(board.edges[0].truth.kind, '调查')
+  assert.equal(board.edges[0].from, 'a')
+  assert.equal(board.edges[0].to, 'b')
+})
+
+test('a passive belief label is normalised without moving the edge', () => {
+  const board = normalizeMosaic({
+    entities: [
+      { id: 'a', kind: 'character', name: '甲' },
+      { id: 'b', kind: 'character', name: '乙' },
+    ],
+    edges: [{
+      id: 'e1', from: 'a', to: 'b',
+      truth: { kind: '调查', note: '' },
+      beliefs: [{ holderId: 'b', kind: '被调查', note: '他以为自己被查' }],
+    }],
+  })
+  assert.equal(board.edges[0].truth.kind, '调查')
+  assert.equal(board.edges[0].from, 'a', 'an active truth keeps its direction')
+  assert.equal(board.edges[0].to, 'b')
+  assert.equal(board.edges[0].beliefs[0].kind, '调查', 'the passive belief wording becomes active')
+})
+
 test('a chapter with text leaves todo behind; an empty one returns to it', () => {
   assert.equal(statusAfterText('', 'writing'), 'todo')
   assert.equal(statusAfterText('一句话。', 'todo'), 'writing')

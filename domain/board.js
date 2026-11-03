@@ -12,6 +12,13 @@ import {
 } from './schema.js'
 
 const str = (v) => (typeof v === 'string' ? v : '')
+const PASSIVE_RELATIONS = new Map([
+  ['被调查', '调查'], ['被追查', '追查'], ['被委托', '委托'], ['被通缉', '通缉'],
+  ['受雇', '雇用'], ['受雇于', '雇用'], ['受雇於', '雇用'], ['受托', '委托'],
+])
+/** The active form of a relation kind. A passive/object-angle wording has an active twin. */
+const activeKind = (kind) => PASSIVE_RELATIONS.get(kind) ?? kind
+
 const arr = (v) => (Array.isArray(v) ? v : [])
 
 /**
@@ -97,15 +104,25 @@ export function normalizeEntity(raw, idSet) {
 /** Normalize one edge's truth and one level of beliefs. */
 export function normalizeEdge(raw, idSet) {
   if (!raw || typeof raw !== 'object') return null
-  const from = str(raw.from)
-  const to = str(raw.to)
+  let from = str(raw.from)
+  let to = str(raw.to)
   // An edge whose endpoints do not exist is unreadable: drop it rather than draw a dangling line.
   if (!idSet.has(from) || !idSet.has(to)) return null
   const truth = raw.truth && typeof raw.truth === 'object'
     ? { kind: str(raw.truth.kind).trim(), note: str(raw.truth.note) } : { kind: '', note: '' }
+  const truthKind = activeKind(truth.kind)
+  if (truthKind !== truth.kind) {
+    truth.kind = truthKind
+    const swap = from
+    from = to
+    to = swap
+  }
   const beliefs = arr(raw.beliefs)
     .filter((b) => b && typeof b === 'object' && idSet.has(str(b.holderId)))
-    .map((b) => ({ holderId: str(b.holderId), kind: str(b.kind).trim(), note: str(b.note) }))
+    // A belief has no endpoints of its own, so only its wording is normalised: a passive label
+    // becomes the active word the rest of the board uses. The edge's direction is decided once,
+    // by `truth` above, and must not be re-read per belief.
+    .map((b) => ({ holderId: str(b.holderId), kind: activeKind(str(b.kind).trim()), note: str(b.note) }))
   return {
     id: str(raw.id), from, to, truth, beliefs,
     retired: raw.retired === true,
