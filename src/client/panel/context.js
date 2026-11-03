@@ -191,7 +191,10 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose }) 
       active: selected !== null && row.id === selected.id,
       onActivate: () => setVersionId(row.id),
     },
+      // 条目的第一要素是副本内容本身：首行预览。时间与「当前发送」只是附属信息。
       h('span', { className: 'st-list-row-title' },
+        row.text === '' ? t('context.empty') : row.text.split('\n')[0]),
+      h('span', { className: 'fang-list-row-meta' },
         row.at === null ? t('context.myVersion') : new Date(row.at).toLocaleString()),
       row.text === override ? h('span', { className: 'fang-list-row-meta' }, t('context.active')) : null))
 
