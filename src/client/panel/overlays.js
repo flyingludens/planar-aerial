@@ -13,7 +13,6 @@ import { React, h } from '../shared/react.js'
 import { Drawer, ConfirmDialog, Segmented, Dropdown } from 'fang-style'
 import { AnswerLog } from './composer.js'
 import { MosaicSheet } from '../mosaic/index.js'
-import { api } from '../api.js'
 
 /**
  * The history drawer's second page: the system event log.
@@ -65,7 +64,7 @@ function eventDetail(event) {
   return parts.join(' ')
 }
 
-function SystemEventLog({ t }) {
+function SystemEventLog({ t, api }) {
   const [events, setEvents] = React.useState(null)
   const [error, setError] = React.useState('')
   const [filter, setFilter] = React.useState('all')
@@ -160,7 +159,7 @@ function SystemEventLog({ t }) {
  * you open over the manuscript, read, and dismiss. The drawer carries TWO pages: the answers,
  * and the system event log behind them.
  */
-export function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClose }) {
+export function AnswerLogOverlay({ open, t, api, answers, loadError, onInsert, onClose }) {
   // Hooks stay above the early return, so opening and closing cannot change this component's
   // hook count.
   const [page, setPage] = React.useState('answers')
@@ -184,7 +183,7 @@ export function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClos
         ? h('div', { className: 'st-answers-page' },
             loadError !== '' ? h('div', { className: 'st-dialog-hint' }, loadError) : null,
             h(AnswerLog, { t, answers, onInsert }))
-        : h(SystemEventLog, { t })),
+        : h(SystemEventLog, { t, api })),
   })
 }
 

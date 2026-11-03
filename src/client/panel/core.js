@@ -965,7 +965,7 @@ export function StoryPanelBody(props) {
       t, book, updateBook, onClose: () => setNotesOpen(false),
     }) : null,
     h(AnswerLogOverlay, {
-      open: answerLog, t, answers, loadError: answersError,
+      open: answerLog, t, api, answers, loadError: answersError,
       // An old answer is inserted the same way the newest one is: the editor owns the range
       // and the undo history, so it does the work.
       onInsert: (entry) => { insertFromLog(entry); setAnswerLog(false) },

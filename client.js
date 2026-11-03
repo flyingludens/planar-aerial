@@ -1316,11 +1316,11 @@ function InfoIcon() {
   );
 }
 
-// ../Projects/fang-style/src/react.js
+// node_modules/fang-style/src/react.js
 var import_react2 = __toESM(require("react"), 1);
 var h2 = import_react2.default.createElement;
 
-// ../Projects/fang-style/src/widgets/overlays.js
+// node_modules/fang-style/src/widgets/overlays.js
 function Drawer({ title, children, onClose, size, bodyClassName, closing = false, closeLabel = "\u5173\u95ED" }) {
   import_react2.default.useEffect(() => {
     const onKey = (e) => {
@@ -1454,7 +1454,7 @@ function Dialog({ title, children, onClose, size, bodyClassName, panelClassName,
   );
 }
 
-// ../Projects/fang-style/src/storage.js
+// node_modules/fang-style/src/storage.js
 function storageAvailable() {
   try {
     return typeof window !== "undefined" && window.localStorage !== void 0 && window.localStorage !== null;
@@ -1480,7 +1480,7 @@ function writeStored(key, value) {
   }
 }
 
-// ../Projects/fang-style/src/hooks.js
+// node_modules/fang-style/src/hooks.js
 function createStateStore() {
   const values = /* @__PURE__ */ new Map();
   const listeners = /* @__PURE__ */ new Map();
@@ -1583,7 +1583,7 @@ function useDismiss(rootRef, open, onClose) {
   }, [rootRef, open]);
 }
 
-// ../Projects/fang-style/src/widgets/dropdown.js
+// node_modules/fang-style/src/widgets/dropdown.js
 function Chevron({ open, direction }) {
   const down = direction !== "right";
   return h2("svg", {
@@ -1653,7 +1653,7 @@ function Dropdown({ label, value, options, onChange, testId, className }) {
   );
 }
 
-// ../Projects/fang-style/src/widgets/file-button.js
+// node_modules/fang-style/src/widgets/file-button.js
 function FileButton({ label, accept, multiple = false, onFile, onFiles, className, testId }) {
   const inputRef = import_react2.default.useRef(null);
   return h2(
@@ -1686,7 +1686,7 @@ function FileButton({ label, accept, multiple = false, onFile, onFiles, classNam
   );
 }
 
-// ../Projects/fang-style/src/widgets/segmented.js
+// node_modules/fang-style/src/widgets/segmented.js
 function Segmented({ label, options, value, onChange, testId, disabled = false }) {
   return h2(
     "div",
@@ -1703,7 +1703,7 @@ function Segmented({ label, options, value, onChange, testId, disabled = false }
   );
 }
 
-// ../Projects/fang-style/src/widgets/list.js
+// node_modules/fang-style/src/widgets/list.js
 function SplitPane({ list, detail, listProps, detailProps }) {
   const rows = Array.isArray(list) ? list : list === void 0 ? [] : [list];
   const body = Array.isArray(detail) ? detail : detail === void 0 ? [] : [detail];
@@ -1732,7 +1732,7 @@ function ListRow({ className, active, onActivate, children, ...rest }) {
   }, ...rows);
 }
 
-// ../Projects/fang-style/src/widgets/tooltip.js
+// node_modules/fang-style/src/widgets/tooltip.js
 function TooltipLayer({ rootRef }) {
   const [tip, setTip] = import_react2.default.useState(null);
   const held = import_react2.default.useRef(null);
@@ -1794,7 +1794,7 @@ function TooltipLayer({ rootRef }) {
   return h2("div", { className: "fang-tip", role: "tooltip", style: { left: tip.left, top: tip.top } }, tip.text);
 }
 
-// ../Projects/fang-style/src/tokens.css.js
+// node_modules/fang-style/src/tokens.css.js
 var FANG_TOKENS = `
       .fang-shell{
         /* \u5F3A\u8C03\u8272\u53EA\u6709\u4E00\u4E2A\u51FA\u5904\uFF1A\u7126\u70B9\u73AF\u3001\u9009\u4E2D\u6001\u3001\u5361\u7247\u63CF\u8FB9\u3001\u4E3B\u6309\u94AE\u90FD\u8BFB\u8FD9\u4E00\u4E2A\u53D8\u91CF\u3002
@@ -1997,7 +1997,7 @@ var FANG_TOKENS = `
       }
 `;
 
-// ../Projects/fang-style/src/frame.css.js
+// node_modules/fang-style/src/frame.css.js
 var FANG_FRAME = `
       .fang-root,.fang-root *,.fang-shell *{box-sizing:border-box}
       /* \u6392\u7248\u58F0\u660E\u5728\u6BCF\u4E2A\u89C4\u5219\u90FD\u5750\u5728\u91CC\u9762\u7684\u90A3\u4E00\u4E2A\u5143\u7D20\u4E0A\uFF1A\u5B57\u4F53\u65CF\u5728\u8FD9\u91CC\u800C\u4E0D\u662F\u5206\u6563\u5230\u6BCF\u4E2A
@@ -2107,18 +2107,18 @@ var FANG_FRAME = `
         color:var(--fang-ink-secondary)}
 `;
 
-// ../Projects/fang-style/src/components.css.js
+// node_modules/fang-style/src/components.css.js
 var FANG_COMPONENTS = `
-      /* \u80CC\u677F\u3002\u5F39\u7A97\u4E0E\u62BD\u5C49\u5171\u7528\u4E00\u4E2A\u7C7B\uFF1A\u516C\u5171\u9AA8\u67B6\u662F\u5F39\u7A97\u7684\u2014\u2014\u5C45\u4E2D\u3001\u8C03\u6697\u3001\u6A21\u7CCA\uFF0C\u538B\u5728
-         modal \u5C42\uFF1B\u62BD\u5C49\u7684\u80CC\u677F\u4E0D\u662F\u6A21\u6001\uFF0C\u7531\u4E0B\u9762\u4E00\u6761\u6309\u5B50\u5143\u7D20\u533A\u5206\u7684\u89C4\u5219\u63A5\u7BA1\u51E0\u4F55\u3002 */
+      /* \u80CC\u677F\u3002\u5F39\u7A97\u4E0E\u62BD\u5C49\u5171\u7528\u4E00\u4E2A\u7C7B\uFF1A\u5B83\u4E0D\u662F\u89C6\u89C9\u5C42\u2014\u2014\u4E0D\u8C03\u6697\u3001\u4E0D\u6A21\u7CCA\uFF0C\u5F39\u7A97\u7684\u5206\u79BB\u611F
+         \u7531\u5F39\u7A97\u81EA\u5DF1\u7684\u8FB9\u6846\u4E0E\u9634\u5F71\u627F\u62C5\u3002\u80CC\u677F\u53EA\u5269\u4E24\u4EF6\u673A\u68B0\u804C\u8D23\uFF1A\u5F39\u5C42\u7684\u5B9A\u4F4D\u4E0A\u4E0B\u6587\uFF0C\u548C
+         \u70B9\u51FB\u6536\u8D77\u7684\u76EE\u6807\u3002 */
       .fang-backdrop{position:absolute;inset:0;z-index:var(--fang-layer-modal);display:flex;align-items:center;justify-content:center;
-        padding:var(--fang-space-24);background:color-mix(in srgb, var(--fang-bg) 62%, transparent);
-        backdrop-filter:blur(2px)}
+        padding:var(--fang-space-24)}
       /* \u62BD\u5C49\u7684\u80CC\u677F\u4E0D\u8C03\u6697\uFF1A\u6ED1\u5165\u7684\u9762\u677F\u4E0D\u662F\u6A21\u6001\uFF0C\u65C1\u8FB9\u7684\u6B63\u6587\u4FDD\u6301\u53EF\u8BFB\u3001\u4ECD\u662F\u6B63\u5728\u5DE5\u4F5C\u7684
          \u8868\u9762\u3002\u53D8\u6697\u8BF4\u4E86\u300C\u5173\u6389\u4E4B\u524D\u4E0D\u8BB8\u7528\u300D\uFF0C\u800C\u62BD\u5C49\u662F\u5199\u4F5C\u65F6\u67E5\u9605\u7684\u53C2\u8003\u2014\u2014\u5B83\u7684\u5206\u79BB\u9760
          \u9762\u677F\u81EA\u5DF1\u7684\u98DE\u51FA\u9634\u5F71\u3002\u8FD9\u5C42\u4FDD\u7559\u662F\u56E0\u4E3A\u5B83\u662F\u70B9\u51FB\u6536\u8D77\u7684\u76EE\u6807\u548C\u5B9A\u4F4D\u4E0A\u4E0B\u6587\u3002 */
       .fang-backdrop:has(> .fang-drawer){inset:var(--fang-titlebar-height) 0 0 0;z-index:var(--fang-layer-drawer);
-        align-items:stretch;justify-content:flex-end;padding:0;background:transparent;backdrop-filter:none}
+        align-items:stretch;justify-content:flex-end;padding:0}
       /* \u62BD\u5C49\uFF1A\u4ECE\u53F3\u7F18\u8FDB\u6765\u7684\u9762\u677F\uFF0C\u5168\u9AD8\uFF0C\u53EA\u5728\u5185\u4FA7\u5706\u89D2\u2014\u2014\u8D34\u6846\u7684\u4E24\u4E2A\u89D2\u4FDD\u6301\u76F4\u89D2\u3002
          \u6DF1\u5EA6\u662F\u4E24\u4EF6\u4E8B\uFF1A\u98DE\u51FA\u9634\u5F71\uFF08\u7529\u5411\u5DE6\uFF0C\u6765\u7684\u65B9\u5411\uFF09\u52A0\u9876\u7F18\u7684\u5185\u7F18\u5149\u3002 */
       .fang-drawer{display:flex;flex-direction:column;
@@ -2255,7 +2255,7 @@ var FANG_COMPONENTS = `
         border:var(--fang-hairline) solid color-mix(in srgb, var(--fang-highlight) 14%, transparent);border-radius:var(--fang-radius-sm);corner-shape:round;
         background:var(--fang-surface);
         color:var(--fang-highlight);font-size:var(--fang-font-size-sm);line-height:var(--fang-line-height-sm);
-        white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, #000 30%, transparent)}
+        white-space:nowrap;box-shadow:0 2px 8px color-mix(in srgb, var(--fang-shade) 30%, transparent)}
       .fang-tip::after{content:'';position:absolute;top:calc(-1 * var(--fang-space-4));left:calc(50% - var(--fang-space-4));
         width:var(--fang-space-8);height:var(--fang-space-8);background:inherit;
         transform:rotate(45deg);border-radius:var(--fang-hairline)}
@@ -2283,7 +2283,7 @@ var FANG_COMPONENTS = `
         box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-border-strong)}
 `;
 
-// ../Projects/fang-style/src/styles.js
+// node_modules/fang-style/src/styles.js
 var FANG_CSS = `${FANG_TOKENS}
 ${FANG_FRAME}
 ${FANG_COMPONENTS}`;
@@ -6793,13 +6793,14 @@ function Segment({ label, tone, active, onPick }) {
     onClick: onPick
   }, h("span", { className: "st-ctx-seg-label" }, label));
 }
-function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onNotice }) {
+function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose }) {
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState("");
   const [sceneId, setSceneId] = React.useState("chat");
   const [partKey, setPartKey] = React.useState(SYSTEM);
   const [versionId, setVersionId] = React.useState(null);
   const [dialogText, setDialogText] = React.useState(null);
+  const [copyError, setCopyError] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const load = React.useCallback(() => {
     let live = true;
@@ -6828,12 +6829,18 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
   const applyText = async (text) => {
     if (busy || scene === void 0) return;
     setBusy(true);
+    setCopyError("");
     try {
-      if (partKey === SYSTEM) await api2.savePrompt(scene.promptKey, text);
-      else await api2.saveContext(bookId, scene.id, partKey, text);
+      let res;
+      if (partKey === SYSTEM) res = await api2.savePrompt(scene.promptKey, text);
+      else res = await api2.saveContext(bookId, scene.id, partKey, text);
+      if (res.ok === false) {
+        setCopyError(res.error ?? "\u66FF\u6362\u5931\u8D25");
+        return;
+      }
       setData(await api2.context(bookFolder, bookId, chapterId));
     } catch (failure) {
-      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+      setCopyError(String(failure?.message ?? failure));
     } finally {
       setBusy(false);
     }
@@ -6841,12 +6848,18 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
   const revert = async () => {
     if (busy || scene === void 0) return;
     setBusy(true);
+    setCopyError("");
     try {
-      if (partKey === SYSTEM) await api2.resetPrompt(scene.promptKey);
-      else await api2.resetContext(bookId, scene.id, partKey);
+      let res;
+      if (partKey === SYSTEM) res = await api2.resetPrompt(scene.promptKey);
+      else res = await api2.resetContext(bookId, scene.id, partKey);
+      if (res.ok === false) {
+        setCopyError(res.error ?? "\u6062\u590D\u5931\u8D25");
+        return;
+      }
       setData(await api2.context(bookFolder, bookId, chapterId));
     } catch (failure) {
-      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+      setCopyError(String(failure?.message ?? failure));
     } finally {
       setBusy(false);
     }
@@ -6854,11 +6867,16 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
   const deleteEntry = async (id) => {
     if (busy || scene === void 0 || partKey === SYSTEM) return;
     setBusy(true);
+    setCopyError("");
     try {
-      await api2.deleteContextVersion(bookId, scene.id, partKey, id);
+      const res = await api2.deleteContextVersion(bookId, scene.id, partKey, id);
+      if (res.ok === false) {
+        setCopyError(res.error ?? "\u5220\u9664\u5931\u8D25");
+        return;
+      }
       setData(await api2.context(bookFolder, bookId, chapterId));
     } catch (failure) {
-      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+      setCopyError(String(failure?.message ?? failure));
     } finally {
       setBusy(false);
     }
@@ -6866,20 +6884,26 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
   const addCopy = async () => {
     if (busy || scene === void 0 || dialogText === null || dialogText.trim() === "") return;
     setBusy(true);
+    setCopyError("");
     try {
-      let newest = null;
+      let res, rows;
       if (partKey === SYSTEM) {
-        const prompts = await api2.addPromptDoc(scene.promptKey, dialogText);
-        newest = prompts.find((row) => row.key === scene.promptKey)?.docs.slice(-1)[0] ?? null;
+        res = await api2.addPromptDoc(scene.promptKey, dialogText);
+        rows = res.ok === false ? [] : res.prompts.find((row) => row.key === scene.promptKey)?.docs ?? [];
       } else {
-        const versions = (await api2.addContextVersion(bookId, scene.id, partKey, dialogText)).versions;
-        newest = versions[scene.id]?.[partKey]?.slice(-1)[0] ?? null;
+        res = await api2.addContextVersion(bookId, scene.id, partKey, dialogText);
+        rows = res.ok === false ? [] : res.versions[scene.id]?.[partKey] ?? [];
+      }
+      if (res.ok === false) {
+        setCopyError(res.error ?? "\u4FDD\u5B58\u5931\u8D25");
+        return;
       }
       setDialogText(null);
       setData(await api2.context(bookFolder, bookId, chapterId));
-      if (newest !== null) setVersionId(newest.id);
+      const newest = rows[rows.length - 1];
+      if (newest !== void 0) setVersionId(newest.id);
     } catch (failure) {
-      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+      setCopyError(String(failure?.message ?? failure));
     } finally {
       setBusy(false);
     }
@@ -6925,7 +6949,7 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
       h("div", { className: "st-dialog-label" }, t("context.officialVersion")),
       official === "" ? h("p", { className: "fang-muted" }, t("context.empty")) : h("p", { className: "st-overview-text" }, official)
     );
-    const entries = partKey === SYSTEM ? override !== "" ? [{ id: "override", text: override, at: null }] : [] : [...part?.versions ?? []].reverse();
+    const entries = partKey === SYSTEM ? [...(data.prompts.find((row) => row.key === scene.promptKey) ?? {}).docs ?? []].reverse() : [...part?.versions ?? []].reverse();
     const selected = entries.find((row) => row.id === versionId) ?? entries[0] ?? null;
     const mineHead = h(
       "div",
@@ -6936,7 +6960,10 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
         type: "button",
         className: "fang-btn",
         disabled: busy,
-        onClick: () => setDialogText("")
+        onClick: () => {
+          setCopyError("");
+          setDialogText("");
+        }
       }, t("context.newCopy")) : null,
       override !== "" ? h("button", {
         type: "button",
@@ -6952,9 +6979,15 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
         active: selected !== null && row.id === selected.id,
         onActivate: () => setVersionId(row.id)
       },
+      // 条目的第一要素是副本内容本身：首行预览。时间与「当前发送」只是附属信息。
       h(
         "span",
         { className: "st-list-row-title" },
+        row.text === "" ? t("context.empty") : row.text.split("\n")[0]
+      ),
+      h(
+        "span",
+        { className: "fang-list-row-meta" },
         row.at === null ? t("context.myVersion") : new Date(row.at).toLocaleString()
       ),
       row.text === override ? h("span", { className: "fang-list-row-meta" }, t("context.active")) : null
@@ -6979,6 +7012,7 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
       "div",
       { key: "mine", className: "st-ctx-mine" },
       mineHead,
+      copyError !== "" ? h("p", { key: "mine-error", className: "st-dialog-error" }, copyError) : null,
       h(
         "div",
         { key: "mine-split", className: "st-ctx-mine-split" },
@@ -7022,11 +7056,12 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
         },
         h("textarea", {
           key: "draft",
-          className: "st-dialog-textarea",
+          className: "st-input st-dialog-textarea",
           spellCheck: false,
           value: dialogText,
           onChange: (event) => setDialogText(event.target.value)
         }),
+        copyError !== "" ? h("p", { key: "copy-error", className: "st-dialog-error" }, copyError) : null,
         h(
           "div",
           { key: "actions", className: "st-dialog-actions" },
@@ -9724,135 +9759,6 @@ function MosaicEntityPage({ t, entity, mosaic, onClose, closing, onPatchEntity, 
   );
 }
 
-// src/client/api.js
-async function fetchTransport(path, body) {
-  let response;
-  try {
-    response = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-  } catch (error) {
-    throw new Error(`\u65E0\u6CD5\u8FDE\u63A5\u6545\u4E8B\u670D\u52A1\uFF08${path}\uFF09\uFF1A${error?.message ?? "\u7F51\u7EDC\u9519\u8BEF"}`, { cause: error });
-  }
-  if (!response.ok) throw new Error(`${path} failed: HTTP ${response.status}`);
-  let data;
-  try {
-    data = await response.json();
-  } catch (error) {
-    throw new Error(`${path} \u8FD4\u56DE\u4E86\u65E0\u6CD5\u89E3\u6790\u7684\u54CD\u5E94`, { cause: error });
-  }
-  if (data.ok !== true) throw new Error(data.error || `${path} failed`);
-  return data;
-}
-function createStoryApi(transport) {
-  if (typeof transport !== "function") throw new TypeError("story api needs a transport function");
-  const call = (path, body) => transport(path, body);
-  return {
-    // bookFolder selects which manuscript; undefined means the workspace's original book.
-    books: () => call("/api/story.books", {}),
-    createBook: (title) => call("/api/story.createBook", { title }),
-    openDirectory: (path) => call("/api/story.openDirectory", { path }),
-    deleteBook: (folder, removeFiles) => call("/api/story.deleteBook", { bookFolder: folder, removeFiles }),
-    renameBook: (folder, title) => call("/api/story.renameBook", { bookFolder: folder, title }),
-    load: (bookFolder) => call("/api/story.load", { bookFolder }),
-    save: (book, token, bookFolder) => call("/api/story.save", { book, token, bookFolder }),
-    // The host takes (chapterId, text, instruction): the unit of an AI edit is the SELECTED
-    // TEXT, not a paragraph. Passing the old paragraphId slot left `text` empty and pushed the
-    // selection into `instruction`, so the model was asked to rewrite nothing and answered with
-    // the instruction glued to the passage.
-    // `role` names whose model does the work. It is omitted for the editor's own actions, which use
-    // the `suggest` model, and is 'chat' when the question came in through the composer: the
-    // writer configured a model for the chat because it is the one that knows the story, and an
-    // edit that arrives through that conversation should not be handed to a different model.
-    suggest: (bookFolder, chapterId, text, instruction, role, before, after) => call("/api/story.suggest", { bookFolder, chapterId, text, instruction, role, before, after }),
-    overview: (bookFolder, refresh) => call("/api/story.overview", { bookFolder, refresh }),
-    snapshot: (bookFolder, label) => call("/api/story.snapshot", { bookFolder, label }),
-    restore: (bookFolder, id) => call("/api/story.restore", { bookFolder, id }),
-    // The caret travels with the question: without it the chat could only answer in the
-    // abstract, and a request to "write from here" had no "here".
-    chat: (bookFolder, history, message, chapterId, before, after, selection) => call("/api/story.chat", { bookFolder, history, message, chapterId, before, after, selection }),
-    applyProposal: (bookFolder, proposal) => call("/api/story.applyProposal", { bookFolder, proposal }),
-    // `before` is the text up to the caret and `after` the text following it. Sending the whole
-    // chapter as `text` made the model continue from the END even when the writer was working
-    // in the middle of a paragraph.
-    continue: (bookFolder, chapterId, text, before, after, role) => call("/api/story.continue", { bookFolder, chapterId, text, before, after, role }),
-    // 流派: saved style prompts, which one is active, and generating a prompt from a sample.
-    writingStyles: (bookFolder) => call("/api/story.writingStyles", { bookFolder }),
-    saveWritingStyle: (bookFolder, fields) => call("/api/story.writingStyle.save", { bookFolder, ...fields }),
-    setWritingStyleActive: (bookFolder, id) => call("/api/story.writingStyle.setActive", { bookFolder, id }),
-    deleteWritingStyle: (bookFolder, id) => call("/api/story.writingStyle.delete", { bookFolder, id }),
-    generateWritingStyle: (bookFolder, source) => call("/api/story.writingStyle.generate", { bookFolder, source }),
-    consistency: (bookFolder) => call("/api/story.consistency", { bookFolder }),
-    manuscript: (bookFolder) => call("/api/story.manuscript", { bookFolder }),
-    // The context page: the parts of the current context, and the writer's system-prompt copies.
-    // The book is named by ID, so a stale folder name cannot point the page at another book.
-    context: (bookFolder, bookId, chapterId) => call("/api/story.context", { bookFolder, bookId, chapterId }),
-    savePrompt: (key, text) => call("/api/story.context.prompt.save", { key, text }),
-    addPromptDoc: (key, text) => call("/api/story.context.prompt.doc.add", { key, text }),
-    resetPrompt: (key) => call("/api/story.context.prompt.reset", { key }),
-    // One scene part's copy, kept in the book's own context.json, plus its version documents:
-    // add = 新建一份副本（不动发送内容），save = 把发送内容替换为选中的文本，delete = 删历史。
-    saveContext: (bookId, scene, part, text) => call("/api/story.context.save", { bookId, scene, part, text }),
-    addContextVersion: (bookId, scene, part, text) => call("/api/story.context.version.add", { bookId, scene, part, text }),
-    resetContext: (bookId, scene, part) => call("/api/story.context.reset", { bookId, scene, part }),
-    deleteContextVersion: (bookId, scene, part, id) => call("/api/story.context.version.delete", { bookId, scene, part, id }),
-    // Which model the panel's own actions run on, for the status bar.
-    meta: () => call("/api/story.meta", {}),
-    // Where the books live. One setting decides it; changing it does not move any files.
-    setLibrary: (path) => call("/api/story.setLibrary", { path }),
-    // The model page: what each role resolves to, and where the writer pinned one.
-    models: () => call("/api/story.models", {}),
-    // Every model the host can route to. The page's picker is built from this, not from a
-    // client service: what the host will accept is what the page offers.
-    catalog: () => call("/api/story.catalog", {}),
-    // The reasoning levels one model offers, for the axis.
-    efforts: (provider, model) => call("/api/story.efforts", { provider, model }),
-    setModel: (role, selection) => call("/api/story.setModel", { role, selection }),
-    // A copy-edit of one section, and a blunt grammar critique of the prose by the caret.
-    review: (bookFolder, chapterId, text) => call("/api/story.review", { bookFolder, chapterId, text }),
-    critique: (bookFolder, chapterId, before, after, text, direction) => call("/api/story.critique", { bookFolder, chapterId, before, after, text, direction }),
-    // The mosaic board: chapter consistency check, board Q&A, and reading relations out of the
-    // cards. The sheet calls these on the relations page.
-    mosaicCheck: (bookFolder, chapterId, text) => call("/api/story.mosaic.check", { bookFolder, chapterId, text }),
-    mosaicAsk: (bookFolder, question) => call("/api/story.mosaic.ask", { bookFolder, question }),
-    // Reads the CARDS, not a chapter: the writer described who knows whom in the summaries and
-    // expects the lines to appear. The cards travel with the request because the panel is the
-    // one holding the board the writer is looking at; the host re-reading the file would answer
-    // about a possibly older (or missing) copy of it.
-    mosaicRelate: (cards, edges, bookFolder) => call("/api/story.mosaic.relate", { cards, edges, bookFolder }),
-    // Stored proposals: the page that lists what the model suggested and nobody answered yet.
-    proposals: (bookFolder) => call("/api/story.proposals", { bookFolder }),
-    setProposalStatus: (bookFolder, id, status) => call("/api/story.proposal.setStatus", { bookFolder, id, status }),
-    deleteProposal: (bookFolder, id) => call("/api/story.proposal.delete", { bookFolder, id }),
-    // The write for the changes the writer accepted, one call for the whole batch. The host
-    // answers with the board it actually wrote, so the sheet can repaint from it.
-    // proposalId is optional and only there so the host can mark a stored proposal answered in
-    // the same write that applied it.
-    mosaicApply: (bookFolder, changes, proposalId, provenance) => call("/api/story.mosaic.apply", { bookFolder, changes, proposalId, provenance }),
-    // One portrait per card. The entity travels whole because the prompt is built from the fields
-    // the writer has just been editing, not from what is on disk.
-    mosaicPortrait: (bookFolder, entity, language) => call("/api/story.mosaic.portrait", { bookFolder, entity, language }),
-    // The stored picture, read back by the relative path the board recorded. The host's route
-    // surface is POST-only, so there is no URL to point an img at.
-    mosaicPortraitRead: (bookFolder, path) => call("/api/story.mosaic.portrait.read", { bookFolder, path }),
-    // The portrait settings live beside the role models in one file, so they share one write.
-    setImage: (image) => call("/api/story.setImage", { image }),
-    imageModels: (image) => call("/api/story.imageModels", image ?? {}),
-    providerTest: (provider) => call("/api/story.provider.test", provider),
-    // The answer history, kept in the book's own `answers/` folder rather than in book.json.
-    // `limit` is passed because the panel shows the newest few; the host sorts before slicing.
-    answers: (bookFolder, limit) => call("/api/story.answers", { bookFolder, limit }),
-    saveAnswer: (bookFolder, answer) => call("/api/story.answer.save", { bookFolder, answer }),
-    deleteAnswer: (bookFolder, id) => call("/api/story.answer.delete", { bookFolder, id }),
-    // The writer's own OpenAI-compatible providers: interface, key and model ids.
-    providers: () => call("/api/story.providers", {}),
-    providerModels: ({ id, baseURL, apiKey }) => call("/api/story.provider.models", { id, baseURL, apiKey }),
-    saveProvider: (provider) => call("/api/story.provider.save", { provider }),
-    deleteProvider: (id) => call("/api/story.provider.delete", { id }),
-    // The system event log: every model call's and picture request's outcome, newest last.
-    events: () => call("/api/story.events", {})
-  };
-}
-var api = createStoryApi(fetchTransport);
-
 // src/client/panel/overlays.js
 var EVENT_COLUMNS = [
   { key: "time", label: "log.time", width: 96 },
@@ -9877,7 +9783,7 @@ function eventDetail(event) {
   parts.push(`${event.ms ?? "?"}ms`);
   return parts.join(" ");
 }
-function SystemEventLog({ t }) {
+function SystemEventLog({ t, api: api2 }) {
   const [events, setEvents] = React.useState(null);
   const [error, setError] = React.useState("");
   const [filter, setFilter] = React.useState("all");
@@ -9886,7 +9792,7 @@ function SystemEventLog({ t }) {
   const dragRef = React.useRef(null);
   React.useEffect(() => {
     let alive = true;
-    api.events().then(
+    api2.events().then(
       (data) => {
         if (alive) setEvents(Array.isArray(data?.events) ? data.events : []);
       },
@@ -9988,7 +9894,7 @@ function SystemEventLog({ t }) {
     )
   );
 }
-function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClose }) {
+function AnswerLogOverlay({ open, t, api: api2, answers, loadError, onInsert, onClose }) {
   const [page, setPage] = React.useState("answers");
   if (!open) return null;
   return h(Drawer, {
@@ -10016,7 +9922,7 @@ function AnswerLogOverlay({ open, t, answers, loadError, onInsert, onClose }) {
         { className: "st-answers-page" },
         loadError !== "" ? h("div", { className: "st-dialog-hint" }, loadError) : null,
         h(AnswerLog, { t, answers, onInsert })
-      ) : h(SystemEventLog, { t })
+      ) : h(SystemEventLog, { t, api: api2 })
     )
   });
 }
@@ -14002,6 +13908,7 @@ function StoryPanelBody(props) {
     h(AnswerLogOverlay, {
       open: answerLog,
       t,
+      api: api2,
       answers,
       loadError: answersError,
       // An old answer is inserted the same way the newest one is: the editor owns the range
@@ -14058,6 +13965,135 @@ function StoryPanelBody(props) {
     h(TooltipLayer, { rootRef: shellRef })
   );
 }
+
+// src/client/api.js
+async function fetchTransport(path, body) {
+  let response;
+  try {
+    response = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  } catch (error) {
+    throw new Error(`\u65E0\u6CD5\u8FDE\u63A5\u6545\u4E8B\u670D\u52A1\uFF08${path}\uFF09\uFF1A${error?.message ?? "\u7F51\u7EDC\u9519\u8BEF"}`, { cause: error });
+  }
+  if (!response.ok) throw new Error(`${path} failed: HTTP ${response.status}`);
+  let data;
+  try {
+    data = await response.json();
+  } catch (error) {
+    throw new Error(`${path} \u8FD4\u56DE\u4E86\u65E0\u6CD5\u89E3\u6790\u7684\u54CD\u5E94`, { cause: error });
+  }
+  if (data.ok !== true) throw new Error(data.error || `${path} failed`);
+  return data;
+}
+function createStoryApi(transport) {
+  if (typeof transport !== "function") throw new TypeError("story api needs a transport function");
+  const call = (path, body) => transport(path, body);
+  return {
+    // bookFolder selects which manuscript; undefined means the workspace's original book.
+    books: () => call("/api/story.books", {}),
+    createBook: (title) => call("/api/story.createBook", { title }),
+    openDirectory: (path) => call("/api/story.openDirectory", { path }),
+    deleteBook: (folder, removeFiles) => call("/api/story.deleteBook", { bookFolder: folder, removeFiles }),
+    renameBook: (folder, title) => call("/api/story.renameBook", { bookFolder: folder, title }),
+    load: (bookFolder) => call("/api/story.load", { bookFolder }),
+    save: (book, token, bookFolder) => call("/api/story.save", { book, token, bookFolder }),
+    // The host takes (chapterId, text, instruction): the unit of an AI edit is the SELECTED
+    // TEXT, not a paragraph. Passing the old paragraphId slot left `text` empty and pushed the
+    // selection into `instruction`, so the model was asked to rewrite nothing and answered with
+    // the instruction glued to the passage.
+    // `role` names whose model does the work. It is omitted for the editor's own actions, which use
+    // the `suggest` model, and is 'chat' when the question came in through the composer: the
+    // writer configured a model for the chat because it is the one that knows the story, and an
+    // edit that arrives through that conversation should not be handed to a different model.
+    suggest: (bookFolder, chapterId, text, instruction, role, before, after) => call("/api/story.suggest", { bookFolder, chapterId, text, instruction, role, before, after }),
+    overview: (bookFolder, refresh) => call("/api/story.overview", { bookFolder, refresh }),
+    snapshot: (bookFolder, label) => call("/api/story.snapshot", { bookFolder, label }),
+    restore: (bookFolder, id) => call("/api/story.restore", { bookFolder, id }),
+    // The caret travels with the question: without it the chat could only answer in the
+    // abstract, and a request to "write from here" had no "here".
+    chat: (bookFolder, history, message, chapterId, before, after, selection) => call("/api/story.chat", { bookFolder, history, message, chapterId, before, after, selection }),
+    applyProposal: (bookFolder, proposal) => call("/api/story.applyProposal", { bookFolder, proposal }),
+    // `before` is the text up to the caret and `after` the text following it. Sending the whole
+    // chapter as `text` made the model continue from the END even when the writer was working
+    // in the middle of a paragraph.
+    continue: (bookFolder, chapterId, text, before, after, role) => call("/api/story.continue", { bookFolder, chapterId, text, before, after, role }),
+    // 流派: saved style prompts, which one is active, and generating a prompt from a sample.
+    writingStyles: (bookFolder) => call("/api/story.writingStyles", { bookFolder }),
+    saveWritingStyle: (bookFolder, fields) => call("/api/story.writingStyle.save", { bookFolder, ...fields }),
+    setWritingStyleActive: (bookFolder, id) => call("/api/story.writingStyle.setActive", { bookFolder, id }),
+    deleteWritingStyle: (bookFolder, id) => call("/api/story.writingStyle.delete", { bookFolder, id }),
+    generateWritingStyle: (bookFolder, source) => call("/api/story.writingStyle.generate", { bookFolder, source }),
+    consistency: (bookFolder) => call("/api/story.consistency", { bookFolder }),
+    manuscript: (bookFolder) => call("/api/story.manuscript", { bookFolder }),
+    // The context page: the parts of the current context, and the writer's system-prompt copies.
+    // The book is named by ID, so a stale folder name cannot point the page at another book.
+    context: (bookFolder, bookId, chapterId) => call("/api/story.context", { bookFolder, bookId, chapterId }),
+    savePrompt: (key, text) => call("/api/story.context.prompt.save", { key, text }),
+    addPromptDoc: (key, text) => call("/api/story.context.prompt.doc.add", { key, text }),
+    resetPrompt: (key) => call("/api/story.context.prompt.reset", { key }),
+    // One scene part's copy, kept in the book's own context.json, plus its version documents:
+    // add = 新建一份副本（不动发送内容），save = 把发送内容替换为选中的文本，delete = 删历史。
+    saveContext: (bookId, scene, part, text) => call("/api/story.context.save", { bookId, scene, part, text }),
+    addContextVersion: (bookId, scene, part, text) => call("/api/story.context.version.add", { bookId, scene, part, text }),
+    resetContext: (bookId, scene, part) => call("/api/story.context.reset", { bookId, scene, part }),
+    deleteContextVersion: (bookId, scene, part, id) => call("/api/story.context.version.delete", { bookId, scene, part, id }),
+    // Which model the panel's own actions run on, for the status bar.
+    meta: () => call("/api/story.meta", {}),
+    // Where the books live. One setting decides it; changing it does not move any files.
+    setLibrary: (path) => call("/api/story.setLibrary", { path }),
+    // The model page: what each role resolves to, and where the writer pinned one.
+    models: () => call("/api/story.models", {}),
+    // Every model the host can route to. The page's picker is built from this, not from a
+    // client service: what the host will accept is what the page offers.
+    catalog: () => call("/api/story.catalog", {}),
+    // The reasoning levels one model offers, for the axis.
+    efforts: (provider, model) => call("/api/story.efforts", { provider, model }),
+    setModel: (role, selection) => call("/api/story.setModel", { role, selection }),
+    // A copy-edit of one section, and a blunt grammar critique of the prose by the caret.
+    review: (bookFolder, chapterId, text) => call("/api/story.review", { bookFolder, chapterId, text }),
+    critique: (bookFolder, chapterId, before, after, text, direction) => call("/api/story.critique", { bookFolder, chapterId, before, after, text, direction }),
+    // The mosaic board: chapter consistency check, board Q&A, and reading relations out of the
+    // cards. The sheet calls these on the relations page.
+    mosaicCheck: (bookFolder, chapterId, text) => call("/api/story.mosaic.check", { bookFolder, chapterId, text }),
+    mosaicAsk: (bookFolder, question) => call("/api/story.mosaic.ask", { bookFolder, question }),
+    // Reads the CARDS, not a chapter: the writer described who knows whom in the summaries and
+    // expects the lines to appear. The cards travel with the request because the panel is the
+    // one holding the board the writer is looking at; the host re-reading the file would answer
+    // about a possibly older (or missing) copy of it.
+    mosaicRelate: (cards, edges, bookFolder) => call("/api/story.mosaic.relate", { cards, edges, bookFolder }),
+    // Stored proposals: the page that lists what the model suggested and nobody answered yet.
+    proposals: (bookFolder) => call("/api/story.proposals", { bookFolder }),
+    setProposalStatus: (bookFolder, id, status) => call("/api/story.proposal.setStatus", { bookFolder, id, status }),
+    deleteProposal: (bookFolder, id) => call("/api/story.proposal.delete", { bookFolder, id }),
+    // The write for the changes the writer accepted, one call for the whole batch. The host
+    // answers with the board it actually wrote, so the sheet can repaint from it.
+    // proposalId is optional and only there so the host can mark a stored proposal answered in
+    // the same write that applied it.
+    mosaicApply: (bookFolder, changes, proposalId, provenance) => call("/api/story.mosaic.apply", { bookFolder, changes, proposalId, provenance }),
+    // One portrait per card. The entity travels whole because the prompt is built from the fields
+    // the writer has just been editing, not from what is on disk.
+    mosaicPortrait: (bookFolder, entity, language) => call("/api/story.mosaic.portrait", { bookFolder, entity, language }),
+    // The stored picture, read back by the relative path the board recorded. The host's route
+    // surface is POST-only, so there is no URL to point an img at.
+    mosaicPortraitRead: (bookFolder, path) => call("/api/story.mosaic.portrait.read", { bookFolder, path }),
+    // The portrait settings live beside the role models in one file, so they share one write.
+    setImage: (image) => call("/api/story.setImage", { image }),
+    imageModels: (image) => call("/api/story.imageModels", image ?? {}),
+    providerTest: (provider) => call("/api/story.provider.test", provider),
+    // The answer history, kept in the book's own `answers/` folder rather than in book.json.
+    // `limit` is passed because the panel shows the newest few; the host sorts before slicing.
+    answers: (bookFolder, limit) => call("/api/story.answers", { bookFolder, limit }),
+    saveAnswer: (bookFolder, answer) => call("/api/story.answer.save", { bookFolder, answer }),
+    deleteAnswer: (bookFolder, id) => call("/api/story.answer.delete", { bookFolder, id }),
+    // The writer's own OpenAI-compatible providers: interface, key and model ids.
+    providers: () => call("/api/story.providers", {}),
+    providerModels: ({ id, baseURL, apiKey }) => call("/api/story.provider.models", { id, baseURL, apiKey }),
+    saveProvider: (provider) => call("/api/story.provider.save", { provider }),
+    deleteProvider: (id) => call("/api/story.provider.delete", { id }),
+    // The system event log: every model call's and picture request's outcome, newest last.
+    events: () => call("/api/story.events", {})
+  };
+}
+var api = createStoryApi(fetchTransport);
 
 // src/client/index.js
 var index_default = {
@@ -14155,7 +14191,11 @@ var index_default = {
     // outcomes — a shelf, a save, a download and a dialog — and each one has to be driven on its
     // own to prove it is not a decorative label.
     RailTools,
-    AboutBox
+    AboutBox,
+    // The context window. Mounted whole by core.js; exposed so its 新建副本 flow can be driven
+    // in the render harness — the dialog save reaches the API through a chain a route test
+    // cannot see.
+    ContextPage
   },
   apply(ctx, config) {
     if (typeof window !== "undefined" && typeof window.addEventListener === "function") {

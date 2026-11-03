@@ -86,6 +86,19 @@ test('the board keeps its writes in the actions hook', () => {
   }
 })
 
+test('panel pages receive their transport instead of importing the singleton', () => {
+  // The `api` exported by api.js is bound to browser fetch, which only works when the panel is
+  // served over HTTP (DSH). A page that imports it directly holds the wrong transport inside the
+  // Electron renderer, where the page is file:// and fetch('/api/...') throws "Failed to fetch" —
+  // exactly the failure the system event log reported. Pages take `api` as a prop; only the
+  // composition entries (src/client/index.js and hosts/electron.js) choose which transport.
+  for (const path of filesUnder('src/client/panel')) {
+    for (const specifier of importsOf(path)) {
+      assert.ok(!/(^|\/)api\.js$/.test(specifier), `${label(path)} imports transport: ${specifier}`)
+    }
+  }
+})
+
 test('the domain kernel depends on neither runtime and no built-in', () => {
   for (const path of filesUnder('domain')) {
     for (const specifier of importsOf(path)) {
