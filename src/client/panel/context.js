@@ -167,10 +167,10 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose }) 
         ? h('p', { className: 'fang-muted' }, t('context.empty'))
         : h('p', { className: 'st-overview-text' }, official))
 
-    // The writer's versions of THIS part, newest first. The system prompt keeps a single copy —
-    // it is model behaviour, not one book's material, so it has a history of at most one entry.
+    // The writer's versions of THIS part, newest first. The system prompt's copies live in the
+    // global prompt documents (prompts.json v2) and arrive with the prompt rows.
     const entries = partKey === SYSTEM
-      ? (override !== '' ? [{ id: 'override', text: override, at: null }] : [])
+      ? [...(((data.prompts.find((row) => row.key === scene.promptKey) ?? {}).docs) ?? [])].reverse()
       : [...(part?.versions ?? [])].reverse()
     const selected = entries.find((row) => row.id === versionId) ?? entries[0] ?? null
 
