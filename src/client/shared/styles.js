@@ -28,6 +28,9 @@ export const CSS_BRIDGE = `
         --fang-radius-panel:var(--dsw-radius-panel,28px);
         --fang-focus-ring-width:var(--dsw-focus-ring-width,2px);
         --fang-danger:var(--dsw-alias-state-error-primary,#ec1313);
+        /* 窗口左缘安全内缩：宿主收起自己的侧栏时抬升 --dsh-frame-leading-clearance，
+           库的标题行据此让出.Controls 的座位。 */
+        --fang-frame-inset-leading:var(--dsh-frame-leading-clearance,0px);
       }
 `
 

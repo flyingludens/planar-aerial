@@ -24,7 +24,7 @@ function toolContext(workspacePath) {
     },
     connection: { fetch: { register: () => () => {} } },
     get(name) {
-      if (name === 'workingDirectory') return { get: () => '/nowhere' }
+      if (name === 'workingDirectory') return { get: () => join(workspacePath, 'library', '测试书') }
       if (name === 'agentDefaultModel') return { currentSelection: () => ({ provider: 'p', model: 'm' }) }
       return undefined
     },
@@ -204,7 +204,7 @@ test('tools work without an owning session, because the library is a setting', a
  * `ctx.systemPrompt.context(...)` records the contribution. This mirrors how the plugin actually
  * registers the story context: per agent, inside that agent's own context.
  */
-function promptContext(settingsPath) {
+function promptContext(settingsPath, directory = '/nowhere') {
   const listeners = []
   const registered = []
   const ctx = {
@@ -216,12 +216,12 @@ function promptContext(settingsPath) {
         effect(fn) { return fn() },
         on(event, listener) { if (event === 'agent/created') listeners.push(listener); return () => {} },
         get: ctx.get,
-        workingDirectory: { get: () => '/nowhere' },
+        workingDirectory: { get: () => directory },
       })
     },
     connection: { fetch: { register: () => () => {} } },
     get(name) {
-      if (name === 'workingDirectory') return { get: () => '/nowhere' }
+      if (name === 'workingDirectory') return { get: () => directory }
       if (name === 'agentDefaultModel') return { currentSelection: () => ({ provider: 'p', model: 'm' }) }
       return undefined
     },
@@ -303,7 +303,7 @@ test('story context carries per-chapter summaries and bounds them', async () => 
 
     const text = textOf(promptContext(settingsPath))
     // The 梗概 block is the part under test; the 章节 digest line names every title regardless.
-    const block = (text.match(/梗概：\n[\s\S]*?(?=\nCall story_read)/) ?? [''])[0]
+    const block = (text.match(/梗概：\n[\s\S]*?(?=\n需要全文时调用 story_read)/) ?? [''])[0]
     assert.ok(block !== '', 'the context carries a summary block')
     assert.ok(block.includes('第1章 第1章：本章梗概1。'), 'a chapter with a summary is listed')
     assert.ok(!block.includes('第2章 第2章：'), 'an empty summary contributes no row')
@@ -328,3 +328,31 @@ test('story context stays silent on a malformed book instead of throwing', async
     await rm(ws, { recursive: true, force: true })
   }
 })
+
+test('story context follows the session directory, not the latest book in the library', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'story-ctx-'))
+  try {
+    const mine = createEmptyBook('我的书')
+    await writeBook(root, mine, undefined, 'A书')
+    const other = createEmptyBook('别人的书')
+    await writeBook(root, other, undefined, 'B书')
+    const entries = promptContext(join(root, 'settings.json'), join(root, 'A书'))
+    const text = entries[0].text({ agent: { session: { id: 's1' } } })
+    assert.match(text, /我的书/, 'the session reads its own book')
+    assert.doesNotMatch(text, /别人的书/, 'another book in the same library must not leak in')
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})
+
+test('a session outside any book contributes nothing, even when the library has books', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'story-ctx-'))
+  try {
+    await writeBook(root, createEmptyBook('别人的书'), undefined, 'B书')
+    const entries = promptContext(join(root, 'settings.json'), root)
+    assert.equal(entries[0].text({ agent: { session: { id: 's1' } } }), '')
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})
+

@@ -199,12 +199,11 @@ var ZH = {
   "context.empty": "\uFF08\u7A7A\uFF09",
   "context.officialVersion": "\u5B98\u65B9\u7248\u672C",
   "context.myVersion": "\u6211\u7684\u7248\u672C",
-  "context.editCopy": "\u7F16\u8F91\u526F\u672C",
-  "context.setActive": "\u8BBE\u4E3A\u53D1\u9001\u7248\u672C",
+  "context.newCopy": "\u65B0\u5EFA\u526F\u672C",
+  "context.setActive": "\u66FF\u6362",
   "context.deleteEntry": "\u5220\u9664\u6761\u76EE",
   "context.active": "\u5F53\u524D\u53D1\u9001",
-  "context.replace": "\u7528\u6211\u7684\u526F\u672C\u66FF\u6362",
-  "context.revert": "\u56DE\u9000",
+  "context.revert": "\u6062\u590D",
   "action.send": "\u53D1\u9001",
   "label.snapshotLabel": "\u624B\u52A8\u5FEB\u7167",
   "chapter.defaultTitle": "\u7B2C{n}\u7AE0",
@@ -657,12 +656,11 @@ var EN = {
   "context.empty": "(empty)",
   "context.officialVersion": "Official version",
   "context.myVersion": "My version",
-  "context.editCopy": "Edit copy",
-  "context.setActive": "Use as sent",
+  "context.newCopy": "New copy",
+  "context.setActive": "Replace",
   "context.deleteEntry": "Delete entry",
   "context.active": "In use",
-  "context.replace": "Replace with my copy",
-  "context.revert": "Revert",
+  "context.revert": "Restore",
   "action.send": "Send",
   panel: "Planar Aerial",
   "brand.full": "Planar Aerial",
@@ -1318,11 +1316,11 @@ function InfoIcon() {
   );
 }
 
-// node_modules/fang-style/src/react.js
+// ../Projects/fang-style/src/react.js
 var import_react2 = __toESM(require("react"), 1);
 var h2 = import_react2.default.createElement;
 
-// node_modules/fang-style/src/widgets/overlays.js
+// ../Projects/fang-style/src/widgets/overlays.js
 function Drawer({ title, children, onClose, size, bodyClassName, closing = false, closeLabel = "\u5173\u95ED" }) {
   import_react2.default.useEffect(() => {
     const onKey = (e) => {
@@ -1456,7 +1454,7 @@ function Dialog({ title, children, onClose, size, bodyClassName, panelClassName,
   );
 }
 
-// node_modules/fang-style/src/storage.js
+// ../Projects/fang-style/src/storage.js
 function storageAvailable() {
   try {
     return typeof window !== "undefined" && window.localStorage !== void 0 && window.localStorage !== null;
@@ -1482,7 +1480,7 @@ function writeStored(key, value) {
   }
 }
 
-// node_modules/fang-style/src/hooks.js
+// ../Projects/fang-style/src/hooks.js
 function createStateStore() {
   const values = /* @__PURE__ */ new Map();
   const listeners = /* @__PURE__ */ new Map();
@@ -1585,7 +1583,7 @@ function useDismiss(rootRef, open, onClose) {
   }, [rootRef, open]);
 }
 
-// node_modules/fang-style/src/widgets/dropdown.js
+// ../Projects/fang-style/src/widgets/dropdown.js
 function Chevron({ open, direction }) {
   const down = direction !== "right";
   return h2("svg", {
@@ -1655,7 +1653,7 @@ function Dropdown({ label, value, options, onChange, testId, className }) {
   );
 }
 
-// node_modules/fang-style/src/widgets/file-button.js
+// ../Projects/fang-style/src/widgets/file-button.js
 function FileButton({ label, accept, multiple = false, onFile, onFiles, className, testId }) {
   const inputRef = import_react2.default.useRef(null);
   return h2(
@@ -1688,7 +1686,7 @@ function FileButton({ label, accept, multiple = false, onFile, onFiles, classNam
   );
 }
 
-// node_modules/fang-style/src/widgets/segmented.js
+// ../Projects/fang-style/src/widgets/segmented.js
 function Segmented({ label, options, value, onChange, testId, disabled = false }) {
   return h2(
     "div",
@@ -1705,7 +1703,7 @@ function Segmented({ label, options, value, onChange, testId, disabled = false }
   );
 }
 
-// node_modules/fang-style/src/widgets/list.js
+// ../Projects/fang-style/src/widgets/list.js
 function SplitPane({ list, detail, listProps, detailProps }) {
   const rows = Array.isArray(list) ? list : list === void 0 ? [] : [list];
   const body = Array.isArray(detail) ? detail : detail === void 0 ? [] : [detail];
@@ -1734,7 +1732,7 @@ function ListRow({ className, active, onActivate, children, ...rest }) {
   }, ...rows);
 }
 
-// node_modules/fang-style/src/widgets/tooltip.js
+// ../Projects/fang-style/src/widgets/tooltip.js
 function TooltipLayer({ rootRef }) {
   const [tip, setTip] = import_react2.default.useState(null);
   const held = import_react2.default.useRef(null);
@@ -1796,7 +1794,7 @@ function TooltipLayer({ rootRef }) {
   return h2("div", { className: "fang-tip", role: "tooltip", style: { left: tip.left, top: tip.top } }, tip.text);
 }
 
-// node_modules/fang-style/src/tokens.css.js
+// ../Projects/fang-style/src/tokens.css.js
 var FANG_TOKENS = `
       .fang-shell{
         /* \u5F3A\u8C03\u8272\u53EA\u6709\u4E00\u4E2A\u51FA\u5904\uFF1A\u7126\u70B9\u73AF\u3001\u9009\u4E2D\u6001\u3001\u5361\u7247\u63CF\u8FB9\u3001\u4E3B\u6309\u94AE\u90FD\u8BFB\u8FD9\u4E00\u4E2A\u53D8\u91CF\u3002
@@ -1999,7 +1997,7 @@ var FANG_TOKENS = `
       }
 `;
 
-// node_modules/fang-style/src/frame.css.js
+// ../Projects/fang-style/src/frame.css.js
 var FANG_FRAME = `
       .fang-root,.fang-root *,.fang-shell *{box-sizing:border-box}
       /* \u6392\u7248\u58F0\u660E\u5728\u6BCF\u4E2A\u89C4\u5219\u90FD\u5750\u5728\u91CC\u9762\u7684\u90A3\u4E00\u4E2A\u5143\u7D20\u4E0A\uFF1A\u5B57\u4F53\u65CF\u5728\u8FD9\u91CC\u800C\u4E0D\u662F\u5206\u6563\u5230\u6BCF\u4E2A
@@ -2080,6 +2078,10 @@ var FANG_FRAME = `
          \u6700\u540E\u4E00\u884C\u63A8\u8FC7\u5E95\u7F18\uFF0C\u800C\u4E0D\u662F\u6EDA\u5230\u5B83\u3002 */
       .fang-rail .fang-scroll{flex:1 1 auto;min-height:0}
       .fang-scroll{overflow:auto;padding:var(--fang-space-12);min-height:0;min-width:0}
+      /* \u6EDA\u52A8\u6761\u5185\u7F6E\u4E8E\u7EC4\u4EF6\uFF1A\u7EC6\u3001\u968F\u4E3B\u9898\u58A8\u8272\u3001\u539F\u751F overlay \u81EA\u52A8\u9690\u85CF\u3002\u7528\u6807\u51C6\u5C5E\u6027
+         \uFF08Chromium 121+ / Firefox\uFF09\uFF0C\u4E0D\u7528 ::-webkit-scrollbar \u4F2A\u5143\u7D20\u2014\u2014\u90A3\u4F1A\u5173\u6389
+         \u539F\u751F overlay \u884C\u4E3A\uFF0C\u6EDA\u52A8\u6761\u53D8\u6210\u5E38\u9A7B\u3002 */
+      .fang-shell,.fang-shell *{scrollbar-width:thin;scrollbar-color:var(--fang-ink-edge) transparent}
       /* \u884C\u4E0E\u5360\u4F4D\u3002 */
       .fang-row{display:flex;gap:var(--fang-space-8);align-items:center;min-width:0}
       .fang-spacer{flex:1 1 auto;min-width:0}
@@ -2105,7 +2107,7 @@ var FANG_FRAME = `
         color:var(--fang-ink-secondary)}
 `;
 
-// node_modules/fang-style/src/components.css.js
+// ../Projects/fang-style/src/components.css.js
 var FANG_COMPONENTS = `
       /* \u80CC\u677F\u3002\u5F39\u7A97\u4E0E\u62BD\u5C49\u5171\u7528\u4E00\u4E2A\u7C7B\uFF1A\u516C\u5171\u9AA8\u67B6\u662F\u5F39\u7A97\u7684\u2014\u2014\u5C45\u4E2D\u3001\u8C03\u6697\u3001\u6A21\u7CCA\uFF0C\u538B\u5728
          modal \u5C42\uFF1B\u62BD\u5C49\u7684\u80CC\u677F\u4E0D\u662F\u6A21\u6001\uFF0C\u7531\u4E0B\u9762\u4E00\u6761\u6309\u5B50\u5143\u7D20\u533A\u5206\u7684\u89C4\u5219\u63A5\u7BA1\u51E0\u4F55\u3002 */
@@ -2281,7 +2283,7 @@ var FANG_COMPONENTS = `
         box-shadow:inset 0 0 0 var(--fang-hairline) var(--fang-border-strong)}
 `;
 
-// node_modules/fang-style/src/styles.js
+// ../Projects/fang-style/src/styles.js
 var FANG_CSS = `${FANG_TOKENS}
 ${FANG_FRAME}
 ${FANG_COMPONENTS}`;
@@ -6861,14 +6863,21 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
       setBusy(false);
     }
   };
-  const saveCopy = async () => {
-    if (busy || dialogText === null) return;
+  const addCopy = async () => {
+    if (busy || scene === void 0 || dialogText === null || dialogText.trim() === "") return;
     setBusy(true);
     try {
-      if (partKey === SYSTEM) await api2.savePrompt(scene.promptKey, dialogText);
-      else await api2.saveContext(bookId, scene.id, partKey, dialogText);
+      let newest = null;
+      if (partKey === SYSTEM) {
+        const prompts = await api2.addPromptDoc(scene.promptKey, dialogText);
+        newest = prompts.find((row) => row.key === scene.promptKey)?.docs.slice(-1)[0] ?? null;
+      } else {
+        const versions = (await api2.addContextVersion(bookId, scene.id, partKey, dialogText)).versions;
+        newest = versions[scene.id]?.[partKey]?.slice(-1)[0] ?? null;
+      }
       setDialogText(null);
       setData(await api2.context(bookFolder, bookId, chapterId));
+      if (newest !== null) setVersionId(newest.id);
     } catch (failure) {
       if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
     } finally {
@@ -6927,8 +6936,8 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
         type: "button",
         className: "fang-btn",
         disabled: busy,
-        onClick: () => setDialogText(official)
-      }, t("context.replace")) : null,
+        onClick: () => setDialogText("")
+      }, t("context.newCopy")) : null,
       override !== "" ? h("button", {
         type: "button",
         className: "fang-btn",
@@ -6951,13 +6960,6 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
       row.text === override ? h("span", { className: "fang-list-row-meta" }, t("context.active")) : null
     ));
     const mineActions = selected === null ? [] : [
-      h("button", {
-        key: "edit",
-        type: "button",
-        className: "fang-btn",
-        disabled: busy,
-        onClick: () => setDialogText(selected.text)
-      }, t("context.editCopy")),
       selected.text !== override ? h("button", {
         key: "active",
         type: "button",
@@ -7013,7 +7015,7 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
         Dialog,
         {
           key: "copy-dialog",
-          title: t("context.replace"),
+          title: t("context.newCopy"),
           size: "medium",
           closeLabel: t("action.close"),
           onClose: () => setDialogText(null)
@@ -7037,9 +7039,9 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
           h("button", {
             type: "button",
             className: "fang-btn fang-btn-primary",
-            disabled: busy,
-            onClick: saveCopy
-          }, t("action.save"))
+            disabled: busy || dialogText.trim() === "",
+            onClick: addCopy
+          }, t("context.newCopy"))
         )
       )
     ];
@@ -9784,9 +9786,12 @@ function createStoryApi(transport) {
     // The book is named by ID, so a stale folder name cannot point the page at another book.
     context: (bookFolder, bookId, chapterId) => call("/api/story.context", { bookFolder, bookId, chapterId }),
     savePrompt: (key, text) => call("/api/story.context.prompt.save", { key, text }),
+    addPromptDoc: (key, text) => call("/api/story.context.prompt.doc.add", { key, text }),
     resetPrompt: (key) => call("/api/story.context.prompt.reset", { key }),
-    // One scene part's copy, kept in the book's own context.json, plus its version history.
+    // One scene part's copy, kept in the book's own context.json, plus its version documents:
+    // add = 新建一份副本（不动发送内容），save = 把发送内容替换为选中的文本，delete = 删历史。
     saveContext: (bookId, scene, part, text) => call("/api/story.context.save", { bookId, scene, part, text }),
+    addContextVersion: (bookId, scene, part, text) => call("/api/story.context.version.add", { bookId, scene, part, text }),
     resetContext: (bookId, scene, part) => call("/api/story.context.reset", { bookId, scene, part }),
     deleteContextVersion: (bookId, scene, part, id) => call("/api/story.context.version.delete", { bookId, scene, part, id }),
     // Which model the panel's own actions run on, for the status bar.

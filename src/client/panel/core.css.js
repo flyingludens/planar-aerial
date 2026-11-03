@@ -20,13 +20,10 @@ export const CSS_CORE = `
       .st-md-p:last-child{margin-bottom:0}
       .st-md-rule{border:none;border-top:.5px solid var(--fang-border-edge);margin:1.2em 0}
       .st-issue{display:flex;gap:var(--fang-space-8,8px);align-items:baseline;padding:var(--fang-space-4,4px) 0;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui)}
-      /* Scrollbars: the host themes them; leaving them default is the most visible inconsistency. */
+      /* Scrollbars live in the library now (.fang-shell 的标准 thin 属性), 只保留 gutters:
+         原先的 ::-webkit-scrollbar 自定义是常驻 12px 灰条的来源, 且无宿主主题时
+         回退成亮灰——已由 fang-style 的滚动条内置样式取代。 */
       .fang-scroll{scrollbar-gutter:stable}
-      .fang-scroll::-webkit-scrollbar{width:var(--fang-space-12,12px);height:var(--fang-space-12,12px)}
-      .fang-scroll::-webkit-scrollbar-track{background:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5);border-radius:var(--fang-radius-pill,999px);corner-shape:round;margin:var(--fang-space-2,2px)}
-      .fang-scroll::-webkit-scrollbar-thumb{background:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5);border-radius:var(--fang-radius-pill,999px);corner-shape:round}
-      .fang-scroll::-webkit-scrollbar-thumb:hover{background:var(--dsw-alias-scrollbar-hover-l2,#d4d4d4)}
-      .fang-scroll{scrollbar-width:thin;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
       /* Text selection follows the theme instead of the browser default blue.
          It is mixed from the ACCENT, not filled with a surface token: the module-platform token is
          a page background (a near-white grey), so the selection read as a grey slab laid over the

@@ -94,15 +94,22 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
     } finally { setBusy(false) }
   }
 
-  /** The dialog's save: a copy from the editor becomes the sent copy and a history entry. */
-  const saveCopy = async () => {
-    if (busy || dialogText === null) return
+  /** The dialog's save: 新建一份副本文档——只入列表，不改变发送内容。 */
+  const addCopy = async () => {
+    if (busy || scene === undefined || dialogText === null || dialogText.trim() === '') return
     setBusy(true)
     try {
-      if (partKey === SYSTEM) await api.savePrompt(scene.promptKey, dialogText)
-      else await api.saveContext(bookId, scene.id, partKey, dialogText)
+      let newest = null
+      if (partKey === SYSTEM) {
+        const prompts = await api.addPromptDoc(scene.promptKey, dialogText)
+        newest = prompts.find((row) => row.key === scene.promptKey)?.docs.slice(-1)[0] ?? null
+      } else {
+        const versions = (await api.addContextVersion(bookId, scene.id, partKey, dialogText)).versions
+        newest = versions[scene.id]?.[partKey]?.slice(-1)[0] ?? null
+      }
       setDialogText(null)
       setData(await api.context(bookFolder, bookId, chapterId))
+      if (newest !== null) setVersionId(newest.id)
     } catch (failure) {
       if (typeof onNotice === 'function') onNotice(String(failure?.message ?? failure), 'error')
     } finally { setBusy(false) }
@@ -163,8 +170,8 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
       h('span', { className: 'fang-spacer' }),
       replaceable ? h('button', {
         type: 'button', className: 'fang-btn', disabled: busy,
-        onClick: () => setDialogText(official),
-      }, t('context.replace')) : null,
+        onClick: () => setDialogText(''),
+      }, t('context.newCopy')) : null,
       override !== '' ? h('button', {
         type: 'button', className: 'fang-btn', disabled: busy,
         onClick: revert,
@@ -179,12 +186,10 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
         row.at === null ? t('context.myVersion') : new Date(row.at).toLocaleString()),
       row.text === override ? h('span', { className: 'fang-list-row-meta' }, t('context.active')) : null))
 
-    // The selected entry's text, with its own action row: edit opens the copy Dialog prefilled,
-    // setActive makes this the copy the model sends, delete drops the history entry (book parts
-    // only — the system prompt's single copy is kept or reverted, not deleted).
+    // The selected entry's actions: 替换 points the sent copy at this document (hidden when it
+    // already is), 删除 drops the document (book parts only — the system prompt's copies are
+    // kept or reverted, not deleted). Entry text is not edited in place: 新建 another one.
     const mineActions = selected === null ? [] : [
-      h('button', { key: 'edit', type: 'button', className: 'fang-btn', disabled: busy,
-        onClick: () => setDialogText(selected.text) }, t('context.editCopy')),
       selected.text !== override ? h('button', { key: 'active', type: 'button', className: 'fang-btn',
         disabled: busy, onClick: () => applyText(selected.text) }, t('context.setActive')) : null,
       partKey !== SYSTEM ? h('button', { key: 'delete', type: 'button', className: 'fang-btn', disabled: busy,
@@ -219,7 +224,7 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
       officialZone,
       mineZone,
       dialogText === null ? null : h(Dialog, {
-        key: 'copy-dialog', title: t('context.replace'), size: 'medium',
+        key: 'copy-dialog', title: t('context.newCopy'), size: 'medium',
         closeLabel: t('action.close'), onClose: () => setDialogText(null),
       },
         h('textarea', { key: 'draft', className: 'st-dialog-textarea', spellCheck: false,
@@ -227,8 +232,8 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
         h('div', { key: 'actions', className: 'st-dialog-actions' },
           h('button', { type: 'button', className: 'fang-btn', disabled: busy,
             onClick: () => setDialogText(null) }, t('action.cancel')),
-          h('button', { type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy,
-            onClick: saveCopy }, t('action.save')))),
+          h('button', { type: 'button', className: 'fang-btn fang-btn-primary', disabled: busy || dialogText.trim() === '',
+            onClick: addCopy }, t('context.newCopy')))),
     ]
   }
 

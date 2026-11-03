@@ -141,8 +141,10 @@ test('apply registers every story route', async () => {
         '/api/story.answer.delete', '/api/story.answer.save', '/api/story.answers',
         '/api/story.applyProposal', '/api/story.books', '/api/story.catalog',
         '/api/story.chat', '/api/story.consistency',
-        '/api/story.context', '/api/story.context.prompt.reset', '/api/story.context.prompt.save',
-        '/api/story.context.reset', '/api/story.context.save', '/api/story.context.version.delete',
+        '/api/story.context', '/api/story.context.prompt.doc.add',
+        '/api/story.context.prompt.reset', '/api/story.context.prompt.save',
+        '/api/story.context.reset', '/api/story.context.save',
+        '/api/story.context.version.add', '/api/story.context.version.delete',
         '/api/story.continue', '/api/story.createBook', '/api/story.critique', '/api/story.deleteBook', '/api/story.efforts', '/api/story.events',
         '/api/story.imageModels', '/api/story.load', '/api/story.manuscript', '/api/story.meta', '/api/story.models',
         '/api/story.mosaic.apply', '/api/story.mosaic.ask', '/api/story.mosaic.check',
@@ -1205,33 +1207,45 @@ test('a scene part copy is kept in the book and reverted on request', async () =
   })
 })
 
-test('every save is a version entry, and deleting one leaves the sent copy alone', async () => {
+test('copies are documents: 新建 only lists them, 替换 points the sent copy, 恢复 goes official', async () => {
   await withRoutes(async ({ call, library, folder }) => {
     const { book } = await readBook(library, folder)
-    await call('/api/story.context.save', {
+    // 新建 x2: documents appear in the list, and the model still sends the official text.
+    await call('/api/story.context.version.add', {
       bookId: book.id, scene: 'chat', part: 'bookMeta', text: '第一版书名行',
     })
-    const second = await call('/api/story.context.save', {
+    const second = await call('/api/story.context.version.add', {
       bookId: book.id, scene: 'chat', part: 'bookMeta', text: '第二版书名行',
     })
-    assert.equal(second.overrides.chat.bookMeta, '第二版书名行', 'the newest save is what is sent')
+    assert.equal(second.ok, true)
+    assert.equal(second.versions.chat.bookMeta.length, 2, 'two documents listed')
+    const untouched = await call('/api/story.context', { bookId: book.id })
+    assert.equal(untouched.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').override, '',
+      '新建 does not change what the model sends')
 
+    // 替换: point the sent copy at the newest document — no new document appears.
+    const applied = await call('/api/story.context.save', {
+      bookId: book.id, scene: 'chat', part: 'bookMeta', text: '第二版书名行',
+    })
+    assert.equal(applied.overrides.chat.bookMeta, '第二版书名行')
     const listed = await call('/api/story.context', { bookId: book.id })
-    const versions = listed.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').versions
-    assert.equal(versions.length, 2, 'two saves are two history entries')
-    assert.equal(versions[1].text, '第二版书名行', 'history is oldest first')
+    const part = listed.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta')
+    assert.equal(part.override, '第二版书名行')
+    assert.equal(part.versions.length, 2, '替换 does not add a document')
+    assert.equal(part.versions[1].text, '第二版书名行', 'the applied copy matches the pointed document')
 
+    // 删除 one document leaves the sent copy alone.
     const dropped = await call('/api/story.context.version.delete', {
-      bookId: book.id, scene: 'chat', part: 'bookMeta', id: versions[0].id,
+      bookId: book.id, scene: 'chat', part: 'bookMeta', id: part.versions[0].id,
     })
     assert.equal(dropped.ok, true)
     assert.equal(dropped.versions.chat.bookMeta.length, 1)
-    assert.equal(dropped.versions.chat.bookMeta[0].text, '第二版书名行')
 
-    // Reverting keeps the history — the override is what the model sends, the list is a log.
+    // 恢复: back to the official text, documents stay.
     await call('/api/story.context.reset', { bookId: book.id, scene: 'chat', part: 'bookMeta' })
     const afterReset = await call('/api/story.context', { bookId: book.id })
-    assert.equal(afterReset.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').override, '')
-    assert.equal(afterReset.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').versions.length, 1)
+    const resetPart = afterReset.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta')
+    assert.equal(resetPart.override, '')
+    assert.equal(resetPart.versions.length, 1, 'documents survive the restore')
   })
 })

@@ -88,9 +88,12 @@ export function createStoryApi(transport) {
     // The book is named by ID, so a stale folder name cannot point the page at another book.
     context: (bookFolder, bookId, chapterId) => call('/api/story.context', { bookFolder, bookId, chapterId }),
     savePrompt: (key, text) => call('/api/story.context.prompt.save', { key, text }),
+    addPromptDoc: (key, text) => call('/api/story.context.prompt.doc.add', { key, text }),
     resetPrompt: (key) => call('/api/story.context.prompt.reset', { key }),
-    // One scene part's copy, kept in the book's own context.json, plus its version history.
+    // One scene part's copy, kept in the book's own context.json, plus its version documents:
+    // add = 新建一份副本（不动发送内容），save = 把发送内容替换为选中的文本，delete = 删历史。
     saveContext: (bookId, scene, part, text) => call('/api/story.context.save', { bookId, scene, part, text }),
+    addContextVersion: (bookId, scene, part, text) => call('/api/story.context.version.add', { bookId, scene, part, text }),
     resetContext: (bookId, scene, part) => call('/api/story.context.reset', { bookId, scene, part }),
     deleteContextVersion: (bookId, scene, part, id) => call('/api/story.context.version.delete', { bookId, scene, part, id }),
     // Which model the panel's own actions run on, for the status bar.
