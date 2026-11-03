@@ -36,7 +36,7 @@ async function mountContext(calls) {
   const rerender = () => render(plugin.__components.ContextPage, props)
   // mount, then one pass on the SAME hook tables: the load effect's promise resolves inside the
   // mount drive's settle, and its setData only lands on the tables a rerender keeps.
-  const mounted = await render(plugin.__components.ContextPage, props)
+  await render(plugin.__components.ContextPage, props)
   const loaded = await rerender()
   return { mounted: loaded, rerender }
 }
