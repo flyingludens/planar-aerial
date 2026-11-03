@@ -199,6 +199,10 @@ var ZH = {
   "context.empty": "\uFF08\u7A7A\uFF09",
   "context.officialVersion": "\u5B98\u65B9\u7248\u672C",
   "context.myVersion": "\u6211\u7684\u7248\u672C",
+  "context.editCopy": "\u7F16\u8F91\u526F\u672C",
+  "context.setActive": "\u8BBE\u4E3A\u53D1\u9001\u7248\u672C",
+  "context.deleteEntry": "\u5220\u9664\u6761\u76EE",
+  "context.active": "\u5F53\u524D\u53D1\u9001",
   "context.replace": "\u7528\u6211\u7684\u526F\u672C\u66FF\u6362",
   "context.revert": "\u56DE\u9000",
   "action.send": "\u53D1\u9001",
@@ -653,6 +657,10 @@ var EN = {
   "context.empty": "(empty)",
   "context.officialVersion": "Official version",
   "context.myVersion": "My version",
+  "context.editCopy": "Edit copy",
+  "context.setActive": "Use as sent",
+  "context.deleteEntry": "Delete entry",
+  "context.active": "In use",
   "context.replace": "Replace with my copy",
   "context.revert": "Revert",
   "action.send": "Send",
@@ -1648,7 +1656,7 @@ function Dropdown({ label, value, options, onChange, testId, className }) {
 }
 
 // node_modules/fang-style/src/widgets/file-button.js
-function FileButton({ label, accept, onFile, className, testId }) {
+function FileButton({ label, accept, multiple = false, onFile, onFiles, className, testId }) {
   const inputRef = import_react2.default.useRef(null);
   return h2(
     "span",
@@ -1665,12 +1673,15 @@ function FileButton({ label, accept, onFile, className, testId }) {
       type: "file",
       className: "fang-file-input",
       accept,
+      multiple: multiple === true || typeof onFiles === "function",
       tabIndex: -1,
       "aria-hidden": "true",
       "data-testid": testId,
       onChange: (event) => {
-        const file = event?.target?.files?.[0];
-        if (file !== void 0 && typeof onFile === "function") onFile(file);
+        const files = Array.from(event?.target?.files ?? []);
+        if (files.length === 0) return;
+        if (typeof onFiles === "function") onFiles(files);
+        else if (typeof onFile === "function") files.forEach((file) => onFile(file));
         if (event?.target !== void 0) event.target.value = "";
       }
     })
@@ -4242,7 +4253,7 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
 // src/client/panel/rail-tools.js
 var PLUGIN = {
   name: "dsh-planar-aerial",
-  version: "0.1.0-beta.6",
+  version: "0.1.0-beta.7",
   author: "flyingludens",
   repository: String("git+https://github.com/flyingludens/planar-aerial.git").replace(/^git\+/, "").replace(/\.git$/, ""),
   license: "MIT"
@@ -6785,7 +6796,8 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
   const [error, setError] = React.useState("");
   const [sceneId, setSceneId] = React.useState("chat");
   const [partKey, setPartKey] = React.useState(SYSTEM);
-  const [draft, setDraft] = React.useState(null);
+  const [versionId, setVersionId] = React.useState(null);
+  const [dialogText, setDialogText] = React.useState(null);
   const [busy, setBusy] = React.useState(false);
   const load = React.useCallback(() => {
     let live = true;
@@ -6807,13 +6819,16 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
   const scene = scenes.find((row) => row.id === sceneId) ?? scenes[0];
   const partOf = () => partKey === SYSTEM ? null : scene?.parts.find((row) => row.key === partKey);
   const partLabel = (key) => key === SYSTEM ? t("context.systemPrompt") : t(`context.part.${key}`);
-  const save = async () => {
+  const pick = (key) => {
+    setPartKey(key);
+    setVersionId(null);
+  };
+  const applyText = async (text) => {
     if (busy || scene === void 0) return;
     setBusy(true);
     try {
-      if (partKey === SYSTEM) await api2.savePrompt(scene.promptKey, draft ?? "");
-      else await api2.saveContext(bookId, scene.id, partKey, draft ?? "");
-      setDraft(null);
+      if (partKey === SYSTEM) await api2.savePrompt(scene.promptKey, text);
+      else await api2.saveContext(bookId, scene.id, partKey, text);
       setData(await api2.context(bookFolder, bookId, chapterId));
     } catch (failure) {
       if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
@@ -6827,7 +6842,6 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
     try {
       if (partKey === SYSTEM) await api2.resetPrompt(scene.promptKey);
       else await api2.resetContext(bookId, scene.id, partKey);
-      setDraft(null);
       setData(await api2.context(bookFolder, bookId, chapterId));
     } catch (failure) {
       if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
@@ -6835,9 +6849,31 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
       setBusy(false);
     }
   };
-  const pick = (key) => {
-    setPartKey(key);
-    setDraft(null);
+  const deleteEntry = async (id) => {
+    if (busy || scene === void 0 || partKey === SYSTEM) return;
+    setBusy(true);
+    try {
+      await api2.deleteContextVersion(bookId, scene.id, partKey, id);
+      setData(await api2.context(bookFolder, bookId, chapterId));
+    } catch (failure) {
+      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const saveCopy = async () => {
+    if (busy || dialogText === null) return;
+    setBusy(true);
+    try {
+      if (partKey === SYSTEM) await api2.savePrompt(scene.promptKey, dialogText);
+      else await api2.saveContext(bookId, scene.id, partKey, dialogText);
+      setDialogText(null);
+      setData(await api2.context(bookFolder, bookId, chapterId));
+    } catch (failure) {
+      if (typeof onNotice === "function") onNotice(String(failure?.message ?? failure), "error");
+    } finally {
+      setBusy(false);
+    }
   };
   const sceneRows = [];
   for (const row of scenes) {
@@ -6864,7 +6900,6 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
     const official = partKey === SYSTEM ? scene.system?.text ?? "" : part?.official ?? "";
     const override = partKey === SYSTEM ? scene.system?.override ?? "" : part?.override ?? "";
     const replaceable = partKey === SYSTEM ? scene.promptKey !== "" : part?.replaceable === true;
-    const editing = draft !== null;
     const segments = [];
     if (scene.system !== null) segments.push({ key: SYSTEM, label: t("context.systemPrompt") });
     for (const row of scene.parts) segments.push({ key: row.key, label: t(`context.part.${row.key}`) });
@@ -6881,45 +6916,84 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
       h("div", { className: "st-dialog-label" }, t("context.officialVersion")),
       official === "" ? h("p", { className: "fang-muted" }, t("context.empty")) : h("p", { className: "st-overview-text" }, official)
     );
-    const headActions = [];
-    if (replaceable) {
-      if (editing) {
-        headActions.push(h("button", { key: "save", type: "button", className: "fang-btn fang-btn-primary", disabled: busy, onClick: save }, t("action.save")));
-        headActions.push(h("button", { key: "cancel", type: "button", className: "fang-btn", disabled: busy, onClick: () => setDraft(null) }, t("action.cancel")));
-      } else if (override !== "") {
-        headActions.push(h("button", { key: "edit", type: "button", className: "fang-btn", disabled: busy, onClick: () => setDraft(override) }, t("action.edit")));
-        headActions.push(h("button", { key: "revert", type: "button", className: "fang-btn", disabled: busy, onClick: revert }, t("context.revert")));
-      } else {
-        headActions.push(h("button", { key: "replace", type: "button", className: "fang-btn", disabled: busy, onClick: () => setDraft(official) }, t("context.replace")));
-      }
-    }
-    const copies = [];
-    if (scene.system !== null && scene.system.override !== "") {
-      copies.push({ key: SYSTEM, label: t("context.systemPrompt"), text: scene.system.override });
-    }
-    for (const row of scene.parts) {
-      if (row.override !== "") copies.push({ key: row.key, label: t(`context.part.${row.key}`), text: row.override });
-    }
+    const entries = partKey === SYSTEM ? override !== "" ? [{ id: "override", text: override, at: null }] : [] : [...part?.versions ?? []].reverse();
+    const selected = entries.find((row) => row.id === versionId) ?? entries[0] ?? null;
+    const mineHead = h(
+      "div",
+      { key: "mine-head", className: "st-ctx-mine-head" },
+      h("span", { className: "st-dialog-label" }, t("context.myVersion")),
+      h("span", { className: "fang-spacer" }),
+      replaceable ? h("button", {
+        type: "button",
+        className: "fang-btn",
+        disabled: busy,
+        onClick: () => setDialogText(official)
+      }, t("context.replace")) : null,
+      override !== "" ? h("button", {
+        type: "button",
+        className: "fang-btn",
+        disabled: busy,
+        onClick: revert
+      }, t("context.revert")) : null
+    );
+    const mineRows = entries.map((row) => h(
+      ListRow,
+      {
+        key: row.id,
+        active: selected !== null && row.id === selected.id,
+        onActivate: () => setVersionId(row.id)
+      },
+      h(
+        "span",
+        { className: "st-list-row-title" },
+        row.at === null ? t("context.myVersion") : new Date(row.at).toLocaleString()
+      ),
+      row.text === override ? h("span", { className: "fang-list-row-meta" }, t("context.active")) : null
+    ));
+    const mineActions = selected === null ? [] : [
+      h("button", {
+        key: "edit",
+        type: "button",
+        className: "fang-btn",
+        disabled: busy,
+        onClick: () => setDialogText(selected.text)
+      }, t("context.editCopy")),
+      selected.text !== override ? h("button", {
+        key: "active",
+        type: "button",
+        className: "fang-btn",
+        disabled: busy,
+        onClick: () => applyText(selected.text)
+      }, t("context.setActive")) : null,
+      partKey !== SYSTEM ? h("button", {
+        key: "delete",
+        type: "button",
+        className: "fang-btn",
+        disabled: busy,
+        onClick: () => deleteEntry(selected.id)
+      }, t("context.deleteEntry")) : null
+    ];
     const mineZone = h(
       "div",
       { key: "mine", className: "st-ctx-mine" },
-      h("div", { className: "st-dialog-label" }, t("context.myVersion")),
-      editing ? h("textarea", {
-        className: "st-overview-summary",
-        spellCheck: false,
-        value: draft,
-        onChange: (event) => setDraft(event.target.value)
-      }) : copies.length === 0 ? null : h(List, null, ...copies.map((row) => h(
-        ListRow,
-        {
-          key: `copy-${row.key}`,
-          active: partKey === row.key,
-          onActivate: () => pick(row.key)
-        },
-        h("span", { className: "st-list-row-title" }, row.label),
-        h("span", { className: "fang-list-row-meta" }, t("context.replaced")),
-        h("span", { className: "fang-list-row-meta" }, row.text)
-      )))
+      mineHead,
+      h(
+        "div",
+        { key: "mine-split", className: "st-ctx-mine-split" },
+        h(
+          "div",
+          { className: "st-ctx-mine-list" },
+          entries.length === 0 ? h("p", { className: "fang-muted" }, t("context.empty")) : h(List, null, ...mineRows)
+        ),
+        h(
+          "div",
+          { className: "st-ctx-mine-detail" },
+          selected === null ? h("p", { className: "fang-muted" }, t("context.empty")) : [
+            h("p", { key: "text", className: "st-overview-text" }, selected.text),
+            h("div", { key: "actions", className: "st-dialog-actions" }, ...mineActions)
+          ]
+        )
+      )
     );
     return [
       h(
@@ -6930,12 +7004,44 @@ function ContextPage({ t, api: api2, bookFolder, bookId, chapterId, onClose, onN
           "span",
           { className: "fang-split-detail-meta" },
           override !== "" ? t("context.replaced") : replaceable ? t("context.official") : t("context.readonly")
-        ),
-        ...headActions
+        )
       ),
       bar,
       officialZone,
-      mineZone
+      mineZone,
+      dialogText === null ? null : h(
+        Dialog,
+        {
+          key: "copy-dialog",
+          title: t("context.replace"),
+          size: "medium",
+          closeLabel: t("action.close"),
+          onClose: () => setDialogText(null)
+        },
+        h("textarea", {
+          key: "draft",
+          className: "st-dialog-textarea",
+          spellCheck: false,
+          value: dialogText,
+          onChange: (event) => setDialogText(event.target.value)
+        }),
+        h(
+          "div",
+          { key: "actions", className: "st-dialog-actions" },
+          h("button", {
+            type: "button",
+            className: "fang-btn",
+            disabled: busy,
+            onClick: () => setDialogText(null)
+          }, t("action.cancel")),
+          h("button", {
+            type: "button",
+            className: "fang-btn fang-btn-primary",
+            disabled: busy,
+            onClick: saveCopy
+          }, t("action.save"))
+        )
+      )
     ];
   };
   return h(
@@ -9679,9 +9785,10 @@ function createStoryApi(transport) {
     context: (bookFolder, bookId, chapterId) => call("/api/story.context", { bookFolder, bookId, chapterId }),
     savePrompt: (key, text) => call("/api/story.context.prompt.save", { key, text }),
     resetPrompt: (key) => call("/api/story.context.prompt.reset", { key }),
-    // One scene part's copy, kept in the book's own context.json.
+    // One scene part's copy, kept in the book's own context.json, plus its version history.
     saveContext: (bookId, scene, part, text) => call("/api/story.context.save", { bookId, scene, part, text }),
     resetContext: (bookId, scene, part) => call("/api/story.context.reset", { bookId, scene, part }),
+    deleteContextVersion: (bookId, scene, part, id) => call("/api/story.context.version.delete", { bookId, scene, part, id }),
     // Which model the panel's own actions run on, for the status bar.
     meta: () => call("/api/story.meta", {}),
     // Where the books live. One setting decides it; changing it does not move any files.
@@ -10948,13 +11055,10 @@ var CSS_CORE = `
       .st-md-p:last-child{margin-bottom:0}
       .st-md-rule{border:none;border-top:.5px solid var(--fang-border-edge);margin:1.2em 0}
       .st-issue{display:flex;gap:var(--fang-space-8,8px);align-items:baseline;padding:var(--fang-space-4,4px) 0;font-size:var(--fang-font-size-md);line-height:var(--fang-line-height-ui)}
-      /* Scrollbars: the host themes them; leaving them default is the most visible inconsistency. */
+      /* Scrollbars live in the library now (.fang-shell \u7684\u6807\u51C6 thin \u5C5E\u6027), \u53EA\u4FDD\u7559 gutters:
+         \u539F\u5148\u7684 ::-webkit-scrollbar \u81EA\u5B9A\u4E49\u662F\u5E38\u9A7B 12px \u7070\u6761\u7684\u6765\u6E90, \u4E14\u65E0\u5BBF\u4E3B\u4E3B\u9898\u65F6
+         \u56DE\u9000\u6210\u4EAE\u7070\u2014\u2014\u5DF2\u7531 fang-style \u7684\u6EDA\u52A8\u6761\u5185\u7F6E\u6837\u5F0F\u53D6\u4EE3\u3002 */
       .fang-scroll{scrollbar-gutter:stable}
-      .fang-scroll::-webkit-scrollbar{width:var(--fang-space-12,12px);height:var(--fang-space-12,12px)}
-      .fang-scroll::-webkit-scrollbar-track{background:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5);border-radius:var(--fang-radius-pill,999px);corner-shape:round;margin:var(--fang-space-2,2px)}
-      .fang-scroll::-webkit-scrollbar-thumb{background:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5);border-radius:var(--fang-radius-pill,999px);corner-shape:round}
-      .fang-scroll::-webkit-scrollbar-thumb:hover{background:var(--dsw-alias-scrollbar-hover-l2,#d4d4d4)}
-      .fang-scroll{scrollbar-width:thin;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2,#e5e5e5) transparent}
       /* Text selection follows the theme instead of the browser default blue.
          It is mixed from the ACCENT, not filled with a surface token: the module-platform token is
          a page background (a near-white grey), so the selection read as a grey slab laid over the
@@ -12158,9 +12262,19 @@ var CSS_CONTEXT = `
         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .st-ctx-official{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;
         gap:var(--fang-space-8);padding:var(--st-board-inset)}
-      .st-ctx-mine{flex:0 0 40%;min-height:0;overflow:auto;display:flex;flex-direction:column;
+      .st-ctx-mine{flex:0 0 40%;min-height:0;overflow:hidden;display:flex;flex-direction:column;
         gap:var(--fang-space-8);padding:var(--st-board-inset);
         border-top:var(--fang-hairline) solid var(--fang-ink-hair)}
+      /* \u533A\u5934\uFF1A\u540D\u79F0\u5728\u5DE6\u3001\u52A8\u4F5C\u5728\u53F3\uFF08mosaic-band-head \u7684\u6A21\u5F0F\uFF09\uFF0C\u533A\u5185\u7684\u52A8\u4F5C\u4E0D\u6D6E\u5728\u6B63\u6587\u4E0A\u3002 */
+      .st-ctx-mine-head{display:flex;align-items:center;gap:var(--fang-space-8);flex:none}
+      /* \u533A\u5185\u7684\u7B2C\u4E8C\u5C42\u5206\u680F\uFF1A\u5DE6\u6761\u76EE\u53F3\u8BE6\u60C5\u3002SplitPane \u7684\u56FA\u5B9A 220px \u5217\u8868\u5728 40% \u9AD8\u7684\u533A\u5185
+         \u653E\u4E0D\u4E0B\uFF0C\u8FD9\u91CC\u662F\u540C\u4E00\u5F62\u72B6\u7684\u533A\u5185\u7248\u672C\u3002 */
+      .st-ctx-mine-split{flex:1 1 auto;min-height:0;display:flex;gap:var(--fang-space-8)}
+      .st-ctx-mine-list{flex:0 0 40%;min-width:0;min-height:0;display:flex;flex-direction:column}
+      .st-ctx-mine-list .fang-list{flex:1 1 auto;min-height:0}
+      .st-ctx-mine-detail{flex:1 1 auto;min-width:0;min-height:0;display:flex;flex-direction:column;
+        gap:var(--fang-space-8)}
+      .st-ctx-mine-detail .st-overview-text{flex:1 1 auto;min-height:0;overflow:auto}
 `;
 
 // src/client/panel/outline.css.js

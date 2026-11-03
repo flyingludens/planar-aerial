@@ -218,3 +218,4 @@ src/client  →  domain  ←  lib
    | `st-ctx-bar` / `st-ctx-seg` / `st-ctx-seg-label` | 上下文构成横条 | 面板没有「分段构成条」组件 |
    | `st-ctx-official` | 官方版本区（弹性高，内滚） | 官方文本与副本必须分属两个固定区，不共滚动区 |
    | `st-ctx-mine` | 我的版本区（固定 40%，内滚：编辑框或副本列表） | 同上；分区边界是窗格的常量 |
+   | `st-ctx-mine-head` / `st-ctx-mine-split` / `st-ctx-mine-list` / `st-ctx-mine-detail` | 我的版本的区头与区内左右分栏 | 版本列表与详情需要区内的第二层分栏；`SplitPane` 的固定 220px 列表在 40% 高的区内放不下 |

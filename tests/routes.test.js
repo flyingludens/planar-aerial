@@ -141,6 +141,8 @@ test('apply registers every story route', async () => {
         '/api/story.answer.delete', '/api/story.answer.save', '/api/story.answers',
         '/api/story.applyProposal', '/api/story.books', '/api/story.catalog',
         '/api/story.chat', '/api/story.consistency',
+        '/api/story.context', '/api/story.context.prompt.reset', '/api/story.context.prompt.save',
+        '/api/story.context.reset', '/api/story.context.save', '/api/story.context.version.delete',
         '/api/story.continue', '/api/story.createBook', '/api/story.critique', '/api/story.deleteBook', '/api/story.efforts', '/api/story.events',
         '/api/story.imageModels', '/api/story.load', '/api/story.manuscript', '/api/story.meta', '/api/story.models',
         '/api/story.mosaic.apply', '/api/story.mosaic.ask', '/api/story.mosaic.check',
@@ -1144,5 +1146,92 @@ test('image models come from a custom provider marked as an image provider', asy
 
     const back = await call('/api/story.setImage', { image: { provider: 'agnes', model: 'agnes-image-2.1-flash' } })
     assert.equal(back.image.provider, 'agnes')
+  })
+})
+
+test('the context route is named by book id and never falls back to the latest book', async () => {
+  await withRoutes(async ({ call, library, folder }) => {
+    const { book } = await readBook(library, folder)
+    const data = await call('/api/story.context', { bookId: book.id })
+    assert.equal(data.ok, true)
+    assert.equal(data.bookFolder, folder)
+    assert.ok(Array.isArray(data.scenes) && data.scenes.length === 13, 'one entry per scene')
+    const chat = data.scenes.find((scene) => scene.id === 'chat')
+    assert.equal(chat.system.text.length > 0, true, 'chat carries its system prompt')
+    assert.ok(chat.parts.length > 0, 'chat carries its context parts')
+    assert.equal(data.prompts.length, 11)
+
+    const missing = await call('/api/story.context', { bookId: 'no-such-book' })
+    assert.equal(missing.ok, false, 'an unknown id is an error, not another book')
+    assert.match(missing.error, /书 id/)
+  })
+})
+
+test('a system prompt copy is saved globally and reverted to the official text', async () => {
+  await withRoutes(async ({ call }) => {
+    const saved = await call('/api/story.context.prompt.save', { key: 'chat', text: '只说事实。' })
+    assert.equal(saved.ok, true)
+    assert.equal(saved.prompts.find((row) => row.key === 'chat').override, '只说事实。')
+
+    const reset = await call('/api/story.context.prompt.reset', { key: 'chat' })
+    assert.equal(reset.prompts.find((row) => row.key === 'chat').override, '')
+    assert.ok(reset.prompts.find((row) => row.key === 'chat').official.length > 0)
+  })
+})
+
+test('a scene part copy is kept in the book and reverted on request', async () => {
+  await withRoutes(async ({ call, library, folder }) => {
+    const { book } = await readBook(library, folder)
+    const saved = await call('/api/story.context.save', {
+      bookId: book.id, scene: 'chat', part: 'bookMeta', text: '我的书名行',
+    })
+    assert.equal(saved.ok, true)
+    assert.equal(saved.overrides.chat.bookMeta, '我的书名行')
+
+    const after = await call('/api/story.context', { bookId: book.id })
+    const chat = after.scenes.find((scene) => scene.id === 'chat')
+    const part = chat.parts.find((row) => row.key === 'bookMeta')
+    assert.equal(part.override, '我的书名行')
+    assert.equal(part.text, '我的书名行', 'the copy is what would be sent')
+
+    const refused = await call('/api/story.context.save', {
+      bookId: book.id, scene: 'chat', part: 'chapterCast', text: 'x',
+    })
+    assert.equal(refused.ok, false, 'chapter-scoped parts cannot be copied')
+
+    await call('/api/story.context.reset', { bookId: book.id, scene: 'chat', part: 'bookMeta' })
+    const reset = await call('/api/story.context', { bookId: book.id })
+    assert.equal(reset.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').override, '')
+  })
+})
+
+test('every save is a version entry, and deleting one leaves the sent copy alone', async () => {
+  await withRoutes(async ({ call, library, folder }) => {
+    const { book } = await readBook(library, folder)
+    await call('/api/story.context.save', {
+      bookId: book.id, scene: 'chat', part: 'bookMeta', text: '第一版书名行',
+    })
+    const second = await call('/api/story.context.save', {
+      bookId: book.id, scene: 'chat', part: 'bookMeta', text: '第二版书名行',
+    })
+    assert.equal(second.overrides.chat.bookMeta, '第二版书名行', 'the newest save is what is sent')
+
+    const listed = await call('/api/story.context', { bookId: book.id })
+    const versions = listed.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').versions
+    assert.equal(versions.length, 2, 'two saves are two history entries')
+    assert.equal(versions[1].text, '第二版书名行', 'history is oldest first')
+
+    const dropped = await call('/api/story.context.version.delete', {
+      bookId: book.id, scene: 'chat', part: 'bookMeta', id: versions[0].id,
+    })
+    assert.equal(dropped.ok, true)
+    assert.equal(dropped.versions.chat.bookMeta.length, 1)
+    assert.equal(dropped.versions.chat.bookMeta[0].text, '第二版书名行')
+
+    // Reverting keeps the history — the override is what the model sends, the list is a log.
+    await call('/api/story.context.reset', { bookId: book.id, scene: 'chat', part: 'bookMeta' })
+    const afterReset = await call('/api/story.context', { bookId: book.id })
+    assert.equal(afterReset.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').override, '')
+    assert.equal(afterReset.scenes.find((scene) => scene.id === 'chat').parts.find((row) => row.key === 'bookMeta').versions.length, 1)
   })
 })

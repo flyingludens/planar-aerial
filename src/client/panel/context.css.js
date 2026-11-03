@@ -25,7 +25,17 @@ export const CSS_CONTEXT = `
         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .st-ctx-official{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;
         gap:var(--fang-space-8);padding:var(--st-board-inset)}
-      .st-ctx-mine{flex:0 0 40%;min-height:0;overflow:auto;display:flex;flex-direction:column;
+      .st-ctx-mine{flex:0 0 40%;min-height:0;overflow:hidden;display:flex;flex-direction:column;
         gap:var(--fang-space-8);padding:var(--st-board-inset);
         border-top:var(--fang-hairline) solid var(--fang-ink-hair)}
+      /* 区头：名称在左、动作在右（mosaic-band-head 的模式），区内的动作不浮在正文上。 */
+      .st-ctx-mine-head{display:flex;align-items:center;gap:var(--fang-space-8);flex:none}
+      /* 区内的第二层分栏：左条目右详情。SplitPane 的固定 220px 列表在 40% 高的区内
+         放不下，这里是同一形状的区内版本。 */
+      .st-ctx-mine-split{flex:1 1 auto;min-height:0;display:flex;gap:var(--fang-space-8)}
+      .st-ctx-mine-list{flex:0 0 40%;min-width:0;min-height:0;display:flex;flex-direction:column}
+      .st-ctx-mine-list .fang-list{flex:1 1 auto;min-height:0}
+      .st-ctx-mine-detail{flex:1 1 auto;min-width:0;min-height:0;display:flex;flex-direction:column;
+        gap:var(--fang-space-8)}
+      .st-ctx-mine-detail .st-overview-text{flex:1 1 auto;min-height:0;overflow:auto}
 `

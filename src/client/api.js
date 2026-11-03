@@ -84,6 +84,15 @@ export function createStoryApi(transport) {
     generateWritingStyle: (bookFolder, source) => call('/api/story.writingStyle.generate', { bookFolder, source }),
     consistency: (bookFolder) => call('/api/story.consistency', { bookFolder }),
     manuscript: (bookFolder) => call('/api/story.manuscript', { bookFolder }),
+    // The context page: the parts of the current context, and the writer's system-prompt copies.
+    // The book is named by ID, so a stale folder name cannot point the page at another book.
+    context: (bookFolder, bookId, chapterId) => call('/api/story.context', { bookFolder, bookId, chapterId }),
+    savePrompt: (key, text) => call('/api/story.context.prompt.save', { key, text }),
+    resetPrompt: (key) => call('/api/story.context.prompt.reset', { key }),
+    // One scene part's copy, kept in the book's own context.json, plus its version history.
+    saveContext: (bookId, scene, part, text) => call('/api/story.context.save', { bookId, scene, part, text }),
+    resetContext: (bookId, scene, part) => call('/api/story.context.reset', { bookId, scene, part }),
+    deleteContextVersion: (bookId, scene, part, id) => call('/api/story.context.version.delete', { bookId, scene, part, id }),
     // Which model the panel's own actions run on, for the status bar.
     meta: () => call('/api/story.meta', {}),
     // Where the books live. One setting decides it; changing it does not move any files.
