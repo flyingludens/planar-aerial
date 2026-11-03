@@ -1,6 +1,6 @@
 {
   "name": "dsh-planar-aerial",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "type": "module",
   "description": "位面飞行（Planar Aerial）— DSH 段落级小说写作插件",
   "author": "flyingludens",
@@ -65,7 +65,7 @@
   },
   "main": "electron/main.js",
   "dependencies": {
-    "fang-style": "github:flyingludens/fang-style#semver:^0.1.0",
+    "fang-style": "^0.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
