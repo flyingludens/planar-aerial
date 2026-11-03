@@ -227,7 +227,7 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
         key: 'copy-dialog', title: t('context.newCopy'), size: 'medium',
         closeLabel: t('action.close'), onClose: () => setDialogText(null),
       },
-        h('textarea', { key: 'draft', className: 'st-dialog-textarea', spellCheck: false,
+        h('textarea', { key: 'draft', className: 'st-input st-dialog-textarea', spellCheck: false,
           value: dialogText, onChange: (event) => setDialogText(event.target.value) }),
         h('div', { key: 'actions', className: 'st-dialog-actions' },
           h('button', { type: 'button', className: 'fang-btn', disabled: busy,
