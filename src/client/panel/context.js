@@ -30,7 +30,7 @@ function Segment({ label, tone, active, onPick }) {
   }, h('span', { className: 'st-ctx-seg-label' }, label))
 }
 
-export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, onNotice }) {
+export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose }) {
   const [data, setData] = React.useState(null)
   const [error, setError] = React.useState('')
   const [sceneId, setSceneId] = React.useState('chat')
@@ -38,6 +38,8 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
   const [versionId, setVersionId] = React.useState(null)
   // The copy editor lives in its own Dialog. `null` is closed; a string is the draft it holds.
   const [dialogText, setDialogText] = React.useState(null)
+  // 副本相关操作的失败原因显示在弹窗与版本区内部——状态栏在弹窗背板之下，写在那里等于没写。
+  const [copyError, setCopyError] = React.useState('')
   const [busy, setBusy] = React.useState(false)
 
   const load = React.useCallback(() => {
@@ -61,57 +63,64 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
   /** Write one text as the part's sent copy — through save (book parts) or the prompt override. */
   const applyText = async (text) => {
     if (busy || scene === undefined) return
-    setBusy(true)
+    setBusy(true); setCopyError('')
     try {
-      if (partKey === SYSTEM) await api.savePrompt(scene.promptKey, text)
-      else await api.saveContext(bookId, scene.id, partKey, text)
+      let res
+      if (partKey === SYSTEM) res = await api.savePrompt(scene.promptKey, text)
+      else res = await api.saveContext(bookId, scene.id, partKey, text)
+      if (res.ok === false) { setCopyError(res.error ?? '替换失败'); return }
       setData(await api.context(bookFolder, bookId, chapterId))
     } catch (failure) {
-      if (typeof onNotice === 'function') onNotice(String(failure?.message ?? failure), 'error')
+      setCopyError(String(failure?.message ?? failure))
     } finally { setBusy(false) }
   }
 
   const revert = async () => {
     if (busy || scene === undefined) return
-    setBusy(true)
+    setBusy(true); setCopyError('')
     try {
-      if (partKey === SYSTEM) await api.resetPrompt(scene.promptKey)
-      else await api.resetContext(bookId, scene.id, partKey)
+      let res
+      if (partKey === SYSTEM) res = await api.resetPrompt(scene.promptKey)
+      else res = await api.resetContext(bookId, scene.id, partKey)
+      if (res.ok === false) { setCopyError(res.error ?? '恢复失败'); return }
       setData(await api.context(bookFolder, bookId, chapterId))
     } catch (failure) {
-      if (typeof onNotice === 'function') onNotice(String(failure?.message ?? failure), 'error')
+      setCopyError(String(failure?.message ?? failure))
     } finally { setBusy(false) }
   }
 
   const deleteEntry = async (id) => {
     if (busy || scene === undefined || partKey === SYSTEM) return
-    setBusy(true)
+    setBusy(true); setCopyError('')
     try {
-      await api.deleteContextVersion(bookId, scene.id, partKey, id)
+      const res = await api.deleteContextVersion(bookId, scene.id, partKey, id)
+      if (res.ok === false) { setCopyError(res.error ?? '删除失败'); return }
       setData(await api.context(bookFolder, bookId, chapterId))
     } catch (failure) {
-      if (typeof onNotice === 'function') onNotice(String(failure?.message ?? failure), 'error')
+      setCopyError(String(failure?.message ?? failure))
     } finally { setBusy(false) }
   }
 
   /** The dialog's save: 新建一份副本文档——只入列表，不改变发送内容。 */
   const addCopy = async () => {
     if (busy || scene === undefined || dialogText === null || dialogText.trim() === '') return
-    setBusy(true)
+    setBusy(true); setCopyError('')
     try {
-      let newest = null
+      let res, rows
       if (partKey === SYSTEM) {
-        const prompts = await api.addPromptDoc(scene.promptKey, dialogText)
-        newest = prompts.find((row) => row.key === scene.promptKey)?.docs.slice(-1)[0] ?? null
+        res = await api.addPromptDoc(scene.promptKey, dialogText)
+        rows = res.ok === false ? [] : (res.prompts.find((row) => row.key === scene.promptKey)?.docs ?? [])
       } else {
-        const versions = (await api.addContextVersion(bookId, scene.id, partKey, dialogText)).versions
-        newest = versions[scene.id]?.[partKey]?.slice(-1)[0] ?? null
+        res = await api.addContextVersion(bookId, scene.id, partKey, dialogText)
+        rows = res.ok === false ? [] : (res.versions[scene.id]?.[partKey] ?? [])
       }
+      if (res.ok === false) { setCopyError(res.error ?? '保存失败'); return }
       setDialogText(null)
       setData(await api.context(bookFolder, bookId, chapterId))
-      if (newest !== null) setVersionId(newest.id)
+      const newest = rows[rows.length - 1]
+      if (newest !== undefined) setVersionId(newest.id)
     } catch (failure) {
-      if (typeof onNotice === 'function') onNotice(String(failure?.message ?? failure), 'error')
+      setCopyError(String(failure?.message ?? failure))
     } finally { setBusy(false) }
   }
 
@@ -170,7 +179,7 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
       h('span', { className: 'fang-spacer' }),
       replaceable ? h('button', {
         type: 'button', className: 'fang-btn', disabled: busy,
-        onClick: () => setDialogText(''),
+        onClick: () => { setCopyError(''); setDialogText('') },
       }, t('context.newCopy')) : null,
       override !== '' ? h('button', {
         type: 'button', className: 'fang-btn', disabled: busy,
@@ -198,6 +207,7 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
 
     const mineZone = h('div', { key: 'mine', className: 'st-ctx-mine' },
       mineHead,
+      copyError !== '' ? h('p', { key: 'mine-error', className: 'st-dialog-error' }, copyError) : null,
       h('div', { key: 'mine-split', className: 'st-ctx-mine-split' },
         h('div', { className: 'st-ctx-mine-list' },
           entries.length === 0
@@ -229,6 +239,7 @@ export function ContextPage({ t, api, bookFolder, bookId, chapterId, onClose, on
       },
         h('textarea', { key: 'draft', className: 'st-input st-dialog-textarea', spellCheck: false,
           value: dialogText, onChange: (event) => setDialogText(event.target.value) }),
+        copyError !== '' ? h('p', { key: 'copy-error', className: 'st-dialog-error' }, copyError) : null,
         h('div', { key: 'actions', className: 'st-dialog-actions' },
           h('button', { type: 'button', className: 'fang-btn', disabled: busy,
             onClick: () => setDialogText(null) }, t('action.cancel')),

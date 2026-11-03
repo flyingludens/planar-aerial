@@ -24,6 +24,7 @@ import {
   gestureKeys, chordMatches, currentPlatform, isModifierChord, createLoneModifierWatcher,
 } from './shared/gestures.js'
 import { StoryPanelBody, StoryPanelBoundary } from './panel/core.js'
+import { ContextPage } from './panel/context.js'
 import { BookLibrary } from './panel/library.js'
 import { TreeNav, ChapterEditor } from './panel/outline.js'
 import { ChatComposer, AiThinking, AnswerLog } from './panel/composer.js'
@@ -91,6 +92,10 @@ export default {
     // outcomes — a shelf, a save, a download and a dialog — and each one has to be driven on its
     // own to prove it is not a decorative label.
     RailTools, AboutBox,
+    // The context window. Mounted whole by core.js; exposed so its 新建副本 flow can be driven
+    // in the render harness — the dialog save reaches the API through a chain a route test
+    // cannot see.
+    ContextPage,
   },
   apply(ctx, config) {
     // A render crash takes the whole panel with it — no border, no status bar — and the host

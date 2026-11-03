@@ -460,6 +460,31 @@ test('every component body renders under real hook semantics', async () => {
       aiError: '', onText: () => {}, onAskSelection: async () => {}, onContinue: async () => '',
       onAccept: () => {}, onReject: () => {}, onRetry: () => {},
     },
+    // The context window: its api is stubbed with the route shapes the real host answers.
+    ContextPage: {
+      t, bookFolder: '/ws/story/book', bookId: 'b1', chapterId: 'c1',
+      api: {
+        context: async () => ({
+          ok: true, bookId: 'b1', bookFolder: '/ws/story/book',
+          scenes: [{
+            id: 'chat', promptKey: 'chat',
+            system: { text: '官方系统提示词', override: '' },
+            parts: [{
+              key: 'bookMeta', official: '官方书名与体裁', text: '官方书名与体裁',
+              override: '', replaceable: true, versions: [],
+            }],
+          }],
+          prompts: [],
+        }),
+        addContextVersion: async () => ({ ok: true, versions: {} }),
+        saveContext: async () => ({ ok: true, overrides: {}, versions: {} }),
+        deleteContextVersion: async () => ({ ok: true, versions: {} }),
+        addPromptDoc: async () => ({ ok: true, prompts: [] }),
+        savePrompt: async () => ({ ok: true, prompts: [] }),
+        resetPrompt: async () => ({ ok: true, prompts: [] }),
+      },
+      onClose: () => {}, onNotice: () => {},
+    },
     ConfirmDialog: {
       t, title: t('label.deleteBookConfirm', { title: '我的书' }), busy: false,
       // A plain child node: the dialog only renders what it is given.
@@ -1098,8 +1123,9 @@ test('the panel comes in from the right edge, rounded like the outline', () => {
   assert.ok(/align-items:stretch/.test(backdrop), 'and lets it take the full height')
   // A side panel is not a modal: the manuscript beside it stays readable and usable. The wash it
   // used to paint turned the page grey, which said "this is disabled" about the one surface the
-  // writer is working on. The panel's own shadow is what separates it.
-  assert.ok(/background:transparent/.test(backdrop),
+  // writer is working on. The panel's own shadow is what separates it — and since the backdrop
+  // stopped painting anything at all (2026-11-03), the absence of a background IS the guarantee.
+  assert.ok(!/background:/.test(backdrop),
     'the layer under a side panel paints nothing, so the page does not go grey')
 
   const sheet = /\.fang-drawer\{([^}]*)\}/.exec(css)?.[1] ?? ''
