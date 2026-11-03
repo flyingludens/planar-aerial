@@ -205,7 +205,7 @@ src/client  →  domain  ←  lib
 ## DSH 部署目标（2026-11-03 记）
 
 - 写作面板**只装 desktop profile**（`~/.dsh/profiles/desktop`）。web profile（`~/.dsh/profiles/web`）里的插件与依赖已清除，不要再装回去。
-- desktop profile 由 Electron 应用独占管理：`dsh plugin --profile desktop ...` 会被拒绝。改法是手改 `package.json` 的 `dependencies` 与 `dsh.profile.bundles`，再用运行时 pnpm（`.../runtime/primary-runtime/dependencies/pnpm/bin/pnpm.mjs`）在该目录 `install`。
+- desktop profile 由 Electron 应用独占管理（设计上不与 npm CLI 共享可执行包/激活/lockfile/node_modules，避免版本漂移与并发竞争）。npm 装的 `dsh`（`~/bin/dsh`）会被硬拒；受支持的入口只有 Desktop 自带的 bundled CLI：`/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh`，且须**完全退出应用后**运行 `dsh plugin --profile desktop add <tgz>` / `remove`，再重开应用。手改 package.json + 运行时 pnpm 只是绕过写锁的应急法，不算受支持路径。
 - 本地安装走打包产物：`npm pack` 出新的 `dsh-planar-aerial-<version>.tgz` 再装。npm registry 发布暂时搁置；依赖一律走 git，`fang-style` 是构建期 devDependency（已打进 `client.js`，安装时不拉）。
 
 
