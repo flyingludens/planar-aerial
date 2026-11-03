@@ -202,6 +202,12 @@ src/client  →  domain  ←  lib
 - `domain/` 的纯净性由 `tests/domain.test.js` 守着：它不能 import `node:`、`react` 或任何一半。
 - 看真实渲染：这台机器上**看不到**运行中的 DSH 面板，宿主 URL 和令牌由每次运行环境给出。所以任何“屏幕上现在长什么样”的结论都必须由用户确认，不能自己断言。
 
+## DSH 部署目标（2026-11-03 记）
+
+- 写作面板**只装 desktop profile**（`~/.dsh/profiles/desktop`）。web profile（`~/.dsh/profiles/web`）里的插件与依赖已清除，不要再装回去。
+- desktop profile 由 Electron 应用独占管理：`dsh plugin --profile desktop ...` 会被拒绝。改法是手改 `package.json` 的 `dependencies` 与 `dsh.profile.bundles`，再用运行时 pnpm（`.../runtime/primary-runtime/dependencies/pnpm/bin/pnpm.mjs`）在该目录 `install`。
+- 本地安装走打包产物：`npm pack` 出新的 `dsh-planar-aerial-<version>.tgz` 再装。npm registry 发布暂时搁置；依赖一律走 git，`fang-style` 是构建期 devDependency（已打进 `client.js`，安装时不拉）。
+
 
 ## 界面构造规则（2026-11-02 新增，上下文窗口一役的教训）
 
