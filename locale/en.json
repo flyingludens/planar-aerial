@@ -1,5 +1,5 @@
 {
-  "meta": { "title": "Story Writing", "description": "A paragraph-level writing desk: draft, get AI rewrites, accept them, with settings, characters, versions and a live overview." },
+  "meta": { "description": "A paragraph-level writing desk: draft, get AI rewrites, accept them, with settings, characters, versions and a live overview." },
   "panel": "Story",
   "tab.chapters": "Chapters", "tab.settings": "Settings", "tab.characters": "Characters", "tab.versions": "Versions", "tab.overview": "Overview",
   "status.draft": "Draft", "status.pending": "Pending", "status.final": "Final",

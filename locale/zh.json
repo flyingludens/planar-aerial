@@ -1,5 +1,5 @@
 {
-  "meta": { "title": "写故事", "description": "段落式写作台：边写边让 AI 提建议，附带设定、人物关系、多版本与全书概览。" },
+  "meta": { "description": "段落式写作台：边写边让 AI 提建议，附带设定、人物关系、多版本与全书概览。" },
   "panel": "写故事",
   "tab.chapters": "目录", "tab.settings": "设定", "tab.characters": "人物", "tab.versions": "版本", "tab.overview": "概览",
   "status.draft": "写作中", "status.pending": "待定", "status.final": "已定稿",

@@ -4255,7 +4255,7 @@ function WelcomePage({ t, api: api2, books, hasBook, onCreated, onLibrary, onBac
 // src/client/panel/rail-tools.js
 var PLUGIN = {
   name: "@flyingludens/dsh-planar-aerial",
-  version: "0.1.0-beta.9",
+  version: "0.1.0-beta.10",
   author: "flyingludens",
   repository: String("git+https://github.com/flyingludens/planar-aerial.git").replace(/^git\+/, "").replace(/\.git$/, ""),
   license: "MIT"

@@ -1,4 +1,11 @@
+<!--
+  The plugin-list icon. Colours are literal, not currentColor: DSH renders this through
+  <img src="data:image/svg+xml;base64,...">, and an SVG inside an <img> is its own document —
+  it cannot inherit the host's currentColor, so a stroke of currentColor collapsed and
+  vanished on the near-black card. The accent is the panel's own vermilion, lifted enough
+  to stay visible against that card; the accent token (c3272b) is too dark at 48px there.
+-->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect x="8" y="10" width="48" height="44" rx="6" fill="none" stroke="currentColor" stroke-width="4"/>
-  <path d="M20 24h24M20 34h24M20 44h14" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  <rect x="8" y="10" width="48" height="44" rx="6" fill="none" stroke="#e0524f" stroke-width="4"/>
+  <path d="M20 24h24M20 34h24M20 44h14" stroke="#e0524f" stroke-width="4" stroke-linecap="round"/>
 </svg>
