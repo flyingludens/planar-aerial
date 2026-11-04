@@ -42,7 +42,7 @@ tests/                  Node 测试
 ## 安装到 DSH
 
 ```bash
-dsh plugin --profile web add dsh-planar-aerial@beta
+dsh plugin --profile web add @flyingludens/dsh-planar-aerial@beta
 ```
 
 安装或升级后重启 DSH，侧边栏会出现「位面飞行」入口。插件包只包含 DSH 客户端和服务端代码，不包含 Electron 安装包或官网静态站。

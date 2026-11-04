@@ -1,6 +1,6 @@
 {
-  "name": "dsh-planar-aerial",
-  "version": "0.1.0-beta.8",
+  "name": "@flyingludens/dsh-planar-aerial",
+  "version": "0.1.0-beta.9",
   "type": "module",
   "description": "位面飞行（Planar Aerial）— DSH 段落级小说写作插件",
   "author": "flyingludens",

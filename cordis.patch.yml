@@ -1,6 +1,6 @@
 - insert:
     - id: storywriting
-      name: 'dsh-planar-aerial'
+      name: '@flyingludens/dsh-planar-aerial'
       config:
         snapshotEvery: 1
         overviewBudget: 2000
